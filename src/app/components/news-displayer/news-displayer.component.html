@@ -1,0 +1,166 @@
+<ng-container *ngIf="!isRSSLoading; else newsstandLoading">
+    <div class="chat-horizontal-scroll" #horizontalScrollContainer>
+        <ng-container *ngIf="true">
+            <div class="chat-card" [ngClass]="'rating-' + post.contentRating" *ngFor="let post of newsPosts; trackBy: trackById">
+                <!-- Blur Overlay for Inappropriate Content -->
+                <div class="d-flex justify-content-between align-items-center actions-container mb-3 pt-3">
+                    <!-- Left group of icons -->
+                    <div class="d-flex align-items-center gap-3 position-relative">
+                        <ng-container *ngIf="post.category === 'news'; else nonNews">
+                            <ng-container *ngIf="(post.linkPreview?.url || post.link) | isVideoLink; else regularNewsLink">
+                                <i class="fa-solid fa-play mb-1" (click)="openVideoLightbox(post)" style="cursor: pointer;" title="Play Video"></i>
+                            </ng-container>
+                            <ng-template #regularNewsLink>
+                                <a [href]="post.linkPreview?.url || post.link" target="_blank" rel="noopener">
+                                    <i class="fa-solid fa-magnifying-glass mb-1" style="cursor: pointer;" title="View"></i>
+                                </a>
+                            </ng-template>
+                        </ng-container>
+                        <ng-template #nonNews>
+                            <a [routerLink]="['/post', post.id]">
+                                <i class="fa-solid fa-magnifying-glass pe-2" style="cursor: pointer;" title="View"></i>
+                            </a>
+                        </ng-template>
+                        <i class="fa fa-share-alt" title="Share" style="cursor: pointer;" (click)="post.category === 'news' ? shareNewsStandContent(post) : shareContent(post)">
+                        </i>
+                        <!-- Heart + Badge -->
+                        <div class="position-relative" style="line-height: 1;">
+                            <i class="fa-regular fa-heart" (click)="favoritePost(post, $event)" style="cursor: pointer;" title="Favorite"></i>
+                            <span *ngIf="post.favoriteCount > 0" class="favorite-badge badge bg-danger position-absolute translate-middle" style="top: -2px; right: 5%; font-size: 0.65rem;">
+                                {{ post.favoriteCount }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div [class.blur-content]="post.contentRating >= 4" #postContent>
+                    <!-- Video Embed --- Code is suspect -->
+                    <div *ngIf="post.linkPreview  && (post.linkPreview.url | isVideoLink)">
+                        <div class="rss-video-container youtube" *ngIf="(post.linkPreview.url | getVideoPlatform) === 'youtube'" attr.data-video-id="{{ post.linkPreview.url | extractVideoId:'youtube' }}" data-platform="youtube">
+                            <img [src]="post.linkPreview?.image ? post.linkPreview.image : (post.linkPreview?.url | getVideoIcon)" class="rss-video-placeholder" alt="Click to watch video" width="320" height="180" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" (error)="onImageError($event)">
+                        </div>
+                        <div class="rss-video-container vimeo" *ngIf="(post.linkPreview.url | getVideoPlatform) === 'vimeo'" attr.data-video-id="{{ post.linkPreview.url | extractVideoId:'vimeo' }}" data-platform="vimeo">
+                            <img [src]="post.linkPreview?.image ? post.linkPreview.image : (post.linkPreview?.url | getVideoIcon)" class="rss-video-placeholder" alt="Click to watch video" width="320" height="180" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" (error)="onImageError($event)">
+                        </div>
+                        <div class="rss-video-container tiktok" *ngIf="(post.linkPreview.url | getVideoPlatform) === 'tiktok'" attr.data-video-id="{{ post.linkPreview.url | extractVideoId:'tiktok' }}" data-platform="tiktok">
+                            <img [src]="post.linkPreview?.image ? post.linkPreview.image : (post.linkPreview?.url | getVideoIcon)" class="rss-video-placeholder" alt="Click to watch video" width="320" height="180" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" (error)="onImageError($event)">
+                        </div>
+                    </div>
+                    <!-- Link Preview -->
+                    <div *ngIf="(post.linkPreview && post.linkPreview.url && post.linkPreview.url != ''  && (post.linkPreview.description !=''))" class="link-preview">
+                        <div *ngIf="!(post.linkPreview.url | isVideoLink); else videoLightBox" class="link-image-container">
+                            <img [src]="post.linkPreview.image" class="img-fluid" alt="Link image" width="320" height="180" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" (error)="onImageError($event)" (click)="openLightbox(post.linkPreview.image)">
+                        </div>
+                        <ng-template #videoLightBox>
+                            <button class="btn btn-primary" (click)="openVideoLightbox(post)" title="{{post.content}}" title="Watch the video in a Popup Window"> Watch Video </button>
+                        </ng-template>
+                        <div class="link-details">
+                            <h5 class="link-title"> <a [href]="post.linkPreview.url" class="link-title" target="_blank">{{ post.linkPreview.title | truncate:100 }}</a></h5>
+                            <div class="link-description" [innerHTML]="post.linkPreview.description | truncate:120" [title]="post.linkPreview.description"></div>
+                        </div>
+                    </div>
+                    <div *ngIf="post.user != 'TODD'; else toddMessage">
+                        <div *ngIf="!(post.linkPreview && post.linkPreview.url && post.linkPreview.url != ''  && (post.linkPreview.description !=''))" class="chat-message mt-2" [innerHTML]="post.content | aicontentextractor | formatAIText | linkify | truncate:120" [attr.title]="post.content || ''"></div>
+                    </div>
+                    <ng-template #toddMessage>
+                        <div class="chat-message mt-2" [innerHTML]="post.content | aicontentextractor | formatAIText | linkify | truncate:155" [attr.title]="post.content || ''"></div>
+                    </ng-template>
+                </div>
+                <div style="font-size: x-small" class="mb-2">
+                    <span class="rating-icon">{{ getRatingIcon(post.contentRating) }}</span>
+                    <span *ngIf="post.ratingExplanation && !post.ratingExplanation.includes('TODD')" class="rating-label" [attr.title]="post.ratingExplanation ? post.ratingExplanation : null"> Content Description: {{post.ratingExplanation}} </span> <span [attr.title]="post.ratingExplanation ? post.ratingExplanation : null"> <i> {{ getRatingDescription(post.contentRating) }}</i></span><br>
+                    <div class="category text-capitalize mt-2" *ngIf="post.category">🗂️ Category: {{post.category}}</div><br>
+                    <div *ngIf="post.contentRating >= 4">
+                        <button class="btn btn-sm btn-warning" (click)="toggleBlur(postContent, $event.target)" title="Toggle viewing this "> View Any Way </button>
+                    </div>
+                </div>
+                <div class="chat-header mt-2">
+                    <!-- Avatar: News shows Source badge fallback; others show profile avatar -->
+                    <!-- TODD stays unlinked -->
+                    <ng-container *ngIf="post.user === 'TODD'; else nonToddAvatar">
+                        <img [src]="post.imageUrl || '/assets/nophoto.svg'" class="todd-avatar" alt="TODD" width="40" height="40" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" (error)="onImageError($event)">
+                    </ng-container>
+                    <ng-template #nonToddAvatar>
+                        <!-- NEWS: prefer author image if it loads; otherwise show source badge -->
+                        <ng-container *ngIf="post.category === 'news'; else avatarWithPipe">
+                            <div class="source-avatar-wrap" title="{{ post.sourceName || 'News source' }}">
+                                <!-- Source badge (always present; image hides on error so badge shows) -->
+                                <div class="source-avatar-fallback">
+                                    <img *ngIf="getNewsLink(post)" class="source-favicon" [src]="'https://www.google.com/s2/favicons?sz=64&domain_url=' + getNewsLink(post)" alt="" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" (error)="hideBrokenImg($event)">
+                                    <span class="source-initials">{{ getSourceInitials(post) }}</span>
+                                </div>
+                                <!-- If imageUrl is viable it will cover the badge; if it fails it will hide and reveal badge -->
+                                <img *ngIf="post.imageUrl" [src]="post.imageUrl" class="chat-avatar source-avatar-image" [alt]="post.sourceName || post.displayName || 'News source'" width="40" height="40" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" (error)="hideBrokenImg($event)">
+                            </div>
+                        </ng-container>
+                        <!-- NON-NEWS: original profile avatar behavior -->
+                        <ng-template #avatarWithPipe>
+                            <ng-container *ngIf="(post | authorProfileUrl) as profileUrl; else avatarNoLink">
+                                <a [routerLink]="profileUrl" title="View profile" (click)="trackProfileClick(post, profileUrl)">
+                                    <img [src]="post.imageUrl || '/assets/nophoto.svg'" class="chat-avatar" [alt]="post.displayName || 'No Photo'" width="40" height="40" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" (error)="onImageError($event)">
+                                </a>
+                            </ng-container>
+                            <ng-template #avatarNoLink>
+                                <img [src]="post.imageUrl || '/assets/nophoto.svg'" class="chat-avatar" [alt]="post.displayName || 'No Photo'" width="40" height="40" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" (error)="onImageError($event)">
+                            </ng-template>
+                        </ng-template>
+                    </ng-template>
+                    <div class="chat-info">
+                        <h5 class="chat-name" style="font-size: small;">
+                            <a *ngIf="(post | authorProfileUrl) as profileUrl; else plainName" [routerLink]="profileUrl" title="View profile" (click)="trackProfileClick(post, profileUrl)">
+                                {{ post.displayName || post.user }}
+                            </a>
+                            <ng-template #plainName>
+                                <span>{{ post.displayName || post.user }}</span>
+                            </ng-template>
+                        </h5>
+                        <div class="chat-timestamp" [title]="post.timestamp | exactTime">
+                            {{ post.timestamp | relativeTime }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</ng-container>
+<ng-template #newsstandLoading>
+    <div class="newsstand-loading" aria-live="polite">
+        <div class="newsstand-loading-inner">
+            <div class="newsstand-loading-title">Loading NewsStand…</div>
+            <div class="progress" role="progressbar" aria-label="Loading NewsStand" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar progress-bar-striped progress-bar-animated" [style.width.%]="rssProgress"></div>
+            </div>
+            <div class="d-flex align-items-center gap-2 mt-2">
+                <div class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></div>
+                <div class="newsstand-loading-sub">
+                    {{ rssProgress }}% • Feeds {{ rssLoaded }}/{{ rssTotal }} <span *ngIf="rssFailed > 0">• Failed {{ rssFailed }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+<div class="modal fade custom-lightbox" id="imageLightbox" tabindex="-1" aria-labelledby="imageLightboxLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body p-0 text-center">
+                <img [src]="lightboxImage" class="lightbox-img img-fluid" alt="Lightbox image" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer">
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-outline-light btn-close-custom" data-bs-dismiss="modal"> Close </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade custom-lightbox" id="videoLightbox" tabindex="-1" aria-labelledby="videoLightboxLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body p-0 text-center">
+                <!-- Video iframe or video tag -->
+                <iframe *ngIf="lightboxVideoUrl" [src]="lightboxVideoUrl | safeVideoUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="lightbox-video">
+                </iframe>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <button type="button" class="btn btn-outline-light btn-close-custom" data-bs-dismiss="modal" (click)="closeLightbox()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

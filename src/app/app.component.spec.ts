@@ -20,10 +20,10 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('sayit');
   });
 
-  it('should render title', () => {
+  it('should render the footer', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, sayit');
+    expect(compiled.querySelector('footer.app-footer')).toBeTruthy();
   });
 });

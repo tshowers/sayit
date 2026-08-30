@@ -1,0 +1,176 @@
+<app-preloader [isLoading]="isLoading"></app-preloader>
+<div class="sayit-business-shell container-fluid" *ngIf="!isLoading">
+    <div class="row mb-2" *ngIf="!isLoading">
+        <div class="col-12">
+            <a routerLink="/" class="sayit-back-link">← Back to Posts</a>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-12 col-xl-10">
+            <div class="sayit-business-hero" *ngIf="!errorMessage; else missingState">
+                <div class="sayit-business-brand">
+                    <div class="sayit-business-avatar-wrap">
+                        <img [src]="profile?.photoURL || profile?.imageUrl || '/assets/nophoto.svg'" [alt]="profileTitle" class="sayit-business-avatar" width="96" height="96">
+                    </div>
+                    <div class="sayit-business-copy">
+                        <div class="sayit-business-badge">{{ directoryStatusLabel }}</div>
+                        <h1 class="sayit-business-title">{{ profileTitle }}</h1>
+                        <p class="sayit-business-tagline" *ngIf="businessTagline">{{ businessTagline }}</p>
+                        <p class="sayit-business-intent" *ngIf="businessIntent">{{ businessIntent }}</p>
+                        <p class="sayit-business-intent" *ngIf="directoryStatusCopy">{{ directoryStatusCopy }}</p>
+                        <div class="sayit-business-meta" *ngIf="categoryLabel || locationLabel || memberSinceLabel || watchCount">
+                            <span *ngIf="categoryLabel">{{ categoryLabel }}</span>
+                            <span *ngIf="locationLabel">{{ locationLabel }}</span>
+                            <span *ngIf="memberSinceLabel && !isSeededTeaser">On SayIt since {{ memberSinceLabel }}</span>
+                            <span>{{ watchCount }} watching</span>
+                        </div>
+                        <div class="sayit-business-trust-row">
+                            <span class="sayit-business-trust-badge" [class.verified]="hasListedWebsite">
+                                {{ hasListedWebsite ? 'Website listed' : 'No website yet' }}
+                            </span>
+                            <span *ngIf="isDomainAligned" class="sayit-business-trust-badge verified">Domain aligned</span>
+                            <span class="sayit-business-trust-badge">{{ activityLabel }}</span>
+                            <span class="sayit-business-trust-badge">{{ trustLabel }}</span>
+                        </div>
+                        <div class="sayit-business-meta" *ngIf="primaryEmail || primaryPhone || websiteUrl">
+                            <span *ngIf="primaryEmail">{{ primaryEmail }}</span>
+                            <span *ngIf="primaryPhone">{{ primaryPhone }}</span>
+                            <span *ngIf="websiteUrl">{{ websiteUrl }}</span>
+                        </div>
+                    </div>
+                    <div class="sayit-business-actions">
+                        <button *ngIf="canWatchProfile" type="button" class="btn-todd" (click)="toggleWatchProfile()" [disabled]="watchActionBusy">
+                            {{ watchActionBusy ? 'Saving...' : ( isWatchingProfile ? 'Watching' : 'Watch' ) }}
+                        </button>
+                        <a *ngIf="websiteHref" class="btn-todd text-center" [href]="websiteHref" target="_blank" rel="noopener noreferrer"> Visit Website </a>
+                        <a class="btn-todd" routerLink="/"> Join the conversation </a>
+                    </div>
+                </div>
+            </div>
+            <div class="sayit-business-card sayit-business-about" *ngIf="!errorMessage">
+                <div class="sayit-business-section-head">
+                    <h2>Business Snapshot</h2>
+                    <p>Quick business context so people can decide whether to follow, connect, research, or buy.</p>
+                </div>
+                <div class="sayit-business-pinned" *ngIf="pinnedIntro">
+                    <span class="sayit-business-label">Pinned intro</span>
+                    <p>{{ pinnedIntro }}</p>
+                </div>
+                <div class="sayit-business-pinned" *ngIf="aboutBusiness && aboutBusiness !== pinnedIntro">
+                    <span class="sayit-business-label">About this business</span>
+                    <p>{{ aboutBusiness }}</p>
+                </div>
+                <div class="sayit-business-grid">
+                    <div class="sayit-business-stat" *ngIf="servicesSummary">
+                        <span class="sayit-business-label">Services / specialties</span>
+                        <strong>{{ servicesSummary }}</strong>
+                    </div>
+                    <div class="sayit-business-stat" *ngIf="primaryEmail">
+                        <span class="sayit-business-label">Email</span>
+                        <strong>{{ primaryEmail }}</strong>
+                    </div>
+                    <div class="sayit-business-stat" *ngIf="primaryPhone">
+                        <span class="sayit-business-label">Phone</span>
+                        <strong>{{ primaryPhone }}</strong>
+                    </div>
+                    <div class="sayit-business-stat">
+                        <span class="sayit-business-label">Display name</span>
+                        <strong>{{ profile?.displayName || 'Not set yet' }}</strong>
+                    </div>
+                    <div class="sayit-business-stat" *ngIf="websiteHref">
+                        <span class="sayit-business-label">Website</span>
+                        <strong>{{ websiteUrl }}</strong>
+                    </div>
+                    <div class="sayit-business-stat">
+                        <span class="sayit-business-label">Business name</span>
+                        <strong>{{ profile?.businessName || profile?.displayName || 'Not set yet' }}</strong>
+                    </div>
+                    <div class="sayit-business-stat">
+                        <span class="sayit-business-label">Category</span>
+                        <strong>{{ categoryLabel || 'Still being added' }}</strong>
+                    </div>
+                    <div class="sayit-business-stat">
+                        <span class="sayit-business-label">Location</span>
+                        <strong>{{ locationLabel || 'Still being added' }}</strong>
+                    </div>
+                    <div class="sayit-business-stat">
+                        <span class="sayit-business-label">Profile completeness</span>
+                        <strong>{{ completenessPercent }}%</strong>
+                    </div>
+                    <div class="sayit-business-stat">
+                        <span class="sayit-business-label">Watchlist signal</span>
+                        <strong>{{ watchCount }} businesses watching this one</strong>
+                    </div>
+                    <div class="sayit-business-stat">
+                        <span class="sayit-business-label">Website status</span>
+                        <strong>{{ hasListedWebsite ? 'Website listed' : 'No website listed yet' }}</strong>
+                    </div>
+                    <div class="sayit-business-stat">
+                        <span class="sayit-business-label">Domain alignment</span>
+                        <strong>{{ isDomainAligned ? 'Matches listed email domain' : 'Not verified by domain match' }}</strong>
+                    </div>
+                    <div class="sayit-business-stat">
+                        <span class="sayit-business-label">Trust signal</span>
+                        <strong>{{ trustLabel }}</strong>
+                    </div>
+                    <div class="sayit-business-stat" *ngIf="isSeededTeaser">
+                        <span class="sayit-business-label">Profile status</span>
+                        <strong>Seeded teaser waiting for owner claim</strong>
+                    </div>
+                </div>
+            </div>
+            <div class="sayit-business-card">
+                <div class="sayit-business-section-head">
+                    <h2>Recent SayIt Posts</h2>
+                    <p *ngIf="visiblePosts.length; else noPostsText">Research what this business has been saying lately.</p>
+                    <ng-template #noPostsText>
+                        <p>This business has not posted publicly yet.</p>
+                    </ng-template>
+                </div>
+                <app-post-displayer [visiblePosts]="visiblePosts" [isLoggedIn]="false" [firebaseUser]="null" [favoritePostIds]="[]"></app-post-displayer>
+            </div>
+            <div class="sayit-business-card" *ngIf="isProfileOwner && interestedPosts.length">
+                <div class="sayit-business-section-head">
+                    <h2>People interested in your posts</h2>
+                    <p>Follow up in the post comments to keep the conversation in one place.</p>
+                </div>
+                <a *ngFor="let interest of interestedPosts" class="sayit-business-interest-row" [routerLink]="['/post', interest.postId]">
+                    <span class="sayit-business-interest-preview">{{ interest.postPreview || 'SayIt post' }}</span>
+                    <span class="sayit-business-interest-meta">{{ interest.interestedDisplayName || 'Someone' }} · View post</span>
+                </a>
+            </div>
+            <div class="sayit-business-card" *ngIf="relatedProfiles.length">
+                <div class="sayit-business-section-head">
+                    <h2>Similar Organizations</h2>
+                </div>
+                <div class="sayit-business-related-grid">
+                    <a *ngFor="let related of relatedProfiles" class="sayit-business-related-card" [routerLink]="['/business', related?.handle || related?.id || related?.uid]">
+                        <div class="sayit-business-related-top">
+                            <img [src]="related?.photoURL || '/assets/nophoto.svg'" [alt]="related?.businessName || related?.displayName || 'Business'" class="sayit-business-related-avatar" width="52" height="52">
+                            <div>
+                                <h3>{{ related?.businessName || related?.displayName || 'Business' }}</h3>
+                                <p>{{ related?.pinnedIntro || related?.tagline || related?.intentText || related?.sellText || 'Business updates on SayIt.' }}</p>
+                            </div>
+                        </div>
+                        <div class="sayit-business-meta">
+                            <span *ngIf="related?.businessCategory || related?.industry">{{ related?.businessCategory || related?.industry }}</span>
+                            <span *ngIf="related?.location">{{ related?.location }}</span>
+                            <span>{{ related?.watcherCount || 0 }} watching</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-template #missingState>
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-8">
+            <div class="sayit-business-card sayit-business-empty">
+                <h1>Business profile unavailable</h1>
+                <p>{{ errorMessage }}</p>
+                <a class="btn btn-todd" routerLink="/">Open SayIt</a>
+            </div>
+        </div>
+    </div>
+</ng-template>

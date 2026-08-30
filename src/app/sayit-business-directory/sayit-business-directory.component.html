@@ -1,0 +1,67 @@
+<app-preloader [isLoading]="loading"></app-preloader>
+<div class="sayit-directory-shell container-fluid" *ngIf="!loading">
+    <div class="row justify-content-center">
+        <div class="col-12 col-xl-10">
+            <div class="sayit-directory-hero">
+                <div>
+                    <div class="sayit-directory-badge">SayIt Discovery</div>
+                    <h1>Browse Businesses</h1>
+                    <p>Browse businesses. Watch the ones you want to follow.</p>
+                </div>
+                <a class="btn btn-todd" routerLink="/">Open SayIt</a>
+            </div>
+            <div class="sayit-directory-controls">
+                <input type="search" class="form-control sayit-directory-search" placeholder="Search by business name, category, location, or what they do" [(ngModel)]="searchTerm" [ngModelOptions]="{standalone: true}">
+                <div class="sayit-directory-mode-row">
+                    <button *ngFor="let mode of browseModes" type="button" class="btn-todd" [class.active]="browseMode === mode.id" (click)="setBrowseMode(mode.id)">
+                        {{ mode.label }}
+                    </button>
+                </div>
+                <div class="sayit-directory-mode-row">
+                    <button *ngFor="let category of categoryPills | slice:0:10" type="button" class="btn-todd" [class.active]="categoryFilter === category" (click)="setCategoryFilter(category)">
+                        {{ category === 'all' ? 'All Categories' : category }}
+                    </button>
+                </div>
+            </div>
+            <div class="sayit-directory-grid" *ngIf="filteredProfiles.length; else emptyState">
+                <a *ngFor="let profile of filteredProfiles | slice:0:24" class="sayit-directory-card" [routerLink]="getProfileRoute(profile)">
+                    <div class="sayit-directory-top">
+                        <img [src]="profile?.photoURL || '/assets/nophoto.svg'" [alt]="getProfileTitle(profile)" class="sayit-directory-avatar" width="64" height="64">
+                        <div>
+                            <div class="sayit-directory-status-row">
+                                <span *ngIf="isSeededTeaserProfile(profile)" class="sayit-directory-seed-badge">{{ getSeedStatusLabel(profile) }}</span>
+                                <span *ngIf="!isSeededTeaserProfile(profile)" class="sayit-directory-live-badge">Active member</span>
+                            </div>
+                            <h2>{{ getProfileTitle(profile) }}</h2>
+                            <p>{{ getProfileSummary(profile) }}</p>
+                        </div>
+                    </div>
+                    <div class="sayit-directory-meta">
+                        <span *ngIf="profile?.businessCategory || profile?.industry">{{ profile?.businessCategory || profile?.industry }}</span>
+                        <span *ngIf="profile?.location">{{ profile?.location }}</span>
+                        <span>{{ getCompleteness(profile) }}% complete</span>
+                        <span>{{ profile?.watcherCount || 0 }} watching</span>
+                    </div>
+                    <div class="sayit-directory-presence">{{ getProfilePresenceCopy(profile) }}</div>
+                    <div class="sayit-directory-trust">
+                        <span class="sayit-directory-trust-badge" [class.verified]="hasListedWebsite(profile)">
+                            {{ hasListedWebsite(profile) ? 'Website listed' : 'No website yet' }}
+                        </span>
+                        <span *ngIf="isDomainAligned(profile)" class="sayit-directory-trust-badge verified">Domain aligned</span>
+                        <span class="sayit-directory-trust-badge">{{ getActivityLabel(profile) }}</span>
+                        <span class="sayit-directory-trust-badge">{{ getTrustLabel(profile) }}</span>
+                    </div>
+                    <div class="mt-3">
+                        <span class="btn btn-outline-secondary btn-sm">View Page</span>
+                    </div>
+                </a>
+            </div>
+            <ng-template #emptyState>
+                <div class="sayit-directory-empty">
+                    <h2>No businesses match that view yet</h2>
+                    <p>Try a different search term, category, or browse mode.</p>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+</div>

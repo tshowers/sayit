@@ -1,0 +1,363 @@
+.sayit-business-shell {
+    padding: 1.5rem 0 3rem;
+}
+
+.sayit-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    color: inherit;
+    opacity: 0.7;
+    text-decoration: none;
+    padding: 0.25rem 0;
+}
+
+.sayit-back-link:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+.sayit-business-hero,
+.sayit-business-card {
+    border: 1px solid rgba(15, 15, 15, 0.08);
+    border-radius: 28px;
+    background:
+        radial-gradient(circle at top right, rgba(247, 208, 96, 0.18), transparent 30%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 249, 252, 0.98));
+    box-shadow: 0 20px 50px rgba(15, 15, 15, 0.08);
+    margin-bottom: 1.25rem;
+}
+
+.sayit-business-hero {
+    padding: 1.5rem;
+}
+
+.sayit-business-brand {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.sayit-business-avatar-wrap {
+    width: 96px;
+    height: 96px;
+    border-radius: 24px;
+    padding: 4px;
+    background: linear-gradient(135deg, #d97706, #f7d060);
+}
+
+.sayit-business-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 20px;
+    display: block;
+    background: #fff;
+}
+
+.sayit-business-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(217, 119, 6, 0.12);
+    color: #9a3412;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 0.85rem;
+}
+
+.sayit-business-title {
+    font-size: clamp(2rem, 3vw, 3rem);
+    line-height: 1;
+    font-weight: 800;
+    margin: 0 0 0.55rem;
+    color: #0f172a;
+}
+
+.sayit-business-tagline {
+    font-size: 1.05rem;
+    color: #334155;
+    margin: 0 0 0.45rem;
+}
+
+.sayit-business-intent {
+    font-size: 1rem;
+    color: #475569;
+    max-width: 760px;
+    margin: 0;
+}
+
+.sayit-business-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    margin-top: 1rem;
+}
+
+.sayit-business-meta span {
+    padding: 0.45rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(15, 15, 15, 0.05);
+    color: #334155;
+    font-size: 0.9rem;
+}
+
+.sayit-business-trust-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    margin-top: 0.9rem;
+}
+
+.sayit-business-trust-badge {
+    padding: 0.42rem 0.72rem;
+    border-radius: 999px;
+    background: rgba(2, 132, 199, 0.08);
+    color: #075985;
+    font-size: 0.82rem;
+    font-weight: 700;
+}
+
+.sayit-business-trust-badge.verified {
+    background: rgba(22, 163, 74, 0.1);
+    color: #166534;
+}
+
+.sayit-business-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.sayit-business-card {
+    padding: 1.4rem;
+}
+
+.sayit-business-pinned {
+    margin-bottom: 1rem;
+    padding: 1rem 1.05rem;
+    border-radius: 20px;
+    background: rgba(245, 245, 245, 0.08);
+    border: 1px solid rgba(217, 119, 6, 0.12);
+}
+
+.sayit-business-pinned p {
+    margin: 0.35rem 0 0;
+    color: #334155;
+    line-height: 1.55;
+}
+
+.sayit-business-section-head {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: end;
+    margin-bottom: 1rem;
+}
+
+.sayit-business-section-head h2 {
+    margin: 0;
+    font-size: 1.3rem;
+    color: #0f172a;
+}
+
+.sayit-business-section-head p {
+    margin: 0;
+    color: #64748b;
+}
+
+.sayit-business-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+}
+
+.sayit-business-stat {
+    border-radius: 20px;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(15, 15, 15, 0.05);
+}
+
+.sayit-business-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #64748b;
+    margin-bottom: 0.35rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.sayit-business-empty {
+    text-align: center;
+    padding: 3rem 1.5rem;
+}
+
+.sayit-business-related-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+}
+
+.sayit-business-related-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding: 1rem;
+    border-radius: 20px;
+    border: 1px solid rgba(15, 15, 15, 0.06);
+    background: rgba(255, 255, 255, 0.82);
+    text-decoration: none;
+    color: inherit;
+}
+
+.sayit-business-related-top {
+    display: flex;
+    gap: 0.8rem;
+    align-items: start;
+}
+
+.sayit-business-related-avatar {
+    width: 52px;
+    height: 52px;
+    object-fit: cover;
+    border-radius: 16px;
+    background: #fff;
+}
+
+.sayit-business-related-top h3 {
+    margin: 0 0 0.25rem;
+    font-size: 1rem;
+    color: #0f172a;
+}
+
+.sayit-business-related-top p {
+    margin: 0;
+    color: #475569;
+    line-height: 1.5;
+}
+
+@media (max-width: 991px) {
+    .sayit-business-brand {
+        grid-template-columns: 1fr;
+    }
+
+    .sayit-business-actions {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 767px) {
+    .sayit-business-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sayit-business-related-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sayit-business-section-head {
+        flex-direction: column;
+        align-items: start;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .sayit-business-shell {
+        background: transparent;
+    }
+
+    .sayit-business-hero,
+    .sayit-business-card {
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(15, 15, 15, 0.95);
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
+    }
+
+    .sayit-business-avatar {
+        background: rgba(15, 15, 15, 0.95);
+    }
+
+    .sayit-business-badge {
+        background: rgba(245, 158, 11, 0.16);
+        color: #fbbf24;
+    }
+
+    .sayit-business-title,
+    .sayit-business-section-head h2,
+    .sayit-business-related-top h3,
+    .sayit-business-stat strong,
+    .sayit-business-empty h1 {
+        color: #f8fafc;
+    }
+
+    .sayit-business-tagline,
+    .sayit-business-pinned p,
+    .sayit-business-related-top p,
+    .sayit-business-empty p {
+        color: #cbd5e1;
+    }
+
+    .sayit-business-intent,
+    .sayit-business-meta span,
+    .sayit-business-section-head p,
+    .sayit-business-label {
+        color: #94a3b8;
+    }
+
+    .sayit-business-meta span {
+        background: rgba(255, 255, 255, 0.06);
+    }
+
+    .sayit-business-trust-badge {
+        background: rgba(56, 189, 248, 0.14);
+        color: #7dd3fc;
+    }
+
+    .sayit-business-trust-badge.verified {
+        background: rgba(34, 197, 94, 0.14);
+        color: #86efac;
+    }
+
+    .sayit-business-pinned {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(245, 158, 11, 0.18);
+    }
+
+    .sayit-business-stat,
+    .sayit-business-related-card {
+        background: rgba(15, 15, 15, 0.68);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+}
+.sayit-business-interest-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    padding: 0.9rem 0;
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+    color: inherit;
+    text-decoration: none;
+}
+
+.sayit-business-interest-row:hover {
+    color: inherit;
+    opacity: 0.78;
+}
+
+.sayit-business-interest-preview {
+    font-weight: 700;
+}
+
+.sayit-business-interest-meta {
+    color: rgba(15, 23, 42, 0.62);
+    font-size: 0.86rem;
+    white-space: nowrap;
+}

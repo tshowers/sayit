@@ -1,0 +1,118 @@
+<app-preloader [isLoading]="isLoading"></app-preloader>
+<div class="container-fluid chat-page-shell  todd-page">
+  <div class="row no-print m-2 chat-header" *ngIf="!showAuthGate">
+    <div class="col-12">
+      <h1 class="chat-title">Say It</h1>
+      <p class="chat-subtitle mb-0">the social media for organizations</p>
+      <nav class="sayit-quick-actions" aria-label="Say It tools">
+        <button type="button" class="sayit-quick-action sayit-hover-action" (mouseenter)="openComposerPanel()" (click)="toggleComposerPanel()" title="Create a post" aria-label="Create a post">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+        <button type="button" class="sayit-quick-action sayit-hover-action" (mouseenter)="openSearchPanel()" (click)="toggleSearchPanel()" title="Search posts" aria-label="Search posts">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+        <button type="button" class="sayit-quick-action" (click)="openMyBusinessPage()" title="Your Say It profile" aria-label="Open your Say It profile">
+          <i class="fa-solid fa-user"></i>
+          <span *ngIf="interestUnreadCount > 0" class="sayit-interest-dot" aria-label="New interest"></span>
+        </button>
+        <button type="button" class="sayit-quick-action" [class.active]="isPrimaryView('newsstand')" (click)="toggleNewsstand()" [title]="isPrimaryView('newsstand') ? 'Back to posts' : 'Open Newsstand'" [attr.aria-label]="isPrimaryView('newsstand') ? 'Back to posts' : 'Open Newsstand'">
+          <i *ngIf="!isPrimaryView('newsstand'); else postsIcon" class="fa-solid fa-newspaper"></i>
+          <ng-template #postsIcon><i class="fa-solid fa-comments"></i></ng-template>
+        </button>
+        <button *ngIf="isMasterTenant && sayitSchedulerEnabled !== null" type="button" class="sayit-quick-action sayit-seed-action" [class.active]="sayitSchedulerEnabled" (click)="toggleScheduler()" [disabled]="sayitSchedulerLoading" [title]="sayitSchedulerEnabled ? 'AI seed posts on — click to turn off' : 'AI seed posts off — click to turn on'" [attr.aria-label]="sayitSchedulerEnabled ? 'Turn off AI seed posts' : 'Turn on AI seed posts'">
+          <i *ngIf="sayitSchedulerLoading; else seedIcon" class="fa-solid fa-spinner fa-spin"></i>
+          <ng-template #seedIcon><i class="fa-solid fa-robot"></i></ng-template>
+        </button>
+      </nav>
+    </div>
+  </div>
+  <div class="container-fluid chat-content-shell" *ngIf="!showAuthGate">
+    <div class="row mt-4 justify-content-center chat-main-row">
+      <div class="col-12">
+        <div class="sayit-slide-panel sayit-search-panel mb-3" [class.open]="showSearch" (mouseleave)="closeHoverPanel('search')">
+          <div class="chat-card sayit-search-card">
+            <label class="visually-hidden" for="sayit-post-search">Search Say It posts</label>
+            <input id="sayit-post-search" type="search" class="form-control chat-composer-input" placeholder="Search posts: what do you need or offer?" [(ngModel)]="postSearchTerm" [ngModelOptions]="{standalone: true}" (ngModelChange)="applyPostFilters(true)">
+          </div>
+        </div>
+        <div class="sayit-slide-panel sayit-composer-panel mb-3" [class.open]="showComposer" (mouseleave)="closeHoverPanel('composer')">
+          <div class="chat-card chat-composer-card">
+            <form (ngSubmit)="postMessage()">
+              <div class="row">
+                <div class="col-12">
+                  <div class="row g-2 align-items-center chat-composer-row-inline" data-wow-delay="0.5s">
+                    <div class="col-10 col-sm-11">
+                      <input #messageInput type="text" class="form-control chat-composer-input" autocomplete="off" maxlength="155" placeholder="Hi, {{displayName}} say it" [(ngModel)]="newMessage" name="message">
+                    </div>
+                    <div class="col-2 col-sm-1 chat-composer-submit-col">
+                      <button class="btn-todd chat-composer-submit" type="submit" [disabled]="isPosting">
+                        <span *ngIf="isPosting; else postButton">
+                          <i class="fa fa-spinner fa-spin"></i>
+                        </span>
+                        <ng-template #postButton>
+                          <i class="fa-solid fa-arrow-up"></i>
+                        </ng-template>
+                      </button>
+                    </div>
+                  </div>
+                  <small style="font-size: smaller;" class="text-muted chat-composer-hint">
+                    <i>Post a comment, share a link, or ask a question. Start with</i> '<strong>Hey TODD</strong>' <i>if you want an AI reply.</i></small>
+                </div>
+              </div>
+
+              <div class="row mt-2" *ngIf="newMessage">
+                <div class="col-12">
+                  <div class="drop-zone chat-drop-zone" role="button" tabindex="0" aria-label="Upload image" (click)="fileInput.click()" (keydown.enter)="fileInput.click()" (keydown.space)="fileInput.click(); $event.preventDefault()" (drop)="onDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)">
+                    <p>Upload image - drag and drop here or <span style="cursor: pointer;" class="file-browse-link" (click)="$event.stopPropagation(); fileInput.click()">browse</span></p>
+                    <input type="file" #fileInput (click)="$event.stopPropagation()" (change)="onFileSelect($event)" hidden>
+                  </div>
+                  <div class="progress" *ngIf="uploadProgress !== null">
+                    <div class="progress-bar" role="progressbar" [style.width.%]="uploadProgress" [attr.aria-valuenow]="uploadProgress" aria-valuemin="0" aria-valuemax="100">{{uploadProgress}}%</div>
+                  </div>
+                  <div *ngIf="imageDraft && downloadURL" class="draft-image-preview d-flex align-items-center gap-3 mt-2">
+                    <img [src]="downloadURL" alt="Draft image preview" class="draft-image-thumb">
+                    <div class="draft-image-meta">
+                      <div class="draft-image-hint">Image attached. Add a caption, or remove it.</div>
+                      <button type="button" class="draft-remove-btn" (click)="removeDraftImage()" aria-label="Remove draft image" title="Remove image">
+                        <i class="fa-solid fa-xmark"></i>
+                        <span>Remove image</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="chat-feed-shell" *ngIf="isPrimaryView('feed') || isPrimaryView('newsstand')">
+          <div *ngIf="showHorizontalFeedHint && isPrimaryView('feed')" class="sayit-feed-hint">
+            <div class="sayit-feed-hint-icon">↔</div>
+            <div class="sayit-feed-hint-copy">
+              <strong>Swipe sideways to browse posts</strong>
+              <span>This feed scrolls horizontally.</span>
+            </div>
+            <button type="button" class="btn btn-todd" (click)="dismissHorizontalFeedHint()">Got it</button>
+          </div>
+          <div class="chat-card chat-feed-card">
+            <div *ngIf="isPrimaryView('feed') && postsLoadError" class="sayit-feed-status sayit-feed-status--error">
+              <strong>We couldn’t load the posts.</strong>
+              <span>Check your connection and try again.</span>
+              <button type="button" class="btn-todd" (click)="retryPostLoad()">Try again</button>
+            </div>
+            <div *ngIf="isPrimaryView('feed') && !postsLoadError && !postsInitialLoadComplete" class="sayit-feed-status" aria-live="polite">
+              <span class="sayit-feed-skeleton"></span>
+              <span class="sayit-feed-skeleton sayit-feed-skeleton--short"></span>
+              <span>Loading posts…</span>
+            </div>
+            <app-post-displayer *ngIf="isPrimaryView('feed') && postsInitialLoadComplete && !postsLoadError" [visiblePosts]="visiblePosts" [firebaseUser]="firebaseUser" [isLoggedIn]="isLoggedIn" [showMineOnly]="showMineOnly" [favoritePostIds]="favoritePostIds" [currentUserId]="userId" (favorite)="onFavoritePost($event)" (unfavorite)="onUnfavoritePost($event)">
+            </app-post-displayer>
+            <app-news-displayer *ngIf="isPrimaryView('newsstand')" [isLoggedIn]="isLoggedIn" [userId]="userId" [firebaseUser]="firebaseUser" [currentUserContact]="currentUserContact" [displayName]="displayName">
+            </app-news-displayer>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-profile-intent-card *ngIf="showProfileIntent" [forced]="profileGateRequired" (closed)="onProfileIntentClosed()" (completed)="onProfileIntentCompleted()"></app-profile-intent-card>
+<app-auth-gate-modal *ngIf="showAuthGate" [dismissible]="false" (closed)="onAuthGateClosed()" (signedIn)="onAuthGateSignedIn()"></app-auth-gate-modal>

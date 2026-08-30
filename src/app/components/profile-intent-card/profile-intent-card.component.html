@@ -1,0 +1,110 @@
+<div [class.profile-intent-overlay]="!isPageMode()" [class.profile-intent-page-shell]="isPageMode()" [attr.role]="isPageMode() ? null : 'dialog'" [attr.aria-modal]="isPageMode() ? null : 'true'">
+    <div class="profile-intent-page-wrap" *ngIf="isPageMode()">
+        <div class="profile-intent-page-header">
+            <div>
+                <div class="profile-intent-page-badge">SayIt Profile</div>
+                <h1>Edit Your SayIt Profile</h1>
+                <p>Update your business details, public intro, and website in a full-page editor that works on desktop and mobile.</p>
+            </div>
+            <button type="button" class="btn btn-outline-secondary" (click)="close()">Back to SayIt</button>
+        </div>
+    </div>
+    <div class="profile-intent-card" [class.profile-intent-card-page]="isPageMode()">
+        <div class="profile-intent-header">
+            <div class="profile-intent-title text-center">social media for organizations</div>
+            <button *ngIf="!forced && !isPageMode()" type="button" class="profile-intent-close" (click)="close()" aria-label="Close">×</button>
+        </div>
+        <div class="profile-intent-body">
+            <p class="profile-intent-subtext"> Say it. Find it. Get it done </p>
+            <div class="form-group">
+                <label for="piDisplayName">Display name</label>
+                <input id="piDisplayName" class="form-control" type="text" [placeholder]="isQuickSignupMode() ? 'Ty Showers' : 'How your name shows up on SayIt'" [(ngModel)]="displayName" [disabled]="busy" maxlength="40" />
+                <small class="text-muted" style="font-size: smaller;">{{ isQuickSignupMode() ? 'You can change this later.' : 'This is the name shown beside your posts.' }}</small>
+            </div>
+            <ng-container *ngIf="!isQuickSignupMode()">
+                <div class="row g-3 mt-1">
+                    <div class="col-12 col-md-6">
+                        <label for="piBusinessName">Business name</label>
+                        <input id="piBusinessName" class="form-control" type="text" placeholder="Taliferro, Inc." [(ngModel)]="businessName" [disabled]="busy" [ngModelOptions]="{standalone: true}" maxlength="80" />
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="piBusinessCategory">Category</label>
+                        <input id="piBusinessCategory" class="form-control" type="text" placeholder="Marketing, Construction, SaaS..." [(ngModel)]="businessCategory" [disabled]="busy" [ngModelOptions]="{standalone: true}" maxlength="60" />
+                    </div>
+                </div>
+                <div class="row g-3 mt-1">
+                    <div class="col-12 col-md-6">
+                        <label for="piLocation">Location</label>
+                        <input id="piLocation" class="form-control" type="text" placeholder="Seattle, WA" [(ngModel)]="location" [disabled]="busy" [ngModelOptions]="{standalone: true}" maxlength="60" />
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <label for="piTagline">Short tagline</label>
+                        <input id="piTagline" class="form-control" type="text" placeholder="Modern accounting for growing contractors" [(ngModel)]="tagline" [disabled]="busy" [ngModelOptions]="{standalone: true}" maxlength="90" />
+                    </div>
+                </div>
+            </ng-container>
+            <div class="form-group mt-3">
+                <label for="piIntent">What are you trying to do?</label>
+                <textarea id="piIntent" class="form-control" [rows]="isQuickSignupMode() ? 5 : 4" [placeholder]="isQuickSignupMode() ? 'I help with software' : 'I help…&#10;I’m looking for…&#10;I sell…&#10;I need…'" [(ngModel)]="sellText" [disabled]="busy"></textarea>
+                <small class="text-muted" style="font-size: smaller;">Examples: I help contractors move to the cloud. Looking for a CPA and lead gen help. Need subcontractors in Seattle.</small>
+            </div>
+            <ng-container *ngIf="!isQuickSignupMode()">
+                <div class="form-group mt-3">
+                    <label for="piPinnedIntro">Pinned intro (optional)</label>
+                    <textarea id="piPinnedIntro" class="form-control" rows="3" placeholder="We help local manufacturers streamline quoting and scheduling so teams close work faster." [(ngModel)]="pinnedIntro" [disabled]="busy" [ngModelOptions]="{standalone: true}"></textarea>
+                    <small class="text-muted" style="font-size: smaller;">This becomes the first thing people see on your business page.</small>
+                </div>
+            </ng-container>
+            <div class="form-group mt-3">
+                <label for="piWebsite">Business website (optional)</label>
+                <input id="piWebsite" class="form-control" type="url" placeholder="https://yourcompany.com" [(ngModel)]="websiteUrl" [disabled]="busy" />
+            </div>
+            <div class="profile-intent-actions">
+                <button type="button" class="btn btn-todd" (click)="save()" [disabled]="busy || !canSave()">
+                    {{ busy ? 'Saving…' : getSaveButtonLabel() }}
+                </button>
+            </div>
+            <div *ngIf="errorMessage" class="alert alert-danger profile-intent-alert">
+                <i class="fa fa-exclamation-triangle me-2"></i>
+                {{ errorMessage }}
+            </div>
+            <div *ngIf="saveSuccessMessage" class="alert alert-success profile-intent-alert profile-intent-success">
+                <i class="fa fa-check-circle me-2"></i>
+                {{ saveSuccessMessage }}
+            </div>
+            <div class="profile-intent-recommendations" *ngIf="intentProfile || recommendations">
+                <div class="profile-intent-recommendations__header">
+                    <div>
+                        <div class="profile-intent-page-badge">Recommendations</div>
+                        <h3>{{ recommendations?.summary || intentProfile?.summary }}</h3>
+                    </div>
+                    <div class="profile-intent-signal-row" *ngIf="intentProfile">
+                        <span class="profile-intent-signal">{{ formatIntentValue(intentProfile.role) }}</span>
+                        <span class="profile-intent-signal secondary">{{ formatIntentValue(intentProfile.domain) }}</span>
+                        <span class="profile-intent-signal secondary">Confidence {{ intentProfile.confidence | number:'1.0-2' }}</span>
+                    </div>
+                </div>
+
+                <div class="profile-intent-recommendation-block" *ngIf="hasLeadVaultRecommendations()">
+                    <h4>We found likely matches for what you sell</h4>
+                    <div class="profile-intent-pill-list">
+                        <button type="button" class="profile-intent-pill" *ngFor="let segment of recommendations?.leadVaultSegments" (click)="openLeadVaultSegment(getLeadVaultSegmentQuery(segment))">
+                            {{ segment.label }}
+                        </button>
+                    </div>
+                    <button type="button" class="btn btn-todd mt-3" (click)="viewLeadVaultMatches()">View Lead Vault matches</button>
+                </div>
+
+                <div class="profile-intent-recommendation-block" *ngIf="hasProviderRecommendations()">
+                    <h4>We found people who may help</h4>
+                    <div class="profile-intent-pill-list">
+                        <span class="profile-intent-pill static" *ngFor="let suggestion of recommendations?.providerSuggestions">
+                            {{ suggestion.label }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="profile-intent-footnote text-muted">You can edit this later.</div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,186 @@
+<div class="chat-horizontal-scroll sayit-post-strip" #horizontalScrollContainer>
+  <ng-container *ngIf="true">
+    <div *ngIf="visiblePosts.length === 0" class="text-muted text-center">
+      <p class="mb-0">No Posts Available</p>
+      <p *ngIf="showMineOnly">Try posting or adjusting your filters.</p>
+    </div>
+    <div class="chat-card sayit-post-card mb-2" [ngClass]="'rating-' + post.contentRating" *ngFor="let post of visiblePosts; trackBy: trackById">
+      <!-- Blur Overlay for Inappropriate Content -->
+      <div class="d-flex justify-content-between align-items-center actions-container sayit-post-actions mb-3 pt-3">
+        <!-- Left group of icons -->
+        <div class="d-flex align-items-center gap-3 position-relative">
+          <ng-container *ngIf="post.category === 'news'; else nonNews">
+            <ng-container *ngIf="(post.linkPreview?.url || post.link) | isVideoLink; else regularNewsLink">
+              <i class="fa-solid fa-play mb-1" (click)="toggleOnSelection(); openVideoLightbox(post)" style="cursor: pointer;" title="Play Video"></i>
+            </ng-container>
+            <ng-template #regularNewsLink>
+              <a [href]="post.linkPreview?.url || post.link" target="_blank" rel="noopener">
+                <i class="fa-solid fa-magnifying-glass mb-1" style="cursor: pointer;" title="View"></i>
+              </a>
+            </ng-template>
+          </ng-container>
+          <ng-template #nonNews>
+            <a [routerLink]="['/post', post.id]">
+              <i class="fa-solid fa-magnifying-glass pe-2" style="cursor: pointer;" title="View"></i>
+            </a>
+          </ng-template>
+          <i class="fa fa-share-alt" title="Share" style="cursor: pointer;" (click)="shareContent(post)"></i>
+          <!-- I'm interested -->
+          <button *ngIf="!isAssistantPost(post)" type="button" class="btn-todd" title="I'm interested" (click)="onInterestedClick(post, $event)" [disabled]="isExpressingInterestFor(post)">
+            <ng-container *ngIf="isExpressingInterestFor(post); else interestedLabel">
+              <i class="fa-solid fa-spinner fa-spin me-1" aria-hidden="true"></i> Sending… </ng-container>
+            <ng-template #interestedLabel>
+              <i class="fa-solid fa-handshake me-1"></i> Interested </ng-template>
+          </button>
+          <!-- Heart + Badge -->
+          <div *ngIf="!isAssistantPost(post)" class="position-relative" style="line-height: 1;">
+            <i class="fa-regular fa-heart" (click)="favoritePost(post, $event)" style="cursor: pointer;" title="Favorite"></i>
+            <span *ngIf="post.favoriteCount > 0" class="favorite-badge badge bg-danger position-absolute translate-middle" style="top: -2px; right: 5%; font-size: 0.65rem;">
+              {{ post.favoriteCount }}
+            </span>
+          </div>
+        </div>
+        <!-- Trash icon far right -->
+        <div *ngIf="firebaseUser.uid === post.userId">
+          <i class="fa-solid fa-trash mb-1" title="Delete this post" style="cursor: pointer; color: crimson;" (click)="onDelete(post)">
+          </i>
+        </div>
+      </div>
+      <div class="sayit-post-main" [class.blur-content]="post.contentRating >= 4" #postContent>
+        <!-- Video Embed --- Code is suspect -->
+        <div *ngIf="post.linkPreview  && (post.linkPreview.url | isVideoLink)">
+          <div class="rss-video-container youtube sayit-video-thumb" *ngIf="(post.linkPreview.url | getVideoPlatform) === 'youtube'" attr.data-video-id="{{ post.linkPreview.url | extractVideoId:'youtube' }}" data-platform="youtube" (click)="toggleOnSelection(); openVideoLightbox(post)" title="Watch video">
+            <img [src]="post.linkPreview?.image ? post.linkPreview.image : (post.linkPreview?.url | getVideoIcon)" class="rss-video-placeholder" alt="Click to watch video" width="320" height="180" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" (error)="onImageError($event)">
+            <div class="sayit-video-overlay" aria-hidden="true">
+              <span class="sayit-video-play"><i class="fa-solid fa-play"></i></span>
+            </div>
+          </div>
+          <div class="rss-video-container vimeo sayit-video-thumb" *ngIf="(post.linkPreview.url | getVideoPlatform) === 'vimeo'" attr.data-video-id="{{ post.linkPreview.url | extractVideoId:'vimeo' }}" data-platform="vimeo" (click)="toggleOnSelection(); openVideoLightbox(post)" title="Watch video">
+            <img [src]="post.linkPreview?.image ? post.linkPreview.image : (post.linkPreview?.url | getVideoIcon)" class="rss-video-placeholder" alt="Click to watch video" width="320" height="180" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" (error)="onImageError($event)">
+            <div class="sayit-video-overlay" aria-hidden="true">
+              <span class="sayit-video-play"><i class="fa-solid fa-play"></i></span>
+            </div>
+          </div>
+          <div class="rss-video-container tiktok sayit-video-thumb" *ngIf="(post.linkPreview.url | getVideoPlatform) === 'tiktok'" attr.data-video-id="{{ post.linkPreview.url | extractVideoId:'tiktok' }}" data-platform="tiktok" (click)="toggleOnSelection(); openVideoLightbox(post)" title="Watch video">
+            <img [src]="post.linkPreview?.image ? post.linkPreview.image : (post.linkPreview?.url | getVideoIcon)" class="rss-video-placeholder" alt="Click to watch video" width="320" height="180" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" (error)="onImageError($event)">
+            <div class="sayit-video-overlay" aria-hidden="true">
+              <span class="sayit-video-play"><i class="fa-solid fa-play"></i></span>
+            </div>
+          </div>
+        </div>
+        <!-- Link Preview -->
+        <div *ngIf="(post.linkPreview && post.linkPreview.url && post.linkPreview.url != ''  && (post.linkPreview.description !=''))" class="link-preview">
+          <div *ngIf="!(post.linkPreview.url | isVideoLink)" class="link-image-container">
+            <img [src]="post.linkPreview.image" class="img-fluid" alt="Link image" width="320" height="180" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" (error)="onImageError($event)" (click)="toggleOnSelection(); openLightbox(post.linkPreview.image)">
+          </div>
+          <div class="link-details">
+            <h5 class="link-title"> <a [href]="post.linkPreview.url" class="link-title" target="_blank">{{ post.linkPreview.title | truncate:100 }}</a></h5>
+            <div class="link-description" [innerHTML]="post.linkPreview.description | truncate:120" [title]="post.linkPreview.description"></div>
+          </div>
+        </div>
+        <div *ngIf="!isAssistantPost(post); else toddMessage">
+          <!-- Regular post content for non-TODD users -->
+          <div class="chat-message mt-2" [innerHTML]="post.content | linkify | truncate:155" [attr.title]="post.content || ''"></div>
+          <!-- Image-only post (use a dedicated attachment field so avatars don't render huge) -->
+          <div *ngIf="post.postImageUrl && !(post.linkPreview && post.linkPreview.url)" class="link-preview">
+            <div class="link-image-container">
+              <img [src]="post.postImageUrl" class="img-fluid" alt="Post image" width="320" height="180" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer" (error)="onImageError($event)" (click)="toggleOnSelection(); openLightbox(post.postImageUrl)">
+            </div>
+          </div>
+        </div>
+        <ng-template #toddMessage>
+          <div class="chat-message mt-2" [innerHTML]="post.content | aicontentextractor | formatAIText | linkify | truncate:155" [attr.title]="post.content || ''"></div>
+        </ng-template>
+      </div>
+      <div style="font-size: x-small" class="mb-2">
+        <span class="rating-icon">{{ getRatingIcon(post.contentRating) }}</span>
+        <span *ngIf="post.ratingExplanation && !post.ratingExplanation.includes('TODD')" class="rating-label" [attr.title]="post.ratingExplanation ? post.ratingExplanation : null"> Content Description: {{post.ratingExplanation}} </span> <span [attr.title]="post.ratingExplanation ? post.ratingExplanation : null"> <i> {{ getRatingDescription(post.contentRating) }}</i></span><br>
+        <div class="category text-capitalize mt-2" *ngIf="post.category">🗂️ Category: {{post.category}}</div><br>
+        <div *ngIf="post.contentRating >= 4">
+          <button class="btn-todd" (click)="toggleBlur(postContent, $event.target)" title="Toggle viewing this "> View Any Way </button>
+        </div>
+      </div>
+      <div class="chat-header sayit-post-header mt-2">
+        <!-- Avatar: link to profile when available; TODD stays unlinked -->
+        <ng-container *ngIf="isAssistantPost(post); else avatarWithPipe">
+          <img [src]="post.imageUrl" class="todd-avatar" [alt]="getAssistantLabel(post)" width="40" height="40" loading="lazy" decoding="async" fetchpriority="low">
+        </ng-container>
+        <ng-template #avatarWithPipe>
+          <ng-container *ngIf="getBusinessProfileIdentifier(post) as profileIdentifier; else avatarNoLink">
+            <a [routerLink]="getBusinessProfileRoute(post)" title="View profile" (click)="trackProfileClick(post, getBusinessProfileRoute(post))">
+              <img [src]="post.authorImageUrl || post.imageUrl || '/assets/nophoto.svg'" class="chat-avatar" [alt]="post.displayName || 'No Photo'" width="40" height="40" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer">
+            </a>
+          </ng-container>
+          <ng-template #avatarNoLink>
+            <img [src]="post.authorImageUrl || post.imageUrl || '/assets/nophoto.svg'" class="chat-avatar" [alt]="post.displayName || 'No Photo'" width="40" height="40" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer">
+          </ng-template>
+        </ng-template>
+        <div class="chat-info mb-2">
+          <h5 class="chat-name" style="font-size: small;">
+            <a *ngIf="getBusinessProfileIdentifier(post) as profileIdentifier; else plainName" [routerLink]="getBusinessProfileRoute(post)" title="View profile" (click)="trackProfileClick(post, getBusinessProfileRoute(post))">
+              {{ getAssistantLabel(post) }}
+            </a>
+            <ng-template #plainName>
+              <span>{{ getAssistantLabel(post) }}</span>
+            </ng-template>
+          </h5>
+          <div class="chat-timestamp mb-2" [title]="post.timestamp | exactTime">
+            {{ post.timestamp | relativeTime }}
+          </div>
+        </div>
+      </div>
+
+      <!-- Comments section -->
+      <div class="sayit-comments-section">
+        <div *ngIf="commentCount(post) > 0" class="sayit-comment-count">
+          {{ commentCount(post) }} {{ commentCount(post) === 1 ? 'comment' : 'comments' }}
+        </div>
+        <div class="sayit-comments-list">
+          <div *ngFor="let comment of getComments(post)" class="sayit-comment-item">
+            <span class="sayit-comment-author">{{ comment.authorDisplayName }}</span>
+            <span class="sayit-comment-content">{{ comment.content }}</span>
+            <button *ngIf="currentUserId && currentUserId === comment.authorUid"
+              class="sayit-comment-delete" title="Delete comment"
+              (click)="onDeleteComment(post, comment)">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+          </div>
+        </div>
+        <div *ngIf="isLoggedIn" class="sayit-comment-input-row">
+          <input type="text" class="sayit-comment-input"
+            placeholder="Add a comment…"
+            maxlength="500"
+            [value]="getCommentDraft(post)"
+            (input)="setCommentDraft(post, $any($event.target).value)"
+            (keydown.enter)="submitComment(post)"
+            [disabled]="isPostingComment(post)">
+          <button class="btn-todd sayit-comment-submit"
+            (click)="submitComment(post)"
+            [disabled]="isPostingComment(post) || !getCommentDraft(post).trim()">
+            <ng-container *ngIf="isPostingComment(post); else postLabel">
+              <i class="fa-solid fa-spinner fa-spin"></i>
+            </ng-container>
+            <ng-template #postLabel>Post</ng-template>
+          </button>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
+<div *ngIf="isImageLightboxOpen && lightboxImage" class="sayit-popup-overlay" (click)="closeLightbox()">
+  <div class="sayit-popup-shell sayit-popup-shell-image" role="dialog" aria-modal="true" aria-label="Image viewer" (click)="$event.stopPropagation()">
+    <button type="button" class="sayit-popup-close" aria-label="Close" (click)="closeLightbox(); toggleOffSelection()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <img [src]="lightboxImage" class="sayit-popup-image" alt="Expanded image" />
+  </div>
+</div>
+<div *ngIf="isVideoLightboxOpen && lightboxVideoUrl" class="sayit-popup-overlay" (click)="closeLightbox()">
+  <div class="sayit-popup-shell sayit-popup-shell-video" role="dialog" aria-modal="true" aria-label="Video player" (click)="$event.stopPropagation()">
+    <button type="button" class="sayit-popup-close" aria-label="Close" (click)="closeLightbox(); toggleOffSelection()">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <iframe *ngIf="lightboxVideoUrl" [src]="lightboxVideoUrl | safeVideoUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="sayit-popup-video">
+    </iframe>
+  </div>
+</div>

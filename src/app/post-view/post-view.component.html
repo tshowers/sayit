@@ -1,0 +1,146 @@
+<div class="container-fluid tal-app post-view-shell mt-4">
+    <div class="post-view-navigation">
+        <button type="button" class="post-view-back" (click)="goBackToPosts()" aria-label="Back to Say It posts">
+            <i class="fa-solid fa-arrow-left"></i> Back to posts
+        </button>
+    </div>
+    <div class="post-view-wrap" *ngIf="post">
+        <article class="post-view-card" [ngClass]="'rating-' + post.contentRating">
+            <header class="post-view-header">
+                <div class="post-view-eyebrow">Say It Post</div>
+                <div class="post-view-author-row">
+                    <div class="post-view-author-media">
+                        <img *ngIf="post.user === 'TODD'" [src]="post.imageUrl" class="todd-avatar post-view-avatar" alt="TODD">
+                        <ng-container *ngIf="post.user !== 'TODD' && getBusinessProfileIdentifier(post) as profileIdentifier; else plainPostAuthorAvatar">
+                            <a [routerLink]="getBusinessProfileRoute(post)" title="View profile">
+                                <img src="assets/nophoto.svg" class="message-chat-avatar post-view-avatar" alt="{{ post.displayName }}">
+                            </a>
+                        </ng-container>
+                        <ng-template #plainPostAuthorAvatar>
+                            <img *ngIf="post.user !== 'TODD'" src="assets/nophoto.svg" class="message-chat-avatar post-view-avatar" alt="{{ post.displayName }}">
+                        </ng-template>
+                        <div class="chat-info post-view-author-copy">
+                            <ng-container *ngIf="post.user !== 'TODD' && getBusinessProfileIdentifier(post) as profileIdentifier; else plainPostAuthorName">
+                                <h1 class="message-chat-name post-view-author-name">
+                                    <a [routerLink]="getBusinessProfileRoute(post)" title="View profile">{{ post.displayName || post.user }}</a>
+                                </h1>
+                            </ng-container>
+                            <ng-template #plainPostAuthorName>
+                                <h1 class="message-chat-name post-view-author-name">{{ post.displayName || post.user }}</h1>
+                            </ng-template>
+                            <div class="message-chat-timestamp post-view-author-time" *ngIf="hasValidTimestamp(post.timestamp)">{{ post.timestamp | relativeTime }}</div>
+                        </div>
+                    </div>
+                    <div class="post-view-meta">
+                        <div class="post-view-category text-capitalize" *ngIf="post.category">🗂️ {{ post.category }}</div>
+                        <div class="post-view-rating">
+                            <span class="rating-icon">{{ getRatingIcon(post.contentRating) }}</span>
+                            <span class="rating-label">{{ getRatingDescription(post.contentRating) }}</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="post-view-body" [class.blur-content]="post.contentRating >= 4" #postContent>
+                <section class="post-view-content-block">
+                    <div *ngIf="post.user != 'TODD'; else toddMessage">
+                        <div class="message-chat-message post-view-message" [innerHTML]="post.content | aicontentextractor | formatAIText | linkify | truncate:155" [attr.title]="post.ratingExplanation ? post.ratingExplanation : null"></div>
+                    </div>
+                    <ng-template #toddMessage>
+                        <div class="message-chat-message post-view-message" [innerHTML]="post.content | aicontentextractor | formatAIText | linkify" [attr.title]="post.ratingExplanation ? post.ratingExplanation : null"></div>
+                    </ng-template>
+                </section>
+                <section class="post-view-media-block" *ngIf="post.linkPreview">
+                    <div *ngIf="hasEmbeddedVideo() && embeddedVideoUrl" class="single-video-container post-view-video-frame">
+                        <iframe [src]="embeddedVideoUrl | safeVideoUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="responsive-iframe"></iframe>
+                    </div>
+                    <div class="link-preview post-view-link-preview">
+                        <div *ngIf="!hasEmbeddedVideo()" class="preview-link-image-container post-view-link-image-wrap">
+                            <img [src]="post.linkPreview.image" class="img-fluid post-view-link-image" alt="Link image" (error)="onImageError($event)" (click)="openLightbox(post.linkPreview.image)">
+                        </div>
+                        <div class="link-details post-view-link-details">
+                            <h2 class="message-link-title post-view-link-title">{{ post.linkPreview.title | truncate:155 }}</h2>
+                            <p class="message-link-description post-view-link-description"><i>{{ post.linkPreview.description | truncate:155 }}</i></p>
+                            <a [href]="post.linkPreview.url" class="btn-ios post-view-link-button" target="_blank">Go to link</a>
+                        </div>
+                    </div>
+                </section>
+                <section class="post-view-media-block" *ngIf="post.postImageUrl && !post.linkPreview">
+                    <div class="post-view-link-preview post-view-image-preview">
+                        <div class="post-view-link-image-wrap">
+                            <img [src]="post.postImageUrl" class="img-fluid post-view-link-image" alt="Post image" (error)="onImageError($event)" (click)="openLightbox(post.postImageUrl)">
+                        </div>
+                    </div>
+                </section>
+                <section class="post-view-actions">
+                    <div class="row g-2 align-items-stretch">
+                        <div class="col-12 col-md-6">
+                            <button class="btn btn-sm btn-primary d-flex align-items-center justify-content-center w-100 post-view-action-btn" (click)="shareContent(post)">
+                                <i class="fa fa-share-alt me-2"></i>
+                                <span style="white-space: nowrap;" title="Bring up a share window so you can share the post with others">Share</span>
+                            </button>
+                        </div>
+                        <div class="col-12 col-md-6" *ngIf="isLoggedIn">
+                            <div class="favorite-section">
+                                <button class="btn btn-sm btn-outline-primary position-relative d-flex align-items-center justify-content-center w-100 post-view-action-btn" (click)="favoritePost(post, $event)">
+                                    <i class="fa-regular fa-heart me-2"></i><span>Favor</span>
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" *ngIf="post.favoriteCount > 0">
+                                        {{ post.favoriteCount || 0 }}
+                                        <span class="visually-hidden">favored</span>
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-12" *ngIf="isLoggedIn && post.user !== 'TODD'">
+                            <button type="button" class="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center w-100 post-view-action-btn" (click)="expressInterest()" [disabled]="interestBusy">
+                                <i class="fa-solid fa-handshake me-2"></i>{{ interestBusy ? 'Sending…' : 'I’m interested' }}
+                            </button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <footer class="post-view-footer">
+                <div class="post-view-rating-explainer">
+                    <span class="rating-icon">{{ getRatingIcon(post.contentRating) }}</span>
+                    <span class="rating-label">Content Rating:</span>
+                    <i>{{ getRatingDescription(post.contentRating) }}</i>
+                </div>
+                <div class="post-view-rating-notes" *ngIf="post.ratingExplanation">{{ post.ratingExplanation }}</div>
+                <div *ngIf="post.contentRating >= 4" class="post-view-warning-action">
+                    <button class="btn-ios btn-warning" (click)="toggleBlur(postContent)">View Any Way</button>
+                </div>
+            </footer>
+            <section class="post-view-comments">
+                <div class="post-view-comments-heading">
+                    <h2>Comments</h2>
+                    <span *ngIf="commentsLoading">Loading…</span>
+                    <span *ngIf="!commentsLoading">{{ comments.length }} {{ comments.length === 1 ? 'comment' : 'comments' }}</span>
+                </div>
+                <div *ngIf="comments.length; else noDetailComments" class="post-view-comments-list">
+                    <div *ngFor="let comment of comments" class="post-view-comment">
+                        <strong>{{ comment.authorDisplayName }}</strong>
+                        <span>{{ comment.content }}</span>
+                    </div>
+                </div>
+                <ng-template #noDetailComments>
+                    <p class="post-view-no-comments">No comments yet.</p>
+                </ng-template>
+                <form *ngIf="isLoggedIn" class="post-view-comment-form" (ngSubmit)="submitComment()">
+                    <input type="text" name="comment" [(ngModel)]="commentDraft" maxlength="500" placeholder="Add a comment…" aria-label="Add a comment">
+                    <button type="submit" class="btn btn-primary" [disabled]="commentBusy || !commentDraft.trim()">{{ commentBusy ? 'Posting…' : 'Post' }}</button>
+                </form>
+                <p *ngIf="!isLoggedIn" class="post-view-signin-hint">Sign in to join the conversation.</p>
+            </section>
+        </article>
+    </div>
+</div>
+<div *ngIf="isImageLightboxOpen && lightboxImage" class="image-lightbox-overlay" (click)="closeLightbox()">
+    <div class="image-lightbox-dialog" role="dialog" aria-modal="true" aria-label="Image viewer" (click)="$event.stopPropagation()">
+        <div class="image-lightbox-body">
+            <img *ngIf="lightboxImage" [src]="lightboxImage" class="lightbox-img img-fluid" alt="Lightbox image">
+        </div>
+        <div class="image-lightbox-footer">
+            <button type="button" class="btn btn-outline-light btn-close-custom" (click)="closeLightbox()">Close</button>
+        </div>
+    </div>
+</div>
+<app-back-to-top></app-back-to-top>

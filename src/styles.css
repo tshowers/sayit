@@ -1,1 +1,489 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --color-primary: #00bfff;
+  --color-primary-hover: #0095cc;
+  --color-primary-active: #006a99;
+  --color-primary-disabled: #d0f0ff;
+  --color-danger: #dc3545;
+  --color-danger-hover: #c82333;
+  --color-danger-active: #bd2130;
+  --color-danger-disabled: #f5b5bb;
+  --color-dark-text: #000;
+  --color-light-text: #fff;
+  --neutral-lightest: #fefefe;
+  --neutral-lighter: #f2f2f2;
+  --neutral-light: #ddd;
+  --neutral: #ccc;
+  --neutral-dark: #888;
+  --neutral-darker: #555;
+  --link-color: var(--color-primary);
+  --link-hover: var(--color-primary-hover);
+  --border-radius: 25px;
+  --btn-padding: 0.55rem 1.25rem;
+  --btn-font-size: 0.95rem;
+  --btn-font-weight: 500;
+  --btn-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  --color-link-button: #0095cc;
+  --color-link-button-hover: #006a99;
+  --color-muted-text: #666;
+  --color-muted-dark: #999;
+  --color-warning: #ffc107;
+  --color-modal-dark-bg: #1c1c1c;
+  --color-neutral-text: #333;
+  --color-neutral-bg: rgba(248, 249, 250, 0.92);
+  --color-avatar-border: #00bfff;
+  --color-dropzone-border: #0095cc;
+  --color-dropzone-hover: rgba(240, 242, 245, 0.82);
+  --color-step-pill-bg: rgba(232, 236, 240, 0.82);
+  --color-step-pill-text: #006a99;
+  --bs-primary: #0095cc;
+  --bs-primary-rgb: 0, 149, 204;
+  --bs-link-color: #0095cc;
+  --bs-link-color-rgb: 0, 149, 204;
+  --bs-link-hover-color: #006a99;
+  --bs-link-hover-color-rgb: 0, 106, 153;
+  --tl-blue: #00bfff;
+  --tl-blue-mid: #0095cc;
+  --tl-blue-deep: #006a99;
+  --tl-blue-light: #d0f0ff;
+  --tl-blue-glow: rgba(0, 191, 255, 0.18);
+  --tl-blue-glow-strong: rgba(0, 191, 255, 0.45);
+  --tl-blue-subtle: rgba(0, 191, 255, 0.10);
+  --tl-blue-border: rgba(0, 191, 255, 0.20);
+  --tl-amber: #de8b38;
+  --tl-amber-rgb: 194, 101, 10;
+  --tl-amber-ink: #ffffff;
+}
+
+:root {
+  --todd-panel-bg: rgba(255, 255, 255, 0.94);
+  --todd-panel-border: rgba(0, 0, 0, .08);
+  --todd-panel-text: #222;
+  --todd-panel-subtext: #555;
+
+  --todd-bg: var(--todd-panel-bg);
+  --todd-text: var(--todd-panel-text);
+  --todd-subtext: var(--todd-panel-subtext);
+  --todd-border: var(--todd-panel-border);
+
+  --todd-surface-1: rgba(255, 255, 255, 0.92);
+  --todd-surface-2: rgba(248, 249, 250, 0.9);
+
+  --todd-input-bg: rgba(255, 255, 255, 0.92);
+  --todd-input-border: rgba(0, 0, 0, .18);
+  --todd-placeholder: #777;
+
+  --todd-table-cell-bg: rgba(255, 255, 255, 0.92);
+  --todd-table-row-even-bg: #f7f7f7;
+  --todd-table-row-hover-bg: rgba(236, 239, 242, 0.88);
+
+  --todd-navbar-bg: rgba(255, 255, 255, 0.92);
+  --todd-card-bg: rgba(255, 255, 255, 0.92);
+  --todd-modal-bg: rgba(255, 255, 255, 0.94);
+  --todd-modal-chrome-bg: rgba(248, 249, 250, 0.9);
+  --todd-btn-bg: #f2f2f2;
+  --todd-btn-text: #111;
+
+  --todd-link: #0095cc;
+
+  --page-text: var(--todd-panel-text);
+  --field-bg: linear-gradient(180deg, rgba(248, 250, 252, 0.95), rgba(241, 245, 249, 0.95));
+  --field-border: rgba(148, 163, 184, 0.22);
+  --field-placeholder: rgba(100, 116, 139, 0.88);
+  --field-text: #0f172a;
+  --field-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  --focus-ring: rgba(0, 149, 204, 0.55);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --todd-panel-bg: #0d1117;
+    --todd-panel-border: rgba(0, 191, 255, 0.12);
+    --todd-panel-text: #f0f6ff;
+    --todd-panel-subtext: #8ba4bd;
+
+    --todd-bg: var(--todd-panel-bg);
+    --todd-text: var(--todd-panel-text);
+    --todd-subtext: var(--todd-panel-subtext);
+    --todd-border: var(--todd-panel-border);
+
+    --todd-surface-1: #131c27;
+    --todd-surface-2: #1a2535;
+
+    --todd-input-bg: #1a2535;
+    --todd-input-border: rgba(0, 191, 255, 0.28);
+    --todd-placeholder: #5e7a94;
+
+    --todd-table-cell-bg: #1a2535;
+    --todd-table-row-even-bg: #131c27;
+    --todd-table-row-hover-bg: #1f3048;
+
+    --todd-navbar-bg: #131c27;
+    --todd-card-bg: #1a2535;
+    --todd-modal-bg: #131c27;
+    --todd-modal-chrome-bg: #1a2535;
+    --todd-btn-bg: #1f2d40;
+    --todd-btn-text: #e8f4ff;
+
+    --todd-link: #00bfff;
+
+    --tl-amber: #fcc168;
+    --tl-amber-rgb: 255, 181, 69;
+    --tl-amber-ink: #2b1400;
+
+    --page-text: var(--todd-panel-text);
+    --field-bg: linear-gradient(180deg, rgba(27, 30, 36, 0.88), rgba(20, 23, 29, 0.82));
+    --field-border: rgba(148, 163, 184, 0.18);
+    --field-placeholder: rgba(148, 163, 184, 0.72);
+    --field-text: #f8fafc;
+    --field-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    --focus-ring: rgba(0, 191, 255, 0.65);
+  }
+
+  .btn-close {
+    filter: invert(1);
+  }
+}
+
+body {
+  background: var(--todd-bg);
+  color: var(--todd-text);
+  margin: 0;
+}
+
+/* ─── TODD Global Field Styles (source of truth: task-edit.component.css) ─── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--page-text, #0f172a);
+}
+
+.form-control,
+.form-select,
+.todd-select,
+.multi-select {
+  width: 100%;
+  min-height: 48px;
+  border-radius: 16px;
+  border: 1px solid var(--field-border);
+  background: var(--field-bg);
+  color: var(--field-text);
+  box-shadow: var(--field-shadow);
+  padding: 0.85rem 0.95rem;
+  font-family: 'Segoe UI', 'Inter', sans-serif;
+  font-size: 0.95rem;
+}
+
+.form-select,
+.todd-select {
+  padding-right: 2.5rem;
+  font-weight: 700;
+}
+
+@media (prefers-color-scheme: dark) {
+
+  .form-select option,
+  .todd-select option {
+    background-color: #1e2127;
+    color: #f8fafc;
+  }
+}
+
+.form-control::placeholder,
+textarea.form-control::placeholder,
+.multi-select::placeholder {
+  color: var(--field-placeholder);
+}
+
+.form-control:focus,
+.form-select:focus,
+.multi-select:focus {
+  outline: none;
+  border-color: rgba(250, 250, 250, 0.54);
+  box-shadow: 0 0 0 4px var(--focus-ring), 0 10px 24px rgba(37, 99, 235, 0.10);
+  background: var(--field-bg);
+  color: var(--field-text);
+}
+
+.form-control:disabled,
+.form-select:disabled,
+.multi-select:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+textarea.form-control {
+  min-height: 140px;
+  resize: vertical;
+}
+
+/* ─── Toast notifications ─── */
+.todd-notification {
+  position: fixed;
+  top: 3.5rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  z-index: 2000;
+  min-width: 280px;
+  max-width: 360px;
+  padding: 0.75rem 1.25rem;
+
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(255, 255, 255, 0.08);
+  color: #0f172a;
+  backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset, 0 8px 20px rgba(2, 6, 23, .12);
+
+  font-size: 0.85rem;
+  border-radius: 25px;
+
+  border-left: 4px solid var(--color-primary);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.todd-notification.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 480px) {
+  .todd-notification {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%) translateY(20px);
+    width: 90%;
+    max-width: 90%;
+  }
+
+  .todd-notification.show {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.todd-notification h4 {
+  font-size: 1rem;
+  margin: 0 0 0.25rem;
+  font-weight: 600;
+}
+
+.todd-notification p {
+  margin: 0;
+  font-size: 0.85rem;
+}
+
+.todd-notification .btn-close {
+  position: absolute;
+  right: 0.75rem;
+  top: 0.75rem;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: var(--color-muted-text);
+  cursor: pointer;
+}
+
+.todd-notification .btn-close:hover {
+  color: #000;
+}
+
+.todd-notification.success {
+  border-left-color: var(--color-primary);
+}
+
+.todd-notification.error {
+  border-left-color: var(--color-danger);
+}
+
+.todd-notification.warning {
+  border-left-color: var(--color-warning);
+}
+
+@media (prefers-color-scheme: dark) {
+  .todd-notification .btn-close:hover {
+    color: #fff;
+  }
+
+  .todd-notification {
+    color: #e5e7eb;
+    background: rgba(31, 41, 55, .6);
+    border-color: rgba(75, 85, 99, .6);
+  }
+}
+
+/* ─── TODD button (.btn-todd) ─── */
+.btn-todd {
+  margin-top: 5px;
+  padding: 0.72rem 1.2rem;
+  font-size: var(--btn-font-size);
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  border-radius: 18px;
+  border: 1px solid rgba(0, 149, 204, 0.24);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(235, 242, 247, 0.74));
+  color: #0d1820;
+  font-family: 'Segoe UI', 'Inter', sans-serif;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    0 14px 34px rgba(15, 23, 42, 0.10),
+    0 0 0 1px rgba(255, 255, 255, 0.55);
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease,
+    transform 0.18s ease;
+}
+
+.btn-todd-sm {
+  padding: 0.56rem 0.95rem;
+  font-size: 0.85rem;
+  min-height: 38px;
+  border-radius: 15px;
+}
+
+.btn-todd.icon-only {
+  padding: 0;
+  width: 42px;
+  height: 42px;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  border-radius: 16px;
+}
+
+.btn-todd.active {
+  background:
+    linear-gradient(180deg, rgba(0, 191, 255, 0.20), rgba(0, 149, 204, 0.14));
+  border-color: rgba(0, 149, 204, 0.46);
+  color: #06101a;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.76),
+    0 16px 36px rgba(0, 149, 204, 0.16),
+    0 0 0 3px rgba(0, 191, 255, 0.12);
+}
+
+.btn-todd-left {
+  font-size: 0.9rem;
+  border: 1px solid rgba(0, 149, 204, 0.24);
+  display: inline-flex;
+  justify-content: flex-start;
+  align-items: center;
+  text-align: left;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  width: auto;
+}
+
+.btn-todd-left i {
+  margin-right: 0.5rem;
+}
+
+.btn-todd:disabled {
+  background: rgba(226, 232, 240, 0.58);
+  color: var(--color-muted-text);
+  border-color: rgba(203, 213, 225, 0.58);
+  cursor: not-allowed;
+  opacity: 0.68;
+  box-shadow: none;
+  transform: none;
+}
+
+.btn-todd:hover,
+.btn-todd:focus {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(226, 241, 250, 0.82));
+  border-color: rgba(0, 191, 255, 0.50);
+  color: #06101a;
+  text-decoration: none;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 18px 40px rgba(15, 23, 42, 0.14),
+    0 0 0 3px var(--tl-blue-glow);
+  transform: translateY(-1px);
+}
+
+.btn-todd:active {
+  background:
+    linear-gradient(180deg, rgba(216, 234, 244, 0.88), rgba(241, 247, 250, 0.76));
+  border-color: rgba(0, 149, 204, 0.42);
+  box-shadow:
+    inset 0 2px 10px rgba(15, 23, 42, 0.13),
+    0 7px 18px rgba(15, 23, 42, 0.10);
+  transform: translateY(0);
+}
+
+@media (prefers-color-scheme: dark) {
+  .btn-todd {
+    background:
+      linear-gradient(180deg, rgba(31, 45, 64, 0.82), rgba(13, 20, 31, 0.78));
+    color: #f0f8ff;
+    border: 1px solid rgba(0, 191, 255, 0.22);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 14px 34px rgba(0, 0, 0, 0.42),
+      0 0 0 1px rgba(255, 255, 255, 0.03);
+  }
+
+  .btn-todd:hover,
+  .btn-todd:focus {
+    background:
+      linear-gradient(180deg, rgba(40, 58, 80, 0.92), rgba(17, 30, 46, 0.86));
+    border-color: rgba(0, 191, 255, 0.48);
+    color: #ffffff;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 18px 42px rgba(0, 0, 0, 0.50),
+      0 0 0 3px var(--tl-blue-glow);
+  }
+
+  .btn-todd:active {
+    background:
+      linear-gradient(180deg, rgba(9, 16, 26, 0.92), rgba(18, 31, 48, 0.82));
+    border-color: rgba(0, 191, 255, 0.28);
+    box-shadow:
+      inset 0 2px 10px rgba(0, 0, 0, 0.38),
+      0 8px 18px rgba(0, 0, 0, 0.36);
+  }
+
+  .btn-todd:disabled {
+    background: rgba(51, 65, 85, 0.34);
+    color: #94a3b8;
+    border-color: rgba(148, 163, 184, 0.16);
+    cursor: not-allowed;
+    opacity: 0.58;
+    box-shadow: none;
+    transform: none;
+  }
+
+  .btn-todd.active {
+    background:
+      linear-gradient(180deg, rgba(0, 191, 255, 0.22), rgba(0, 106, 153, 0.18));
+    border-color: rgba(0, 191, 255, 0.42);
+    color: #ffffff;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.12),
+      0 18px 42px rgba(0, 0, 0, 0.48),
+      0 0 0 3px rgba(0, 191, 255, 0.10);
+  }
+}

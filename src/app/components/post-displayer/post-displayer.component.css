@@ -1,0 +1,839 @@
+/* 
+  NOTE: The styles in this file have been migrated to the global stylesheet (styles.css).
+  It is safe to remove this file after validating correct appearance across the application.
+*/
+
+a {
+  color: black;
+}
+
+.modal-content {
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header,
+.modal-footer {
+  border: none;
+  padding: 1rem 1.5rem;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.modal-body {
+  padding: 1.5rem;
+  font-size: 0.95rem;
+}
+
+.modal-footer .btn {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.9rem;
+  border-radius: 10px;
+}
+
+.modal .form-label {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.modal .form-control,
+.modal .form-check-input {
+  border-radius: 10px;
+}
+
+.modal .form-check-label {
+  margin-left: 0.5rem;
+}
+
+/* Add spacing between sections */
+.modal-body .form-check,
+.modal-body input,
+.modal-body label {
+  margin-bottom: 1rem;
+}
+
+/* --- Group Manager Modal style overrides for improved consistency and dark mode --- */
+#groupManagerModal .modal-content {
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+#groupManagerModal .modal-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: transparent;
+}
+
+#groupManagerModal .modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+#groupManagerModal .modal-body {
+  padding: 1.5rem;
+}
+
+/* Group Create Modal style overrides for consistency */
+#groupModal .modal-content {
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+#groupModal .modal-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: transparent;
+}
+
+#groupModal .modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+#groupModal .modal-body {
+  padding: 1.5rem;
+}
+
+@media (prefers-color-scheme: dark) {
+
+
+  a {
+    color: white;
+  }
+
+  a:hover {
+    color: #3399FF;
+  }
+
+
+  #groupManagerModal .modal-content {
+    background: rgba(19, 28, 39, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  #groupManagerModal .modal-title {
+    color: #f0f0f0;
+  }
+
+  #groupManagerModal .modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  #groupModal .modal-content {
+    background: rgba(19, 28, 39, 0.92);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  #groupModal .modal-title {
+    color: #f0f0f0;
+  }
+
+  #groupModal .modal-header {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Dark mode support for general modals */
+@media (prefers-color-scheme: dark) {
+  .modal-content {
+    background: rgba(19, 28, 39, 0.92) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .modal-title,
+  .modal .form-label,
+  .modal .form-check-label,
+  .modal-body,
+  .form-text {
+    color: #f0f0f0;
+  }
+
+  .form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+  }
+
+  .btn-close {
+    filter: invert(1);
+  }
+}
+
+/* Override bg-light utility for group manager modal */
+#groupManagerModal .modal-content.bg-light {
+  background-color: transparent !important;
+}
+
+.chat-name a {
+  text-decoration: none;
+}
+
+.chat-name a:hover {
+  text-decoration: underline;
+}
+
+/* Interested button: visible in light mode (btn-outline-light disappears on white backgrounds) */
+.btn-interest {
+  border-width: 1px;
+}
+
+@media (prefers-color-scheme: light) {
+  .btn-interest {
+    border-color: rgba(0, 0, 0, 0.22) !important;
+    color: rgba(15, 15, 20, 0.92) !important;
+    background: rgba(0, 0, 0, 0.03) !important;
+  }
+
+  .btn-interest:hover {
+    border-color: rgba(0, 0, 0, 0.35) !important;
+    background: rgba(0, 0, 0, 0.06) !important;
+  }
+
+  .btn-interest:disabled {
+    opacity: 0.55;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+
+  /* keep the original outline-light look in dark mode */
+  .btn-interest {
+    border-color: rgba(255, 255, 255, 0.75) !important;
+    color: rgba(255, 255, 255, 0.95) !important;
+    background: transparent !important;
+  }
+
+  .btn-interest:hover {
+    background: rgba(255, 255, 255, 0.10) !important;
+  }
+}
+
+/* --------------------------------------------------
+   SayIt post displayer styles (component-scoped)
+   These override shared global scroll/card styles only for this component.
+--------------------------------------------------- */
+
+.sayit-post-strip {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  min-height: 0 !important;
+  padding: 0.35rem 0 0.75rem !important;
+  gap: 1rem !important;
+  align-items: stretch;
+  border-radius: 0 !important;
+}
+
+.sayit-post-strip.horizontal-scroll-container,
+.sayit-post-strip.chat-horizontal-scroll {
+  display: flex;
+  flex-direction: row;
+  overflow-x: auto;
+  overflow-y: visible;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+}
+
+.sayit-post-strip::-webkit-scrollbar {
+  height: 10px;
+}
+
+.sayit-post-strip::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.28);
+  border-radius: 999px;
+}
+
+.sayit-post-strip::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sayit-post-card {
+  flex: 0 0 clamp(300px, 27vw, 360px);
+  min-width: clamp(300px, 27vw, 360px);
+  max-width: clamp(300px, 27vw, 360px);
+  max-height: 560px;
+  min-height: 455px;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1rem 0.9rem;
+  border-radius: 28px;
+  border: 1px solid rgba(15, 15, 15, 0.08);
+  box-shadow: 0 20px 40px rgba(15, 15, 15, 0.10);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  scroll-snap-align: start;
+  overflow: hidden;
+}
+
+/* Keep the feed rhythm steady without stretching every card to the tallest post. */
+.sayit-post-main {
+  flex: 0 1 auto;
+  min-height: 0;
+  max-height: 230px;
+  overflow: hidden;
+}
+
+.sayit-post-main .chat-message {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+}
+
+/* Comments section pinned to the bottom of the card */
+.sayit-comments-section {
+  margin-top: auto;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(15, 15, 15, 0.07);
+  flex-shrink: 0;
+}
+
+.sayit-comment-count {
+  font-size: 0.7rem;
+  color: rgba(0,0,0,0.45);
+  margin-bottom: 0.3rem;
+}
+
+.sayit-comments-list {
+  max-height: 140px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 0.4rem;
+}
+
+.sayit-comment-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  line-height: 1.35;
+}
+
+.sayit-comment-author {
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.sayit-comment-content {
+  color: rgba(0,0,0,0.75);
+  word-break: break-word;
+  flex: 1;
+}
+
+.sayit-comment-delete {
+  background: none;
+  border: none;
+  padding: 0 2px;
+  color: rgba(0,0,0,0.3);
+  cursor: pointer;
+  font-size: 0.65rem;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.sayit-comment-delete:hover {
+  color: crimson;
+}
+
+.sayit-comment-input-row {
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.sayit-comment-input {
+  flex: 1;
+  border: 1px solid rgba(15, 15, 15, 0.15);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  outline: none;
+  background: rgba(255,255,255,0.6);
+}
+
+.sayit-comment-input:focus {
+  border-color: rgba(15, 15, 15, 0.35);
+}
+
+.sayit-comment-submit {
+  font-size: 0.72rem;
+  padding: 0.25rem 0.7rem;
+  flex-shrink: 0;
+}
+
+.sayit-post-actions {
+  margin-bottom: 0.9rem !important;
+  padding-top: 0.15rem !important;
+}
+
+.sayit-post-card .chat-message {
+  color: #0f172a;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+}
+
+.sayit-post-card .chat-message a,
+.sayit-post-card .link-title,
+.sayit-post-card .link-title a,
+.sayit-post-card .chat-name a,
+.sayit-post-card .chat-name span {
+  color: #0f172a;
+}
+
+.sayit-post-card .chat-name {
+  margin: 0;
+  font-size: 0.98rem !important;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.sayit-post-card .chat-timestamp,
+.sayit-post-card .link-description,
+.sayit-post-card .category,
+.sayit-post-card .rating-label,
+.sayit-post-card [style*="font-size: x-small"] {
+  color: rgba(15, 15, 15, 0.68);
+}
+
+.sayit-post-card .chat-info {
+  min-width: 0;
+}
+
+.sayit-post-card .chat-header,
+.sayit-post-card .sayit-post-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sayit-post-card .chat-avatar,
+.sayit-post-card .todd-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 999px;
+  object-fit: cover;
+  flex: 0 0 54px;
+}
+
+/* Replaced .video-lightbox-dialog block */
+.video-lightbox-dialog {
+  position: relative;
+  z-index: 1081;
+  width: min(92vw, 1100px);
+  max-width: min(92vw, 1100px);
+  max-height: calc(100vh - 2.5rem);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  border-radius: 22px;
+  background: #000;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.68);
+  contain: layout paint;
+  isolation: isolate;
+}
+
+/* Replaced .video-lightbox-body block */
+.video-lightbox-body {
+  padding: 0;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* Replaced .video-lightbox-footer block */
+.video-lightbox-footer {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 1.25rem 1.1rem;
+  background: #000;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  flex: 0 0 auto;
+}
+
+/* Replaced .lightbox-video block */
+.lightbox-video {
+  display: block;
+  width: min(100%, 900px);
+  max-width: 100%;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  max-height: calc(100vh - 8rem);
+  border: 0;
+  outline: 0;
+  background: #000;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: transform;
+}
+
+
+.sayit-post-card .link-preview {
+  margin-top: 0.7rem;
+  margin-bottom: 0.85rem;
+  overflow: hidden;
+  border-radius: 20px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+
+.sayit-post-card .link-image-container {
+  overflow: hidden;
+}
+
+.sayit-post-card .link-image-container img,
+.sayit-post-card .rss-video-placeholder {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.sayit-post-card .link-details {
+  padding: 0.85rem 0.9rem 0.95rem;
+}
+
+.sayit-post-card .favorite-badge {
+  box-shadow: 0 6px 16px rgba(220, 38, 38, 0.28);
+}
+
+.sayit-post-card .btn-interest {
+  border-radius: 999px;
+  padding-left: 0.8rem;
+  padding-right: 0.8rem;
+  font-weight: 700;
+}
+
+.sayit-post-card .actions-container i,
+.sayit-post-card .actions-container a {
+  color: inherit;
+}
+
+@media (max-width: 767.98px) {
+  .sayit-post-strip {
+    gap: 0.85rem !important;
+    padding-top: 0.1rem !important;
+  }
+
+  .sayit-post-card {
+    flex: 0 0 min(82vw, 340px);
+    min-width: min(82vw, 340px);
+    max-width: min(82vw, 340px);
+    min-height: 430px;
+    border-radius: 24px;
+    padding: 0.95rem 0.9rem 0.85rem;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .sayit-post-strip {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .sayit-post-card {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.10);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+  }
+
+  .sayit-post-card .chat-message,
+  .sayit-post-card .chat-message a,
+  .sayit-post-card .link-title,
+  .sayit-post-card .link-title a,
+  .sayit-post-card .chat-name a,
+  .sayit-post-card .chat-name span {
+    color: #f8fafc;
+  }
+
+  .sayit-post-card .chat-timestamp,
+  .sayit-post-card .link-description,
+  .sayit-post-card .category,
+  .sayit-post-card .rating-label,
+  .sayit-post-card [style*="font-size: x-small"] {
+    color: rgba(232, 232, 232, 0.72);
+  }
+
+  .sayit-post-card .link-preview {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.10);
+  }
+
+  .sayit-post-signal-badge {
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    color: rgba(248, 250, 252, 0.96);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.18);
+  }
+
+  .sayit-post-signal-badge.secondary {
+    background: rgba(255, 255, 255, 0.10);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: rgba(232, 232, 232, 0.92);
+  }
+
+  .sayit-post-card .btn-interest {
+    border-color: rgba(255, 255, 255, 0.58) !important;
+    color: rgba(255, 255, 255, 0.92) !important;
+    background: rgba(255, 255, 255, 0.04) !important;
+  }
+
+  .sayit-post-card .btn-interest:hover {
+    background: rgba(255, 255, 255, 0.10) !important;
+  }
+}
+
+/* --------------------------------------------------
+   Video lightbox overlay
+--------------------------------------------------- */
+
+.video-lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1080;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  background: rgba(2, 6, 23, 0.94);
+  overflow: hidden;
+}
+
+@media (max-width: 767.98px) {
+  .video-lightbox-overlay {
+    padding: 0.5rem;
+  }
+
+  .video-lightbox-dialog {
+    width: calc(100vw - 1rem);
+    max-width: calc(100vw - 1rem);
+    max-height: calc(100vh - 1rem);
+    border-radius: 18px;
+  }
+
+  .lightbox-video {
+    width: 100%;
+    max-height: calc(100vh - 7.5rem);
+  }
+
+  .video-lightbox-footer {
+    padding: 0.75rem 1rem 1rem;
+  }
+
+  .video-lightbox-footer .btn-close-custom {
+    width: 100%;
+  }
+}
+
+/* --------------------------------------------------
+   SayIt video thumbnail overlay + click safety
+--------------------------------------------------- */
+
+.sayit-video-thumb {
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.sayit-video-thumb .rss-video-placeholder {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.sayit-video-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, rgba(15, 15, 15, 0.10), rgba(15, 15, 15, 0.34));
+  transition: background 160ms ease;
+  pointer-events: none;
+}
+
+.sayit-video-play {
+  width: 58px;
+  height: 58px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(15, 15, 15, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.24);
+  pointer-events: none;
+}
+
+.sayit-video-play i {
+  color: #ffffff;
+  font-size: 1.15rem;
+  margin-left: 0.12rem;
+}
+
+
+@media (max-width: 767.98px) {
+  .sayit-video-play {
+    width: 52px;
+    height: 52px;
+  }
+}
+
+/* --------------------------------------------------
+   Image / video popup
+--------------------------------------------------- */
+
+.sayit-popup-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.sayit-popup-shell {
+  position: relative;
+  max-width: min(94vw, 1280px);
+  max-height: min(92vh, 980px);
+  overflow: hidden;
+  isolation: isolate;
+  contain: layout paint;
+}
+
+.sayit-popup-shell-image {
+  width: auto;
+  height: auto;
+}
+
+.sayit-popup-shell-video {
+  width: min(94vw, 1100px);
+  margin: 0 auto;
+  background: #000;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    0 0 42px rgba(0, 0, 0, 0.72),
+    0 0 96px rgba(0, 0, 0, 0.90);
+}
+
+.sayit-popup-close {
+  position: absolute;
+  top: -0.85rem;
+  right: -0.85rem;
+  z-index: 2;
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.78);
+  color: #fff;
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+}
+
+
+.sayit-popup-image {
+  display: block;
+  max-width: min(94vw, 1280px);
+  max-height: min(88vh, 960px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  box-shadow: 0 38px 90px rgba(0, 0, 0, 0.72);
+}
+
+.sayit-popup-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  box-shadow: none;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+.sayit-post-signal-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.35rem;
+}
+
+.sayit-post-signal-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.38rem 0.68rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(71, 85, 105, 0.16);
+  color: #334155;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  box-shadow: 0 8px 18px rgba(15, 15, 15, 0.08);
+}
+
+.sayit-post-signal-badge.secondary {
+  background: rgba(232, 232, 232, 0.86);
+  border-color: rgba(100, 116, 139, 0.16);
+  color: #1e293b;
+}
+
+@media (max-width: 767.98px) {
+  .sayit-popup-overlay {
+    padding: 0.75rem;
+  }
+
+  .sayit-popup-shell-video {
+    width: calc(100vw - 1.5rem);
+  }
+
+  .sayit-popup-close {
+    top: -0.45rem;
+    right: -0.45rem;
+    width: 38px;
+    height: 38px;
+  }
+
+  .sayit-popup-image {
+    max-width: calc(100vw - 1.5rem);
+    max-height: calc(100vh - 3rem);
+  }
+}
