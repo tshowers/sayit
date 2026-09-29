@@ -17,7 +17,7 @@ import { RouterModule } from '@angular/router';
 import { NotificationService } from '../services/notification.service';
 import { formatDistanceToNow, format } from 'date-fns';
 import { environment } from '../../environments/environment';
-import { buildSayitShareUrl } from '../shared/public-app-url.util';
+import { buildSayitPostUrl } from '../shared/public-app-url.util';
 import { BackToTopComponent } from '../shared/back-to-top/back-to-top.component';
 import { SafeVideoUrlPipe } from '../pipes/safe-video-url-pipe';
 import { SayItComment, SayItService } from '../services/say-it-service';
@@ -418,7 +418,7 @@ export class PostViewComponent implements OnInit, OnDestroy {
   private buildPostShareUrl ( post: Post ): string {
     const postId = post?.id ? String( post.id ).trim() : '';
     return postId
-      ? buildSayitShareUrl( 'post', postId )
+      ? buildSayitPostUrl( postId )
       : window.location.href;
   }
 

@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { sayItSignInGuard } from './guards/sayit-signin.guard';
 import { sayItProfilePageGuard } from './guards/sayit-profile-page.guard';
+import { legacyPostLinkGuard } from './guards/legacy-post-link.guard';
 
 export const routes: Routes = [
   {
@@ -8,6 +9,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import( './chat-board/chat-board.component' ).then( ( m ) => m.ChatBoardComponent ),
     title: 'Say It',
+    canActivate: [legacyPostLinkGuard],
   },
   {
     path: 'businesses',
@@ -45,8 +47,9 @@ export const routes: Routes = [
     path: 'post/:id',
     loadComponent: () =>
       import( './post-view/post-view.component' ).then( ( m ) => m.PostViewComponent ),
+    // Public, so shared links work for anyone; the page itself hides
+    // commenting and other actions until the visitor signs in.
     title: 'Say It - Post',
-    canActivate: [sayItSignInGuard],
   },
   {
     path: 'not-authorized',

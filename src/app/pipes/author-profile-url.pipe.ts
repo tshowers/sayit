@@ -18,9 +18,6 @@ export class AuthorProfileUrlPipe implements PipeTransform {
       const uid = (post as any).userId || (post as any).user;
       if (uid) return ['/business', String(uid)];
 
-      const contactId: any = (post as any).authorContactId;
-      if (contactId) return ['/p', String(contactId)];
-
       return null;
     } catch {
       return null;

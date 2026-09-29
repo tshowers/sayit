@@ -34,6 +34,7 @@ import {
 } from 'rxjs';
 import { RssFeedService } from '../../services/rss-feed.service';
 import {
+  buildSayitPostUrl,
   buildSayitShareUrl,
   getSayitHomeUrl,
   getToddHomeUrl
@@ -176,7 +177,7 @@ export class NewsDisplayerComponent implements OnInit {
   private buildPostShareUrl ( post: any ): string {
     const postId = String( post?.id || '' ).trim();
     if ( postId && post?.category !== 'news' ) {
-      return `${getToddHomeUrl()}/post/${encodeURIComponent( postId )}`;
+      return buildSayitPostUrl( postId );
     }
     return getSayitHomeUrl();
   }

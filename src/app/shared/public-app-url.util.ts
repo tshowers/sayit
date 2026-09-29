@@ -60,8 +60,18 @@ export function getSayitHomeUrl (): string {
   return 'https://sayit.taliferro.tech';
 }
 
+/** Public link to a single post - opens the isolated post view (and the iOS app, via Universal Links). */
+export function buildSayitPostUrl ( postId: string ): string {
+  const normalizedId = String( postId || '' ).trim();
+  if ( !normalizedId ) {
+    return getSayitHomeUrl();
+  }
+
+  return `${getSayitHomeUrl()}/post/${encodeURIComponent( normalizedId )}`;
+}
+
 export function buildSayitShareUrl (
-  queryKey: 'post' | 'news',
+  queryKey: 'news',
   queryValue: string
 ): string {
   const normalizedValue = String( queryValue || '' ).trim();

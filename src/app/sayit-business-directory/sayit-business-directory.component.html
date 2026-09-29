@@ -1,5 +1,5 @@
 <app-preloader [isLoading]="loading"></app-preloader>
-<div class="sayit-directory-shell container-fluid" *ngIf="!loading">
+<div class="sayit-directory-shell container-fluid" data-cy="directory-shell" *ngIf="!loading">
     <div class="row justify-content-center">
         <div class="col-12 col-xl-10">
             <div class="sayit-directory-hero">
@@ -11,7 +11,7 @@
                 <a class="btn btn-todd" routerLink="/">Open SayIt</a>
             </div>
             <div class="sayit-directory-controls">
-                <input type="search" class="form-control sayit-directory-search" placeholder="Search by business name, category, location, or what they do" [(ngModel)]="searchTerm" [ngModelOptions]="{standalone: true}">
+                <input type="search" data-cy="directory-search" class="form-control sayit-directory-search" placeholder="Search by business name, category, location, or what they do" [(ngModel)]="searchTerm" [ngModelOptions]="{standalone: true}">
                 <div class="sayit-directory-mode-row">
                     <button *ngFor="let mode of browseModes" type="button" class="btn-todd" [class.active]="browseMode === mode.id" (click)="setBrowseMode(mode.id)">
                         {{ mode.label }}
@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="sayit-directory-grid" *ngIf="filteredProfiles.length; else emptyState">
-                <a *ngFor="let profile of filteredProfiles | slice:0:24; trackBy: trackByProfile" class="sayit-directory-card" [routerLink]="getProfileRoute(profile)">
+                <a *ngFor="let profile of filteredProfiles | slice:0:24; trackBy: trackByProfile" class="sayit-directory-card" data-cy="directory-card" [routerLink]="getProfileRoute(profile)">
                     <div class="sayit-directory-top">
                         <img [src]="profile?.photoURL || '/assets/nophoto.svg'" [alt]="getProfileTitle(profile)" class="sayit-directory-avatar" width="64" height="64">
                         <div>
@@ -57,7 +57,7 @@
                 </a>
             </div>
             <ng-template #emptyState>
-                <div class="sayit-directory-empty">
+                <div class="sayit-directory-empty" data-cy="directory-empty">
                     <h2>No businesses match that view yet</h2>
                     <p>Try a different search term, category, or browse mode.</p>
                 </div>

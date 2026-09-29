@@ -1,4 +1,4 @@
-<div [class.profile-intent-overlay]="!isPageMode()" [class.profile-intent-page-shell]="isPageMode()" [attr.role]="isPageMode() ? null : 'dialog'" [attr.aria-modal]="isPageMode() ? null : 'true'">
+<div data-cy="profile-intent-card" [class.profile-intent-overlay]="!isPageMode()" [class.profile-intent-page-shell]="isPageMode()" [attr.role]="isPageMode() ? null : 'dialog'" [attr.aria-modal]="isPageMode() ? null : 'true'">
     <div class="profile-intent-page-wrap" *ngIf="isPageMode()">
         <div class="profile-intent-page-header">
             <div>

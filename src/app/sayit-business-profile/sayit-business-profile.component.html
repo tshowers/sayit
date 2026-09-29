@@ -1,5 +1,5 @@
 <app-preloader [isLoading]="isLoading"></app-preloader>
-<div class="sayit-business-shell container-fluid" *ngIf="!isLoading">
+<div class="sayit-business-shell container-fluid" data-cy="business-profile-shell" *ngIf="!isLoading">
     <div class="row mb-2" *ngIf="!isLoading">
         <div class="col-12">
             <a routerLink="/" class="sayit-back-link">← Back to Posts</a>

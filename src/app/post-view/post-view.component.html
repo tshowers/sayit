@@ -4,7 +4,7 @@
             <i class="fa-solid fa-arrow-left"></i> Back to posts
         </button>
     </div>
-    <div class="post-view-wrap" *ngIf="post">
+    <div class="post-view-wrap" data-cy="post-view" *ngIf="post">
         <article class="post-view-card" [ngClass]="'rating-' + post.contentRating">
             <header class="post-view-header">
                 <div class="post-view-eyebrow">Say It Post</div>

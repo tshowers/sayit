@@ -37,7 +37,7 @@ import { SayItService, SayItComment } from '../../services/say-it-service';
 import { SoundService } from '../../services/sound.service';
 import { ClickSoundDirective } from '../../shared/directives/click-sound.directive';
 import {
-  buildSayitShareUrl,
+  buildSayitPostUrl,
   getSayitHomeUrl,
   getToddHomeUrl
 } from '../../shared/public-app-url.util';
@@ -227,7 +227,7 @@ export class PostDisplayerComponent implements OnChanges {
   private buildPostShareUrl ( post: Post ): string {
     const postId = post?.id ? String( post.id ).trim() : '';
     return postId
-      ? buildSayitShareUrl( 'post', postId )
+      ? buildSayitPostUrl( postId )
       : window.location.href;
   }
 

@@ -24,6 +24,6 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('footer.app-footer')).toBeTruthy();
+    expect(compiled.querySelector('footer.site-footer')).toBeTruthy();
   });
 });
