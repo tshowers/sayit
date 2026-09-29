@@ -18,13 +18,13 @@
                     </button>
                 </div>
                 <div class="sayit-directory-mode-row">
-                    <button *ngFor="let category of categoryPills | slice:0:10" type="button" class="btn-todd" [class.active]="categoryFilter === category" (click)="setCategoryFilter(category)">
+                    <button *ngFor="let category of categoryPills | slice:0:10; trackBy: trackByCategory" type="button" class="btn-todd" [class.active]="categoryFilter === category" (click)="setCategoryFilter(category)">
                         {{ category === 'all' ? 'All Categories' : category }}
                     </button>
                 </div>
             </div>
             <div class="sayit-directory-grid" *ngIf="filteredProfiles.length; else emptyState">
-                <a *ngFor="let profile of filteredProfiles | slice:0:24" class="sayit-directory-card" [routerLink]="getProfileRoute(profile)">
+                <a *ngFor="let profile of filteredProfiles | slice:0:24; trackBy: trackByProfile" class="sayit-directory-card" [routerLink]="getProfileRoute(profile)">
                     <div class="sayit-directory-top">
                         <img [src]="profile?.photoURL || '/assets/nophoto.svg'" [alt]="getProfileTitle(profile)" class="sayit-directory-avatar" width="64" height="64">
                         <div>

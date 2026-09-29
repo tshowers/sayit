@@ -770,6 +770,12 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.router.navigate( route );
   }
 
+  async logout (): Promise<void> {
+    this.soundService.playSound('click');
+    await this.authService.signOut();
+    this.router.navigate( ['/'] );
+  }
+
   private async loadInterestNotifications (): Promise<void> {
     const uid = String( this.firebaseUser?.uid || this.user?.uid || this.userId || '' ).trim();
     if ( !uid ) return;

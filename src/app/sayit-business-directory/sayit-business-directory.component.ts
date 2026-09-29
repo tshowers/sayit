@@ -15,11 +15,37 @@ import { ClickSoundDirective } from '../shared/directives/click-sound.directive'
   styleUrl: './sayit-business-directory.component.css',
 } )
 export class SayitBusinessDirectoryComponent implements OnInit {
-  profiles: any[] = [];
-  searchTerm = '';
-  categoryFilter = 'all';
-  browseMode = 'active';
+  private _profiles: any[] = [];
+  private _searchTerm = '';
+  private _categoryFilter = 'all';
+  private _browseMode = 'active';
   loading = true;
+
+  /**
+   * categoryPills/filteredProfiles used to be getters that filtered/sorted
+   * `profiles` fresh on every access - Angular property bindings and
+   * interpolations re-run those on every change-detection pass (which fires
+   * constantly app-wide), so each check allocated new arrays via spread +
+   * filter + sort, and the *ngFor over them (with no trackBy) would
+   * destroy/recreate every row every single check. profiles/searchTerm/
+   * categoryFilter/browseMode are now accessor properties so every mutation
+   * path - including the search box's [(ngModel)] - recomputes these once,
+   * only when the underlying inputs actually change.
+   */
+  categoryPills: string[] = ['all'];
+  filteredProfiles: any[] = [];
+
+  get profiles (): any[] { return this._profiles; }
+  set profiles ( value: any[] ) { this._profiles = value; this.recomputeDerived(); }
+
+  get searchTerm (): string { return this._searchTerm; }
+  set searchTerm ( value: string ) { this._searchTerm = value; this.recomputeDerived(); }
+
+  get categoryFilter (): string { return this._categoryFilter; }
+  set categoryFilter ( value: string ) { this._categoryFilter = value; this.recomputeDerived(); }
+
+  get browseMode (): string { return this._browseMode; }
+  set browseMode ( value: string ) { this._browseMode = value; this.recomputeDerived(); }
 
   readonly browseModes = [
     { id: 'active', label: 'Recently Active' },
@@ -36,23 +62,28 @@ export class SayitBusinessDirectoryComponent implements OnInit {
     await this.loadProfiles();
   }
 
-  get categoryPills (): string[] {
-    const categories = this.profiles
+  trackByCategory ( _index: number, category: string ): string {
+    return category;
+  }
+
+  trackByProfile ( _index: number, profile: any ): string {
+    return ( profile?.handle || profile?.id || profile?.uid || '' ).toString();
+  }
+
+  private recomputeDerived (): void {
+    const categories = this._profiles
       .map( profile => this.normalizeCategory( profile ) )
       .filter( ( category: string, index: number, array: string[] ) =>
         !!category &&
         category !== 'all' &&
         array.indexOf( category ) === index
       );
+    this.categoryPills = ['all', ...categories];
 
-    return ['all', ...categories];
-  }
+    const search = ( this._searchTerm || '' ).trim().toLowerCase();
+    const category = String( this._categoryFilter || 'all' ).trim().toLowerCase();
 
-  get filteredProfiles (): any[] {
-    const search = ( this.searchTerm || '' ).trim().toLowerCase();
-    const category = String( this.categoryFilter || 'all' ).trim().toLowerCase();
-
-    return [...this.profiles]
+    this.filteredProfiles = [...this._profiles]
       .filter( profile => {
         const haystack = [
           profile?.businessName,

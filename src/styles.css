@@ -1,3 +1,5 @@
+@import "@taliferro/ui/styles/controls.css";
+
 :root {
   --color-primary: #00bfff;
   --color-primary-hover: #0095cc;

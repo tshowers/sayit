@@ -2,8 +2,7 @@
 <div class="container-fluid chat-page-shell  todd-page">
   <div class="row no-print m-2 chat-header" *ngIf="!showAuthGate">
     <div class="col-12">
-      <h1 class="chat-title">Say It</h1>
-      <p class="chat-subtitle mb-0">the social media for organizations</p>
+      <img src="assets/sayit/sayit-banner.png" alt="Say It" class="chat-title-banner">
       <nav class="sayit-quick-actions" aria-label="Say It tools">
         <button type="button" class="sayit-quick-action sayit-hover-action" (mouseenter)="openComposerPanel()" (click)="toggleComposerPanel()" title="Create a post" aria-label="Create a post">
           <i class="fa-solid fa-pen"></i>
@@ -22,6 +21,9 @@
         <button *ngIf="isMasterTenant && sayitSchedulerEnabled !== null" type="button" class="sayit-quick-action sayit-seed-action" [class.active]="sayitSchedulerEnabled" (click)="toggleScheduler()" [disabled]="sayitSchedulerLoading" [title]="sayitSchedulerEnabled ? 'AI seed posts on — click to turn off' : 'AI seed posts off — click to turn on'" [attr.aria-label]="sayitSchedulerEnabled ? 'Turn off AI seed posts' : 'Turn on AI seed posts'">
           <i *ngIf="sayitSchedulerLoading; else seedIcon" class="fa-solid fa-spinner fa-spin"></i>
           <ng-template #seedIcon><i class="fa-solid fa-robot"></i></ng-template>
+        </button>
+        <button *ngIf="isLoggedIn" type="button" class="sayit-quick-action" (click)="logout()" title="Log out" aria-label="Log out">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
         </button>
       </nav>
     </div>
@@ -59,7 +61,6 @@
                     <i>Post a comment, share a link, or ask a question. Start with</i> '<strong>Hey TODD</strong>' <i>if you want an AI reply.</i></small>
                 </div>
               </div>
-
               <div class="row mt-2" *ngIf="newMessage">
                 <div class="col-12">
                   <div class="drop-zone chat-drop-zone" role="button" tabindex="0" aria-label="Upload image" (click)="fileInput.click()" (keydown.enter)="fileInput.click()" (keydown.space)="fileInput.click(); $event.preventDefault()" (drop)="onDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)">
