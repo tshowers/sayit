@@ -184,6 +184,11 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
   allPosts: any[] = []; // Full list of posts (updated in real-time)
   visiblePosts: any[] = []; // Posts currently visible in the UI
   currentPage: number = 1; // Current page number
+  /** How many of the newest posts the live listener holds; grows as the user scrolls past them. */
+  postsWindow: number = 200;
+  private subscribedPostsWindow = 0;
+  private hasMorePosts = false;
+  private showNextPageWhenLoaded = false;
 
   sayItProfile: any = null;
   sayItProfileLoaded: boolean = false;
@@ -1069,6 +1074,12 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
     const nextCount = ( this.currentPage + 1 ) * this.pageSize;
 
     if ( this.visiblePosts.length >= filteredPosts.length ) {
+      // Shown everything loaded so far - widen the live window if Firestore has older posts.
+      if ( this.hasMorePosts ) {
+        this.postsWindow += this.pageSize * 2;
+        this.showNextPageWhenLoaded = true;
+        void this.loadMessages();
+      }
       return;
     }
 
@@ -1142,12 +1153,22 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
    * before creating a new subscription to fetch the user's information and set their display name and image.
    * Also subscribes to global posts and tenant posts to update the posts list, which is then filtered by the selected category.
    */
-  async loadMessages () {
+  async loadMessages ( force: boolean = false ) {
+    // Signing in used to tear down and re-download the whole feed; the live
+    // listener doesn't depend on who's signed in, so keep it unless the
+    // window grew or a retry was requested.
+    const listenerActive = !!this.messageSubscription && !this.messageSubscription.closed;
+    if ( !force && listenerActive && !this.postsLoadError && this.subscribedPostsWindow === this.postsWindow ) {
+      return;
+    }
+
     try {
-      this.postsInitialLoadComplete = false;
+      // Widening the window keeps the current posts on screen while more load.
+      if ( !listenerActive || force ) this.postsInitialLoadComplete = false;
       this.postsLoadError = false;
       this.messageSubscription?.unsubscribe();
-      this.posts$ = this.dataService.getRealtimePosts();
+      this.subscribedPostsWindow = this.postsWindow;
+      this.posts$ = this.dataService.getRealtimePosts( this.postsWindow );
 
       this.messageSubscription = this.posts$.subscribe( {
         next: ( posts ) => {
@@ -1157,8 +1178,16 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
           }
 
           this.allPosts = [...posts];
+          this.hasMorePosts = posts.length >= this.subscribedPostsWindow;
+          // Only the first load starts at page 1; later snapshots (new posts
+          // arriving, a widened window) keep the reader where they are.
+          const firstLoad = !this.postsInitialLoadComplete;
           this.postsInitialLoadComplete = true;
-          this.applyPostFilters( true );
+          if ( this.showNextPageWhenLoaded ) {
+            this.showNextPageWhenLoaded = false;
+            this.currentPage++;
+          }
+          this.applyPostFilters( firstLoad );
 
         },
         error: ( error ) => {
@@ -1179,7 +1208,7 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async retryPostLoad (): Promise<void> {
-    await this.loadMessages();
+    await this.loadMessages( true );
   }
 
   applyPostFilters ( resetPaging: boolean = false ): void {

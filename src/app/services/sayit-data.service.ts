@@ -321,10 +321,16 @@ export class SayItDataService {
     }
   }
 
-  getRealtimePosts (): Observable<any[]> {
+  /**
+   * Live feed of the newest `maxPosts` posts. Always bounded: an unbounded
+   * listener downloads (and bills a read for) every post ever written on
+   * each visit, and every other Firestore read on the page - like the
+   * profile check right after sign-in - queues behind that download.
+   */
+  getRealtimePosts ( maxPosts: number ): Observable<any[]> {
     return new Observable( ( subscriber ) => {
       const ref = collection( this.firestore, 'posts' );
-      const q = query( ref, orderBy( 'timestamp', 'desc' ) );
+      const q = query( ref, orderBy( 'timestamp', 'desc' ), limit( Math.max( 1, maxPosts ) ) );
 
       const unsubscribe = onSnapshot(
         q,
