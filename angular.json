@@ -32,6 +32,11 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"
+              },
+              {
+                "glob": "apple-app-site-association",
+                "input": "public/.well-known",
+                "output": ".well-known"
               }
             ],
             "styles": [

@@ -4,13 +4,24 @@
     "public": "dist/sayit/browser",
     "ignore": [
       "firebase.json",
-      "**/.*",
+      "**/.DS_Store",
       "**/node_modules/**"
     ],
     "rewrites": [
       {
         "source": "**",
         "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "/.well-known/apple-app-site-association",
+        "headers": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ]
       }
     ]
   },

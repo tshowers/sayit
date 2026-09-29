@@ -1,0 +1,12 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["6377FLHLAG.tech.taliferro.sayitios"],
+        "components": [
+          { "/": "/post/*", "comment": "Shared posts open in the SayIt iOS app" }
+        ]
+      }
+    ]
+  }
+}
