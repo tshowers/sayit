@@ -38,6 +38,18 @@ export const routes: Routes = [
     canActivate: [sayItSignInGuard],
   },
   {
+    path: 'get-started',
+    loadComponent: () =>
+      import( './get-started/get-started.component' ).then( ( m ) => m.GetStartedComponent ),
+    title: 'Say It - Get Started',
+  },
+  {
+    path: 'auth/callback',
+    loadComponent: () =>
+      import( './auth-callback/auth-callback.component' ).then( ( m ) => m.AuthCallbackComponent ),
+    title: 'Say It - Signing In',
+  },
+  {
     path: 'login',
     loadComponent: () =>
       import( './components/sayit-login/sayit-login.component' ).then( ( m ) => m.SayitLoginComponent ),

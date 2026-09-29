@@ -352,7 +352,7 @@ Categories are:
 Respond in this exact JSON format: {"displayName": <user name>, "category": <selectedCategory>, "rating": <1-6>, "explanation": "<brief explanation>"}. Message: "${String( post.content || '' ).replace( /\s+/g, ' ' ).trim()}".`;
   }
 
-  async publishPost ( input: SayItPublishPostInput ): Promise<{ post: any; }> {
+  async publishPost ( input: SayItPublishPostInput ): Promise<{ post: any; id: string; }> {
     const auth = getAuth();
     const u = auth.currentUser;
 
@@ -467,8 +467,8 @@ Respond in this exact JSON format: {"displayName": <user name>, "category": <sel
       if ( newPost[k] === '' ) delete newPost[k];
     } );
 
-    await addDoc( collection( getFirestore(), 'posts' ), newPost );
-    return { post: newPost };
+    const ref = await addDoc( collection( getFirestore(), 'posts' ), newPost );
+    return { post: newPost, id: ref.id };
   }
 
   async addComment ( postId: string, content: string ): Promise<void> {

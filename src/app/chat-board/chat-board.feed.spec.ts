@@ -29,7 +29,7 @@ describe( 'ChatBoardComponent feed window', () => {
       return feed.asObservable();
     } );
     const noop: any = {};
-    board = new ChatBoardComponent( noop, noop, jasmine.createSpyObj( 'LoggerService', ['info', 'warn', 'error', 'log'] ), noop, noop, dataService, noop, noop, noop );
+    board = new ChatBoardComponent( noop, noop, jasmine.createSpyObj( 'LoggerService', ['info', 'warn', 'error', 'log'] ), noop, noop, dataService, noop, noop, noop, jasmine.createSpyObj( 'SayItOnboardingService', ['submitIfPending'] ) );
   } );
 
   it( 'listens to a bounded window of the newest posts', async () => {

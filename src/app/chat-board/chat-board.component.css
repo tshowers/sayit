@@ -1088,3 +1088,20 @@
     color: rgba(232, 232, 232, 0.72);
   }
 }
+
+.sayit-welcome-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  padding: 16px 20px;
+  border: 1px solid var(--panel-border);
+  border-radius: 18px;
+  background: var(--panel-bg-strong);
+  color: var(--page-text);
+}
+.sayit-welcome-banner strong { display: block; font-size: 1.05rem; }
+.sayit-welcome-banner span { color: var(--muted-text); }
+.sayit-welcome-banner__actions { display: flex; align-items: center; gap: 16px; }
+.sayit-welcome-banner__link { font-weight: 700; color: var(--page-text); }

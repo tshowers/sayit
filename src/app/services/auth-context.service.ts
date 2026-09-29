@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { getAuth, onAuthStateChanged, signOut, User } from 'firebase/auth';
+import { getAuth, onAuthStateChanged, signInWithCustomToken, signOut, User } from 'firebase/auth';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -43,5 +43,39 @@ export class AuthContextService {
 
   async signOut (): Promise<void> {
     await signOut( getAuth() );
+  }
+
+  private readonly pendingLoginStorageKey = 'sayit_hosted_login_pending';
+
+  /**
+   * Leaves for TODD's hosted login (todd.taliferro.tech/login), the page
+   * every TODD web app signs in through. `state` is stashed with the
+   * returnUrl in sessionStorage and checked again in AuthCallbackComponent,
+   * so a forged callback can't sign anyone in. The `sayit-web` clients are
+   * registered in todd-backend's authClients.js.
+   */
+  signIn ( returnUrl: string = '/' ): void {
+    const state = crypto.randomUUID();
+    sessionStorage.setItem( this.pendingLoginStorageKey, JSON.stringify( { state, returnUrl } ) );
+    const host = window.location.hostname;
+    const client = host === 'localhost' || host === '127.0.0.1' ? 'sayit-web-local' : 'sayit-web';
+    window.location.href = `https://todd.taliferro.tech/login?client=${client}&state=${state}`;
+  }
+
+  /** Reads back and clears what signIn() stashed; null unless `state` matches. */
+  consumePendingLogin ( state: string | null ): { returnUrl?: string; } | null {
+    const raw = sessionStorage.getItem( this.pendingLoginStorageKey );
+    sessionStorage.removeItem( this.pendingLoginStorageKey );
+    if ( !raw ) return null;
+    try {
+      const pending = JSON.parse( raw ) as { state: string; returnUrl?: string; };
+      return state && pending.state === state ? { returnUrl: pending.returnUrl } : null;
+    } catch {
+      return null;
+    }
+  }
+
+  async signInWithCustomToken ( token: string ): Promise<User> {
+    return ( await signInWithCustomToken( getAuth(), token ) ).user;
   }
 }

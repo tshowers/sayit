@@ -33,9 +33,6 @@ import { SoundService } from '../services/sound.service';
 import { Post } from '../shared/models/message.model';
 import { PostDisplayerComponent } from '../components/post-displayer/post-displayer.component';
 import { PreloaderComponent } from '../shared/preloader/preloader.component';
-import { AuthGateModalComponent } from '../components/auth-gate-modal/auth-gate-modal.component';
-
-import { ProfileIntentCardComponent } from '../components/profile-intent-card/profile-intent-card.component';
 // Firebase imports for profile intent check
 import { getAuth } from 'firebase/auth';
 import { addDoc, collection, doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
@@ -43,6 +40,7 @@ import { addDoc, collection, doc, getDoc, getFirestore, setDoc } from 'firebase/
 import { NewsDisplayerComponent } from '../components/news-displayer/news-displayer.component';
 import { SayItService } from '../services/say-it-service';
 import { SayItDataService } from '../services/sayit-data.service';
+import { SayItOnboardingService } from '../services/sayit-onboarding.service';
 import { ClickSoundDirective } from '../shared/directives/click-sound.directive';
 declare var bootstrap: any;
 
@@ -57,8 +55,6 @@ declare var bootstrap: any;
     RouterModule,
     PostDisplayerComponent,
     PreloaderComponent,
-    AuthGateModalComponent,
-    ProfileIntentCardComponent,
     NewsDisplayerComponent,
     ClickSoundDirective
   ],
@@ -157,6 +153,8 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
   sayitSchedulerLoading: boolean = false;
   totalLikes: number = 0;
   showProfileIntent: boolean = false;
+  /** Signed in but the SayIt profile is missing a name or "what I do/need". */
+  profileIncomplete = false;
   showNewsstand: boolean = false;
   displayName: string = '';
   userImage!: string;
@@ -219,7 +217,8 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
     private dataService: SayItDataService,
     private renderer: Renderer2,
     private linkPreviewService: LinkPreviewService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private onboarding: SayItOnboardingService
   ) { }
 
   /**
@@ -266,14 +265,12 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
       this.logger.info( "USER RETURNED", u );
 
       if ( !u ) {
-        if ( this.authGateDismissed ) {
-          this.showAuthGate = false;
-        } else {
-          this.firebaseUser = u;
-          this.showAuthGate = true;
-        }
+        // Guests browse freely; the banner and every action that needs an
+        // account point to /get-started (or /login) - no sign-in popup.
+        this.firebaseUser = null;
+        this.isLoggedIn = false;
+        this.showAuthGate = false;
 
-        // Guests can still read posts
         await this.loadMessages();
         this.setupPage();
         return;
@@ -285,6 +282,9 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
       this.isLoggedIn = true;
       this.showAuthGate = false;
       this.authGateDismissed = false;
+
+      // Retries anything the /get-started wizard left unsaved (no-op otherwise).
+      void this.onboarding.submitIfPending();
 
       // Now auth.currentUser is guaranteed real
       await this.ensureSayItProfileExists();
@@ -333,29 +333,7 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
     } catch { }
   }
 
-  onAuthGateClosed (): void {
-    // User chose not to sign in right now; keep SayIt read-only and don't re-open.
-    this.authGateDismissed = true;
-    this.showAuthGate = false;
-    this.blurInput();
-  }
 
-  async onAuthGateSignedIn (): Promise<void> {
-    this.showAuthGate = false;
-    this.blurInput();
-    try {
-      // await this.setUserInfo();
-
-      await this.ensureSayItProfileExists();
-      await this.checkProfileIntentGate();
-      // Focus input if applicable
-      setTimeout( () => {
-        this.setFocusOnInput();
-      }, 300 );
-    } catch ( e ) {
-      this.logger.error( 'onAuthGateSignedIn error', e );
-    }
-  }
 
   /**
    * Checks if the signed-in user has a SayIt profile (and whether it looks complete).
@@ -455,10 +433,12 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
         onboardingStep: data?.onboardingStep || ''
       } );
 
-      const needsGate = !snap.exists() || !hasBasics;
-      this.showProfileIntent = needsGate;
-      this.profileGateRequired = needsGate;
-      this.setGateScrollLock( needsGate );
+      // An incomplete profile gets a banner linking to /profile - never a
+      // blocking popup (the /get-started wizard fills it for new members).
+      this.profileIncomplete = !snap.exists() || !hasBasics;
+      this.showProfileIntent = false;
+      this.profileGateRequired = false;
+      this.setGateScrollLock( false );
       this.refreshPageActions();
     } catch ( e ) {
       this.logger.error( 'checkProfileIntentGate error', e );
@@ -474,10 +454,11 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
       this.sayItProfileLoaded = true;
       this.favoritePostIds = [];
 
-      // Signed-in users should see the intent card when the profile check fails.
-      this.showProfileIntent = !!uid;
-      this.profileGateRequired = !!uid;
-      this.setGateScrollLock( !!uid );
+      // A failed read isn't evidence the profile is incomplete - don't nag.
+      this.profileIncomplete = false;
+      this.showProfileIntent = false;
+      this.profileGateRequired = false;
+      this.setGateScrollLock( false );
       this.refreshPageActions();
 
       // Optional: surface a lightweight hint so the user isn't confused.
@@ -723,11 +704,16 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openComposerPanel (): void {
+    if ( !this.isLoggedIn ) return;
     this.showComposer = true;
     this.showSearch = false;
   }
 
   toggleComposerPanel (): void {
+    if ( !this.isLoggedIn ) {
+      void this.router.navigate( ['/get-started'] );
+      return;
+    }
     this.showComposer = !this.showComposer;
     if ( this.showComposer ) this.showSearch = false;
     this.soundService.playSound('click');
@@ -768,6 +754,10 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   openMyBusinessPage (): void {
+    if ( !this.isLoggedIn ) {
+      void this.router.navigate( ['/login'] );
+      return;
+    }
     const route = this.getSayItProfileRoute();
     if ( !route ) return;
 
@@ -986,41 +976,7 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  onProfileIntentClosed (): void {
-    if ( this.profileGateRequired ) {
-      this.showProfileIntent = true;
-      return;
-    }
-    // Keep browsing; user can re-open via Page Actions.
-    this.showProfileIntent = false;
-    this.blurInput();
-    if ( this.isLoggedIn ) this.showAuthGate = false;
-  }
 
-  async onProfileIntentCompleted (): Promise<void> {
-    // Profile was saved; clear the forced gate and render SayIt.
-    this.profileGateRequired = false;
-    this.showProfileIntent = false;
-    this.setGateScrollLock( false );
-
-    try {
-      // Re-check so cached profile fields (displayName/photo) update immediately.
-      await this.checkProfileIntentGate();
-
-      // If gate still required for any reason, do not proceed.
-      if ( this.profileGateRequired || this.showProfileIntent ) return;
-
-      await this.loadMessages();
-      this.setupPage();
-      this.refreshPageActions();
-
-      setTimeout( () => {
-        this.setFocusOnInput();
-      }, 300 );
-    } catch ( e ) {
-      this.logger.error( 'onProfileIntentCompleted error', e );
-    }
-  }
 
   /**
    * Clean up various subscriptions to prevent memory leaks.
@@ -1487,11 +1443,7 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
     if ( this.profileGateRequired && this.showProfileIntent ) return;
     // Posting requires Firebase auth (even though SayIt is not tenant-owned)
     if ( !this.isLoggedIn ) {
-      this.notificationService.show(
-        'Login Required',
-        'Please sign in to post messages.',
-        'warning'
-      );
+      void this.router.navigate( ['/get-started'] );
       return;
     }
 

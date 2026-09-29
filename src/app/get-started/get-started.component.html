@@ -1,0 +1,119 @@
+<main class="gs-shell" data-cy="get-started-shell">
+  <div class="gs-topbar">
+    <a class="gs-brand" routerLink="/"><img src="assets/sayit/sayit-logo.png" alt="" class="gs-brand__mark">Say It</a>
+  </div>
+
+  <section class="gs-card" aria-live="polite">
+    <div class="gs-card__nav">
+      <button *ngIf="stepIndex > 0" type="button" class="gs-back" (click)="back()" data-cy="get-started-back">
+        <span aria-hidden="true">&lsaquo;</span> Back
+      </button>
+      <span class="gs-count">Step {{ step.section + 1 }} of {{ sections.length }}</span>
+    </div>
+
+    <ol class="gs-progress" role="progressbar" aria-label="Setup progress"
+        [attr.aria-valuenow]="step.section + 1" aria-valuemin="1" [attr.aria-valuemax]="sections.length"
+        data-cy="get-started-progress">
+      <li *ngFor="let section of sections; let i = index" class="gs-progress__segment"
+          [class.is-done]="sectionFill(i) >= 1" [class.is-active]="i === step.section">
+        <span class="gs-progress__track"><span class="gs-progress__fill" [style.width.%]="sectionFill(i) * 100"></span></span>
+        <span class="gs-progress__label">
+          <span *ngIf="sectionFill(i) >= 1" class="gs-progress__check" aria-hidden="true">&#10003;</span>
+          {{ section }}
+        </span>
+      </li>
+    </ol>
+
+    <p *ngIf="step.key === 'intent'" class="gs-lede">You're already 1 step in. Let's get your first post out there.</p>
+
+    <h1 class="gs-question" data-cy="get-started-question">{{ questionText }}</h1>
+    <p *ngIf="step.hint" class="gs-hint">{{ step.hint }}</p>
+
+    <form class="gs-answer" (ngSubmit)="next()">
+      <div *ngIf="step.key === 'intent'" class="gs-chips gs-chips--stack" role="radiogroup" [attr.aria-label]="questionText">
+        <button *ngFor="let option of intentOptions" type="button" class="gs-chip" role="radio"
+                [class.is-selected]="draft.intent === option.value" [attr.aria-checked]="draft.intent === option.value"
+                (click)="selectIntent(option.value)" data-cy="get-started-intent">
+          <span *ngIf="draft.intent === option.value" aria-hidden="true">&#10003;</span>
+          {{ option.label }}
+        </button>
+      </div>
+
+      <div *ngIf="step.key === 'topic'" class="gs-chips" role="radiogroup" [attr.aria-label]="questionText">
+        <button *ngFor="let option of topicOptions" type="button" class="gs-chip" role="radio"
+                [class.is-selected]="draft.topic === option" [attr.aria-checked]="draft.topic === option"
+                (click)="selectTopic(option)" data-cy="get-started-topic">
+          <span *ngIf="draft.topic === option" aria-hidden="true">&#10003;</span>
+          {{ option }}
+        </button>
+        <button type="button" class="gs-chip" role="radio" [class.is-selected]="hasCustomTopic" [attr.aria-checked]="hasCustomTopic"
+                (click)="selectOtherTopic()" data-cy="get-started-topic-other">
+          <span *ngIf="hasCustomTopic" aria-hidden="true">&#10003;</span>
+          Other
+        </button>
+      </div>
+
+      <div *ngIf="step.key === 'category'" class="gs-select">
+        <button type="button" class="gs-select__row" [attr.aria-expanded]="categoryListOpen"
+                (click)="categoryListOpen = !categoryListOpen" data-cy="get-started-category-row">
+          <span>{{ categoryLabel(draft.category) }}</span>
+          <span class="gs-select__chevron" [class.is-open]="categoryListOpen" aria-hidden="true">&rsaquo;</span>
+        </button>
+        <ul *ngIf="categoryListOpen" class="gs-select__list" role="listbox" aria-label="Industry">
+          <li *ngFor="let category of categories">
+            <button type="button" role="option" class="gs-select__option" [class.is-selected]="draft.category === category"
+                    [attr.aria-selected]="draft.category === category" (click)="selectCategory(category)" data-cy="get-started-category">
+              {{ categoryLabel(category) }}
+              <span *ngIf="draft.category === category" aria-hidden="true">&#10003;</span>
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      <ng-container *ngIf="step.key === 'post'">
+        <textarea #answerInput class="gs-input gs-input--post" name="post" rows="3" [attr.maxlength]="maxLength"
+                  aria-label="Your post" [ngModel]="draft.postText" (ngModelChange)="onPostEdited($event)"
+                  data-cy="get-started-post"></textarea>
+        <div class="gs-post-meta">
+          <span [class.is-over]="postRemaining < 0">{{ postRemaining }} characters left</span>
+          <button *ngIf="draft.postTextEdited" type="button" class="gs-link" (click)="resetPost()">Use the suggestion</button>
+        </div>
+        <div class="gs-preview" data-cy="get-started-preview">
+          <div class="gs-preview__avatar" aria-hidden="true">{{ previewName.charAt(0) }}</div>
+          <div>
+            <div class="gs-preview__name">{{ previewName }} <span class="gs-preview__meta">&middot; now &middot; {{ categoryLabel(draft.category) }}</span></div>
+            <p class="gs-preview__text">{{ draft.postText }}</p>
+          </div>
+        </div>
+      </ng-container>
+
+      <input *ngIf="isTextStep" #answerInput class="gs-input" type="text" name="answer"
+             [attr.autocomplete]="textAutocomplete" [attr.aria-label]="step.key === 'topic' ? 'Describe it' : questionText"
+             [attr.placeholder]="step.key === 'topic' ? 'Describe it' : null"
+             [(ngModel)]="textValue" data-cy="get-started-input" />
+
+      <div *ngIf="step.key !== 'signIn'" class="gs-actions">
+        <button *ngIf="step.optional" type="button" class="gs-button gs-button--ghost" (click)="skip()" data-cy="get-started-skip">Skip</button>
+        <button type="submit" class="gs-button" [disabled]="!canAdvance" data-cy="get-started-next">Next</button>
+      </div>
+    </form>
+
+    <ng-container *ngIf="step.key === 'signIn'">
+      <div class="gs-preview gs-preview--final">
+        <div class="gs-preview__avatar" aria-hidden="true">{{ previewName.charAt(0) }}</div>
+        <div>
+          <div class="gs-preview__name">{{ previewName }}</div>
+          <p class="gs-preview__text">{{ draft.postText }}</p>
+        </div>
+      </div>
+      <div class="gs-actions">
+        <button type="button" class="gs-button" [disabled]="isSigningIn" (click)="signIn()" data-cy="get-started-sign-in">
+          {{ isSigningIn ? 'Redirecting...' : 'Sign in and post' }}
+        </button>
+      </div>
+      <p class="gs-fine">By posting you agree to keep Say It respectful - no spam, harassment, or objectionable content.</p>
+    </ng-container>
+
+    <a class="gs-existing" routerLink="/login" data-cy="get-started-existing">Already have an account? Sign in</a>
+  </section>
+</main>

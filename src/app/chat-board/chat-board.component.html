@@ -28,6 +28,25 @@
       </nav>
     </div>
   </div>
+  <div class="sayit-welcome-banner m-2" *ngIf="!isLoggedIn" data-cy="guest-banner">
+    <div>
+      <strong>Say what you need. Get found.</strong>
+      <span>Post what you're looking for or offering in under a minute.</span>
+    </div>
+    <div class="sayit-welcome-banner__actions">
+      <a class="btn btn-todd" routerLink="/get-started" data-cy="guest-get-started">Get started</a>
+      <a class="sayit-welcome-banner__link" routerLink="/login">Sign in</a>
+    </div>
+  </div>
+  <div class="sayit-welcome-banner m-2" *ngIf="isLoggedIn && profileIncomplete" data-cy="profile-incomplete-banner">
+    <div>
+      <strong>Finish your Say It profile</strong>
+      <span>Tell people who you are and what you do so they know who's posting.</span>
+    </div>
+    <div class="sayit-welcome-banner__actions">
+      <a class="btn btn-todd" routerLink="/profile">Finish profile</a>
+    </div>
+  </div>
   <div class="container-fluid chat-content-shell" *ngIf="!showAuthGate">
     <div class="row mt-4 justify-content-center chat-main-row">
       <div class="col-12">
@@ -115,5 +134,3 @@
     </div>
   </div>
 </div>
-<app-profile-intent-card *ngIf="showProfileIntent" [forced]="profileGateRequired" (closed)="onProfileIntentClosed()" (completed)="onProfileIntentCompleted()"></app-profile-intent-card>
-<app-auth-gate-modal *ngIf="showAuthGate" [dismissible]="false" (closed)="onAuthGateClosed()" (signedIn)="onAuthGateSignedIn()"></app-auth-gate-modal>

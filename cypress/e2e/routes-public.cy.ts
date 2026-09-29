@@ -8,20 +8,29 @@ const TENANT = 'yH3nWanUv0RqDCNfwXBOXLWuxt52';
 const profilesPath = `tenants/${TENANT}/say-it-profiles`;
 
 describe( 'SayIt routes - signed out', () => {
-  it( 'shows the sign-in gate on the home page', () => {
-    cy.visitWithFirebaseEmulators( '/' );
-    cy.get( '[data-cy="auth-gate"]', { timeout: 15000 } ).should( 'be.visible' );
-    cy.contains( '.auth-gate-title', 'Sign in to continue' );
-    cy.get( '#authGateEmail' ).type( 'not-an-email' );
-    cy.contains( 'button', 'Send sign-in link' ).should( 'be.disabled' );
-    cy.get( '#authGateEmail' ).clear().type( 'ada@example.com' );
-    cy.contains( 'button', 'Send sign-in link' ).should( 'not.be.disabled' );
+  beforeEach( () => {
+    // TODD's hosted login is another site - stub it so handoffs are observable offline.
+    cy.intercept( 'GET', 'https://todd.taliferro.tech/login*', { statusCode: 200, body: '<html><body>TODD login</body></html>' } ).as( 'toddLogin' );
   } );
 
-  it( 'shows the sign-in gate at /login without a close button', () => {
+  it( 'lets guests browse the board with a Get started banner and no popup', () => {
+    cy.visitWithFirebaseEmulators( '/' );
+    cy.get( '[data-cy="guest-banner"]', { timeout: 15000 } ).should( 'contain.text', 'Say what you need' );
+    cy.get( '[data-cy="chat-board-shell"]' ).should( 'exist' );
+    cy.get( '[role="dialog"]' ).should( 'not.exist' );
+    cy.get( '[data-cy="guest-get-started"]' ).click();
+    cy.location( 'pathname' ).should( 'eq', '/get-started' );
+  } );
+
+  it( 'sends guests who try to post to the wizard', () => {
+    cy.visitWithFirebaseEmulators( '/' );
+    cy.get( 'button[aria-label="Create a post"]', { timeout: 15000 } ).click();
+    cy.location( 'pathname' ).should( 'eq', '/get-started' );
+  } );
+
+  it( 'hands /login off to TODD login', () => {
     cy.visitWithFirebaseEmulators( '/login' );
-    cy.get( '[data-cy="auth-gate"]' ).should( 'be.visible' );
-    cy.get( '.auth-gate-close' ).should( 'not.exist' );
+    cy.wait( '@toddLogin' ).its( 'request.url' ).should( 'include', 'client=sayit-web-local' ).and( 'include', 'state=' );
   } );
 
   it( 'lists public businesses in the directory and filters by search', () => {
@@ -64,11 +73,15 @@ describe( 'SayIt routes - signed out', () => {
     cy.get( '[data-cy="business-profile-shell"]', { timeout: 15000 } ).should( 'contain.text', `Directory Link Co ${id}` );
   } );
 
-  it( 'sends signed-out visitors from /interests to /login with a returnUrl', () => {
+  it( 'sends signed-out visitors from /interests to sign in, remembering where they were going', () => {
     cy.visitWithFirebaseEmulators( '/interests' );
-    cy.location( 'pathname' ).should( 'eq', '/login' );
-    cy.location( 'search' ).should( 'eq', '?returnUrl=%2Finterests' );
-    cy.get( '[data-cy="auth-gate"]' ).should( 'be.visible' );
+    cy.wait( '@toddLogin' ).its( 'request.url' ).should( 'include', 'client=sayit-web-local' );
+    // Back on SayIt's origin, the pending login carries the page they wanted.
+    cy.visitWithFirebaseEmulators( '/not-authorized' );
+    cy.window().then( ( win ) => {
+      const pending = JSON.parse( win.sessionStorage.getItem( 'sayit_hosted_login_pending' ) || '{}' );
+      expect( pending.returnUrl ).to.equal( '/interests' );
+    } );
   } );
 
   it( 'shows a shared post to signed-out visitors, read-only', () => {
@@ -80,7 +93,8 @@ describe( 'SayIt routes - signed out', () => {
     cy.visitWithFirebaseEmulators( `/post/${id}` );
     cy.location( 'pathname' ).should( 'eq', `/post/${id}` );
     cy.get( '[data-cy="post-view"]', { timeout: 15000 } ).should( 'contain.text', `Looking for a bookkeeper ${id}` );
-    cy.contains( '.post-view-signin-hint', 'Sign in to join the conversation.' );
+    cy.contains( '.post-view-signin-hint', 'to join the conversation.' );
+    cy.get( '.post-view-signin-hint a' ).should( 'have.attr', 'href', `/login?returnUrl=%2Fpost%2F${id}` );
     cy.get( '.post-view-comment-form' ).should( 'not.exist' );
   } );
 

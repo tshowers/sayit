@@ -15,7 +15,7 @@ describe( 'SayIt routes - signed in', () => {
   it( 'shows the board instead of the sign-in gate at /', () => {
     cy.visitWithFirebaseEmulators( '/', credentials() );
     cy.get( '[data-cy="chat-board-shell"]', { timeout: 20000 } ).should( 'exist' );
-    cy.get( '[data-cy="auth-gate"]' ).should( 'not.exist' );
+    cy.get( '[data-cy="guest-banner"]' ).should( 'not.exist' );
     cy.get( 'button[aria-label="Log out"]' ).should( 'exist' );
   } );
 
