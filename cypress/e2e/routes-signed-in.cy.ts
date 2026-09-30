@@ -19,6 +19,16 @@ describe( 'SayIt routes - signed in', () => {
     cy.get( 'button[aria-label="Log out"]' ).should( 'exist' );
   } );
 
+  it( 'offers signed-in web users the app, and remembers when they dismiss it', () => {
+    cy.visitWithFirebaseEmulators( '/', credentials() );
+    cy.get( '[data-cy="app-promo-bar"]', { timeout: 20000 } ).should( 'contain.text', 'Say It' );
+    cy.get( '[data-cy="app-promo-dismiss"]' ).click();
+    cy.get( '[data-cy="app-promo-bar"]' ).should( 'not.exist' );
+    cy.reload();
+    cy.get( '[data-cy="chat-board-shell"]', { timeout: 20000 } ).should( 'exist' );
+    cy.get( '[data-cy="app-promo-bar"]' ).should( 'not.exist' );
+  } );
+
   it( 'renders the interest inbox at /interests', () => {
     cy.visitWithFirebaseEmulators( '/interests', credentials() );
     cy.location( 'pathname' ).should( 'eq', '/interests' );

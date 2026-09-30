@@ -13,9 +13,12 @@ describe( 'SayIt routes - signed out', () => {
     cy.intercept( 'GET', 'https://todd.taliferro.tech/login*', { statusCode: 200, body: '<html><body>TODD login</body></html>' } ).as( 'toddLogin' );
   } );
 
-  it( 'lets guests browse the board with a Get started banner and no popup', () => {
+  it( 'leads guests to the app, with the web one tap away and no popup', () => {
     cy.visitWithFirebaseEmulators( '/' );
-    cy.get( '[data-cy="guest-banner"]', { timeout: 15000 } ).should( 'contain.text', 'Say what you need' );
+    cy.get( '[data-cy="guest-banner"]', { timeout: 15000 } ).should( 'contain.text', 'Say It is best on iPhone' );
+    // No Apple ID yet, so no dead App Store link - just "coming soon".
+    cy.get( '[data-cy="app-coming-soon"]' ).should( 'be.visible' );
+    cy.get( '[data-cy="app-store-link"]' ).should( 'not.exist' );
     cy.get( '[data-cy="chat-board-shell"]' ).should( 'exist' );
     cy.get( '[role="dialog"]' ).should( 'not.exist' );
     cy.get( '[data-cy="guest-get-started"]' ).click();

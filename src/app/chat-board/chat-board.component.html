@@ -28,15 +28,12 @@
       </nav>
     </div>
   </div>
-  <div class="sayit-welcome-banner m-2" *ngIf="!isLoggedIn" data-cy="guest-banner">
-    <div>
-      <strong>Say what you need. Get found.</strong>
-      <span>Post what you're looking for or offering in under a minute.</span>
-    </div>
-    <div class="sayit-welcome-banner__actions">
-      <a class="btn btn-todd" routerLink="/get-started" data-cy="guest-get-started">Get started</a>
-      <a class="sayit-welcome-banner__link" routerLink="/login">Sign in</a>
-    </div>
+  <!-- Landing: lead with the iPhone app; the web stays one tap away (same account). -->
+  <div class="m-2" *ngIf="!isLoggedIn" data-cy="guest-banner">
+    <app-promo variant="hero"></app-promo>
+  </div>
+  <div class="m-2" *ngIf="isLoggedIn">
+    <app-promo variant="bar"></app-promo>
   </div>
   <div class="sayit-welcome-banner m-2" *ngIf="isLoggedIn && profileIncomplete" data-cy="profile-incomplete-banner">
     <div>

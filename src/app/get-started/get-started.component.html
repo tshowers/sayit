@@ -115,5 +115,6 @@
     </ng-container>
 
     <a class="gs-existing" routerLink="/login" data-cy="get-started-existing">Already have an account? Sign in</a>
+    <app-promo *ngIf="step.key === 'intent'" variant="link"></app-promo>
   </section>
 </main>

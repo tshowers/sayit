@@ -1,0 +1,93 @@
+:host {
+  display: block;
+  --promo-ink: #201e1d;
+  --promo-muted: #645c50;
+  --promo-surface: #f9f4ed;
+  --promo-line: rgba(32, 30, 29, 0.14);
+  --promo-accent: #b2622d;
+}
+@media (prefers-color-scheme: dark) {
+  :host {
+    --promo-ink: #f3ebdd;
+    --promo-muted: #b3a898;
+    --promo-surface: #25221e;
+    --promo-line: rgba(243, 235, 221, 0.16);
+    --promo-accent: #f6a06b;
+  }
+}
+
+/* App Store button */
+.promo-store {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 6px 18px 6px 14px;
+  border-radius: 12px;
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  line-height: 1.05;
+}
+.promo-store i { font-size: 26px; }
+.promo-store span { display: flex; flex-direction: column; font-size: 1.1rem; font-weight: 700; }
+.promo-store small { font-size: 0.7rem; font-weight: 500; opacity: 0.85; }
+.promo-store:hover { color: #fff; opacity: 0.9; }
+.promo-store--soon { background: #3a3632; cursor: default; }
+
+/* Hero */
+.promo-hero {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  padding: 22px 24px;
+  border: 1px solid var(--promo-line);
+  border-radius: 24px;
+  background: var(--promo-surface);
+  color: var(--promo-ink);
+}
+.promo-hero__icon { flex: none; border-radius: 22px; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18); }
+.promo-hero h2 { margin: 0 0 4px; font-size: clamp(1.4rem, 3.5vw, 1.9rem); font-weight: 800; letter-spacing: -0.01em; }
+.promo-hero__lede { margin: 0 0 12px; color: var(--promo-muted); }
+.promo-hero__benefits { margin: 0 0 16px; padding: 0; list-style: none; display: grid; gap: 6px; }
+.promo-hero__benefits li { display: flex; gap: 8px; align-items: baseline; }
+.promo-hero__benefits i { color: var(--promo-accent); font-size: 0.85rem; }
+.promo-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+.promo-web { font-weight: 700; color: var(--promo-accent); }
+.promo-signin { font-weight: 600; color: var(--promo-muted); }
+.promo-hero__note { margin: 12px 0 0; font-size: 0.85rem; color: var(--promo-muted); }
+
+@media (max-width: 575px) {
+  .promo-hero { flex-direction: column; align-items: center; text-align: center; }
+  .promo-hero__benefits li { justify-content: center; }
+  .promo-hero__actions { justify-content: center; }
+}
+
+/* Bar */
+.promo-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--promo-line);
+  border-radius: 18px;
+  background: var(--promo-surface);
+  color: var(--promo-ink);
+}
+.promo-bar img { flex: none; border-radius: 10px; }
+.promo-bar__text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.promo-bar__text span { font-size: 0.85rem; color: var(--promo-muted); }
+.promo-bar .promo-store { min-height: 40px; padding: 4px 14px 4px 10px; }
+.promo-bar .promo-store i { font-size: 20px; }
+.promo-bar .promo-store span { font-size: 0.95rem; }
+.promo-bar__close { border: 0; background: none; color: var(--promo-muted); padding: 6px; cursor: pointer; }
+.promo-bar--strong { border-color: var(--promo-accent); }
+@media (max-width: 575px) {
+  .promo-bar { flex-wrap: wrap; }
+  .promo-bar__text { flex-basis: calc(100% - 100px); }
+}
+
+/* Link */
+.promo-link { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 14px 0 0; font-size: 0.9rem; color: var(--promo-muted); }
+.promo-link img { border-radius: 6px; }
+.promo-link a { font-weight: 700; color: var(--promo-accent); }

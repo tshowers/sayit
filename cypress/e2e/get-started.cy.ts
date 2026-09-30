@@ -34,6 +34,7 @@ describe( 'SayIt get started wizard', () => {
     cy.contains( '[data-cy="get-started-intent"]', "I'm looking for something" ).should( 'have.class', 'is-selected' );
     cy.get( '[data-cy="get-started-next"]' ).should( 'not.be.disabled' );
     cy.get( '[data-cy="get-started-existing"]' ).should( 'have.attr', 'href', '/login' );
+    cy.get( '[data-cy="app-promo-link"]' ).should( 'contain.text', 'Prefer the app?' );
   } );
 
   it( 'writes the post from taps, lets them edit it, and keeps the draft across reloads', () => {
@@ -111,7 +112,8 @@ describe( 'SayIt get started wizard', () => {
       cy.visitWithFirebaseEmulators( `/auth/callback?token=${emulatorCustomToken( uid )}&state=${state}` );
     } );
 
-    cy.location( 'pathname', { timeout: 20000 } ).should( 'match', /^\/post\/.+/ );
+    // First spec on a cold dev server: the callback route may still be compiling.
+    cy.location( 'pathname', { timeout: 40000 } ).should( 'match', /^\/post\/.+/ );
     cy.get( '[data-cy="post-view"]', { timeout: 15000 } ).should( 'contain.text', `Looking for referrals ${uid}` );
     cy.window().its( 'localStorage' ).invoke( 'getItem', draftKey ).should( 'be.null' );
 
