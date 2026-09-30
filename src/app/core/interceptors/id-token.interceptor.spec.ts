@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClient, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { initializeApp, getApps } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 
 import { environment } from '../../../environments/environment';
 import { idTokenInterceptor } from './id-token.interceptor';
@@ -30,8 +31,11 @@ describe( 'idTokenInterceptor', () => {
 
   afterEach( () => controller.verify() );
 
-  it( 'leaves backend requests unchanged when signed out', () => {
+  it( 'leaves backend requests unchanged when signed out', async () => {
     http.get( 'https://api.taliferro.tech/api/openai' ).subscribe();
+    // Backend requests wait for Firebase to restore the session first.
+    await getAuth().authStateReady();
+    await new Promise( ( resolve ) => setTimeout( resolve, 0 ) );
     expect( controller.expectOne( 'https://api.taliferro.tech/api/openai' ).request.headers.has( 'Authorization' ) ).toBeFalse();
   } );
 
