@@ -1,6 +1,5 @@
 <ng-template #storeButton>
-  <a *ngIf="isLive; else comingSoon" class="promo-store" [href]="appStoreLink" target="_blank" rel="noopener"
-     data-cy="app-store-link" aria-label="Download Say It on the App Store">
+  <a *ngIf="isLive; else comingSoon" class="promo-store" [href]="appStoreLink" target="_blank" rel="noopener" data-cy="app-store-link" aria-label="Download Say It on the App Store">
     <i class="fa-brands fa-apple" aria-hidden="true"></i>
     <span><small>Download on the</small>App Store</span>
   </a>
@@ -11,10 +10,9 @@
     </span>
   </ng-template>
 </ng-template>
-
 <!-- Landing page: app first -->
 <section *ngIf="variant === 'hero'" class="promo-hero" data-cy="app-promo-hero">
-  <img class="promo-hero__icon" src="assets/sayit/app-icon.png" alt="" width="96" height="96">
+  <img class="promo-hero__icon" src="assets/sayit/sayit.png" alt="" width="96" height="96">
   <div class="promo-hero__body">
     <h2>Say It is best on iPhone</h2>
     <p class="promo-hero__lede">Say what you need, get found, and talk it over one-on-one.</p>
@@ -29,10 +27,9 @@
     <p class="promo-hero__note">One account either way - start here and pick up in the app, or the other way around.</p>
   </div>
 </section>
-
 <!-- Signed-in web users: slim, dismissible -->
 <div *ngIf="variant === 'bar' && !dismissed" class="promo-bar" [class.promo-bar--strong]="onAppleDevice" data-cy="app-promo-bar">
-  <img src="assets/sayit/app-icon.png" alt="" width="40" height="40">
+  <img src="assets/sayit/sayit.png" alt="" width="40" height="40">
   <div class="promo-bar__text">
     <strong>{{ onAppleDevice ? 'Get the Say It app' : 'Say It is on iPhone too' }}</strong>
     <span>Reply the moment someone's interested. Same account.</span>
@@ -42,10 +39,9 @@
     <i class="fa-solid fa-xmark" aria-hidden="true"></i>
   </button>
 </div>
-
 <!-- Wizard: one line -->
 <p *ngIf="variant === 'link'" class="promo-link" data-cy="app-promo-link">
-  <img src="assets/sayit/app-icon.png" alt="" width="24" height="24">
+  <img src="assets/sayit/sayit.png" alt="" width="24" height="24">
   <span>Prefer the app?</span>
   <a *ngIf="isLive; else soonText" [href]="appStoreLink" target="_blank" rel="noopener">Get Say It for iPhone</a>
   <ng-template #soonText><span class="promo-link__soon">Say It for iPhone is coming soon.</span></ng-template>
