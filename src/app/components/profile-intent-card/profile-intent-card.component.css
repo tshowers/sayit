@@ -86,23 +86,22 @@
     -webkit-backdrop-filter: none;
 }
 
-@media (prefers-color-scheme: dark) {
-    .profile-intent-card {
+:host-context([data-theme="dark"]) .profile-intent-card {
         background: linear-gradient(180deg, rgba(26, 37, 53, 0.88), rgba(19, 28, 39, 0.82));
-        border-color: rgba(0, 191, 255, 0.16);
+        border-color: rgba(245, 234, 216, 0.16);
         box-shadow:
             0 18px 40px rgba(0, 0, 0, 0.30),
             inset 0 1px 0 rgba(255, 255, 255, 0.04);
     }
 
-    .profile-intent-page-shell {
+:host-context([data-theme="dark"]) .profile-intent-page-shell {
         background: transparent;
     }
 
-    .profile-intent-page-header,
-    .profile-intent-card-page {
+:host-context([data-theme="dark"]) .profile-intent-page-header,
+    :host-context([data-theme="dark"]) .profile-intent-card-page {
         background: linear-gradient(180deg, rgba(26, 37, 53, 0.88), rgba(19, 28, 39, 0.82));
-        border-color: rgba(0, 191, 255, 0.16);
+        border-color: rgba(245, 234, 216, 0.16);
         box-shadow:
             0 18px 40px rgba(0, 0, 0, 0.30),
             inset 0 1px 0 rgba(255, 255, 255, 0.04);
@@ -110,82 +109,81 @@
         -webkit-backdrop-filter: blur(14px);
     }
 
-    .profile-intent-page-header h1 {
+:host-context([data-theme="dark"]) .profile-intent-page-header h1 {
         color: #f8fafc;
     }
 
-    .profile-intent-page-header p {
+:host-context([data-theme="dark"]) .profile-intent-page-header p {
         color: rgba(232, 232, 232, 0.78);
     }
 
-    .profile-intent-page-badge {
-        background: rgba(0, 191, 255, 0.10);
-        border: 1px solid rgba(0, 191, 255, 0.18);
+:host-context([data-theme="dark"]) .profile-intent-page-badge {
+        background: rgba(245, 234, 216, 0.10);
+        border: 1px solid rgba(245, 234, 216, 0.18);
         color: #e7e5e4;
     }
 
-    .profile-intent-header {
-        border-bottom-color: rgba(0, 191, 255, 0.16);
+:host-context([data-theme="dark"]) .profile-intent-header {
+        border-bottom-color: rgba(245, 234, 216, 0.16);
     }
 
-    .profile-intent-title,
-    .profile-intent-body label {
+:host-context([data-theme="dark"]) .profile-intent-title,
+    :host-context([data-theme="dark"]) .profile-intent-body label {
         color: #f8fafc;
     }
 
-    .profile-intent-subtext,
-    .profile-intent-body small.text-muted,
-    .profile-intent-footnote {
+:host-context([data-theme="dark"]) .profile-intent-subtext,
+    :host-context([data-theme="dark"]) .profile-intent-body small.text-muted,
+    :host-context([data-theme="dark"]) .profile-intent-footnote {
         color: rgba(232, 232, 232, 0.76) !important;
     }
 
-    .profile-intent-close {
+:host-context([data-theme="dark"]) .profile-intent-close {
         color: rgba(232, 232, 232, 0.7);
     }
 
-    .profile-intent-actions .btn {
+:host-context([data-theme="dark"]) .profile-intent-actions .btn {
         background: linear-gradient(180deg, rgba(31, 45, 64, 0.92), rgba(26, 37, 53, 0.88));
-        border-color: rgba(0, 191, 255, 0.30);
+        border-color: rgba(245, 234, 216, 0.30);
         color: #f8fafc;
         box-shadow: none;
     }
 
-    .profile-intent-page-header .btn {
+:host-context([data-theme="dark"]) .profile-intent-page-header .btn {
         background: linear-gradient(180deg, rgba(31, 45, 64, 0.74), rgba(19, 28, 39, 0.66));
-        border-color: rgba(0, 191, 255, 0.24);
+        border-color: rgba(245, 234, 216, 0.24);
         color: #e7e5e4;
     }
 
-    .profile-intent-alert {
+:host-context([data-theme="dark"]) .profile-intent-alert {
         background: rgba(127, 29, 29, 0.3);
         border-color: rgba(248, 113, 113, 0.24);
         color: #fecaca;
     }
 
-    .profile-intent-success {
+:host-context([data-theme="dark"]) .profile-intent-success {
         background: rgba(20, 83, 45, 0.35);
         border-color: rgba(74, 222, 128, 0.24);
         color: #dcfce7;
     }
 
-    .profile-intent-recommendations {
+:host-context([data-theme="dark"]) .profile-intent-recommendations {
         background: linear-gradient(180deg, rgba(26, 37, 53, 0.9), rgba(19, 28, 39, 0.85));
-        border-color: rgba(0, 191, 255, 0.16);
+        border-color: rgba(245, 234, 216, 0.16);
         box-shadow: 0 14px 32px rgba(0, 0, 0, 0.22);
     }
 
-    .profile-intent-recommendations__header h3,
-    .profile-intent-recommendation-block h4 {
+:host-context([data-theme="dark"]) .profile-intent-recommendations__header h3,
+    :host-context([data-theme="dark"]) .profile-intent-recommendation-block h4 {
         color: #f8fafc;
     }
 
-    .profile-intent-signal,
-    .profile-intent-pill {
+:host-context([data-theme="dark"]) .profile-intent-signal,
+    :host-context([data-theme="dark"]) .profile-intent-pill {
         border-color: rgba(196, 196, 196, 0.24);
         background: rgba(196, 196, 196, 0.12);
         color: #f8fafc;
     }
-}
 
 .profile-intent-header {
     display: flex;

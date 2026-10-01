@@ -1,9 +1,17 @@
 <app-preloader [isLoading]="isLoading"></app-preloader>
 <div class="container-fluid chat-page-shell  todd-page" data-cy="chat-board-shell">
   <div class="row no-print m-2 chat-header" *ngIf="!showAuthGate">
-    <div class="col-12">
-      <img src="assets/sayit/sayit-banner.png" alt="Say It" class="chat-title-banner">
+    <div class="col-12 sayit-topbar">
+      <div class="sayit-brand">
+        <h1 class="sayit-wordmark">Say It</h1>
+        <nav class="sayit-tabs" aria-label="Say It sections">
+          <a class="sayit-tab active" routerLink="/" aria-current="page">For you</a>
+          <a class="sayit-tab" routerLink="/businesses">Orgs</a>
+          <a class="sayit-tab" routerLink="/interests">Inbox<span *ngIf="interestUnreadCount > 0" class="sayit-tab-badge">{{ interestUnreadCount }}</span></a>
+        </nav>
+      </div>
       <nav class="sayit-quick-actions" aria-label="Say It tools">
+        <app-theme-toggle></app-theme-toggle>
         <button type="button" class="sayit-quick-action sayit-hover-action" (mouseenter)="openComposerPanel()" (click)="toggleComposerPanel()" title="Create a post" aria-label="Create a post">
           <i class="fa-solid fa-pen"></i>
         </button>
@@ -41,7 +49,7 @@
       <span>Tell people who you are and what you do so they know who's posting.</span>
     </div>
     <div class="sayit-welcome-banner__actions">
-      <a class="btn btn-todd" routerLink="/profile">Finish profile</a>
+      <a class="btn-todd btn-todd-primary" routerLink="/profile">Finish profile</a>
     </div>
   </div>
   <div class="container-fluid chat-content-shell" *ngIf="!showAuthGate">

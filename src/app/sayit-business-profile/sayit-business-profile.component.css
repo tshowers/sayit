@@ -268,74 +268,72 @@
     }
 }
 
-@media (prefers-color-scheme: dark) {
-    .sayit-business-shell {
+:host-context([data-theme="dark"]) .sayit-business-shell {
         background: transparent;
     }
 
-    .sayit-business-hero,
-    .sayit-business-card {
+:host-context([data-theme="dark"]) .sayit-business-hero,
+    :host-context([data-theme="dark"]) .sayit-business-card {
         border: 1px solid rgba(255, 255, 255, 0.08);
         background: rgba(15, 15, 15, 0.95);
         box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
     }
 
-    .sayit-business-avatar {
+:host-context([data-theme="dark"]) .sayit-business-avatar {
         background: rgba(15, 15, 15, 0.95);
     }
 
-    .sayit-business-badge {
+:host-context([data-theme="dark"]) .sayit-business-badge {
         background: rgba(245, 158, 11, 0.16);
         color: #fbbf24;
     }
 
-    .sayit-business-title,
-    .sayit-business-section-head h2,
-    .sayit-business-related-top h3,
-    .sayit-business-stat strong,
-    .sayit-business-empty h1 {
+:host-context([data-theme="dark"]) .sayit-business-title,
+    :host-context([data-theme="dark"]) .sayit-business-section-head h2,
+    :host-context([data-theme="dark"]) .sayit-business-related-top h3,
+    :host-context([data-theme="dark"]) .sayit-business-stat strong,
+    :host-context([data-theme="dark"]) .sayit-business-empty h1 {
         color: #f8fafc;
     }
 
-    .sayit-business-tagline,
-    .sayit-business-pinned p,
-    .sayit-business-related-top p,
-    .sayit-business-empty p {
+:host-context([data-theme="dark"]) .sayit-business-tagline,
+    :host-context([data-theme="dark"]) .sayit-business-pinned p,
+    :host-context([data-theme="dark"]) .sayit-business-related-top p,
+    :host-context([data-theme="dark"]) .sayit-business-empty p {
         color: #cbd5e1;
     }
 
-    .sayit-business-intent,
-    .sayit-business-meta span,
-    .sayit-business-section-head p,
-    .sayit-business-label {
+:host-context([data-theme="dark"]) .sayit-business-intent,
+    :host-context([data-theme="dark"]) .sayit-business-meta span,
+    :host-context([data-theme="dark"]) .sayit-business-section-head p,
+    :host-context([data-theme="dark"]) .sayit-business-label {
         color: #94a3b8;
     }
 
-    .sayit-business-meta span {
+:host-context([data-theme="dark"]) .sayit-business-meta span {
         background: rgba(255, 255, 255, 0.06);
     }
 
-    .sayit-business-trust-badge {
+:host-context([data-theme="dark"]) .sayit-business-trust-badge {
         background: rgba(56, 189, 248, 0.14);
         color: #7dd3fc;
     }
 
-    .sayit-business-trust-badge.verified {
+:host-context([data-theme="dark"]) .sayit-business-trust-badge.verified {
         background: rgba(34, 197, 94, 0.14);
         color: #86efac;
     }
 
-    .sayit-business-pinned {
+:host-context([data-theme="dark"]) .sayit-business-pinned {
         background: rgba(255, 255, 255, 0.04);
         border: 1px solid rgba(245, 158, 11, 0.18);
     }
 
-    .sayit-business-stat,
-    .sayit-business-related-card {
+:host-context([data-theme="dark"]) .sayit-business-stat,
+    :host-context([data-theme="dark"]) .sayit-business-related-card {
         background: rgba(15, 15, 15, 0.68);
         border: 1px solid rgba(255, 255, 255, 0.06);
     }
-}
 .sayit-business-interest-row {
     display: flex;
     justify-content: space-between;

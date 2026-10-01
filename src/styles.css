@@ -1,158 +1,318 @@
 @import "@taliferro/ui/styles/controls.css";
 
+/* ════════════════════════════════════════════════════════════════════
+   Organic design system (shared with the SayIt iOS app).
+   Source: design_handoff_sayit_post_feed/styles.css.
+
+   Theme: <html data-theme="light|dark"> is always set before Angular
+   boots (see index.html + ThemeService). Never use
+   @media (prefers-color-scheme) in this app; key dark rules off
+   [data-theme="dark"] (or :host-context([data-theme="dark"]) in components).
+   ════════════════════════════════════════════════════════════════════ */
+
 :root {
-  --color-primary: #00bfff;
-  --color-primary-hover: #0095cc;
-  --color-primary-active: #006a99;
-  --color-primary-disabled: #d0f0ff;
-  --color-danger: #dc3545;
-  --color-danger-hover: #c82333;
-  --color-danger-active: #bd2130;
-  --color-danger-disabled: #f5b5bb;
-  --color-dark-text: #000;
-  --color-light-text: #fff;
-  --neutral-lightest: #fefefe;
-  --neutral-lighter: #f2f2f2;
-  --neutral-light: #ddd;
-  --neutral: #ccc;
-  --neutral-dark: #888;
-  --neutral-darker: #555;
-  --link-color: var(--color-primary);
-  --link-hover: var(--color-primary-hover);
-  --border-radius: 25px;
+  /* Ramps: same in both themes */
+  --color-neutral-100: #f9f4ed;
+  --color-neutral-200: #eee7db;
+  --color-neutral-300: #dcd3c4;
+  --color-neutral-400: #c0b6a5;
+  --color-neutral-500: #a19786;
+  --color-neutral-600: #82796a;
+  --color-neutral-700: #645c50;
+  --color-neutral-800: #474238;
+  --color-neutral-900: #2e2b25;
+
+  --color-accent-100: #fff2eb;
+  --color-accent-200: #ffe1d0;
+  --color-accent-300: #ffc6a5;
+  --color-accent-400: #f6a06b;
+  --color-accent-500: #d67f48;
+  --color-accent-600: #b2622d;
+  --color-accent-700: #8c491a;
+  --color-accent-800: #643312;
+  --color-accent-900: #402310;
+
+  --color-accent-2-100: #f0fae1;
+  --color-accent-2-200: #e1eecc;
+  --color-accent-2-300: #ccdbb2;
+  --color-accent-2-400: #aebf92;
+  --color-accent-2-500: #8fa073;
+  --color-accent-2-600: #728157;
+  --color-accent-2-700: #56633f;
+  --color-accent-2-800: #3d472b;
+  --color-accent-2-900: #272e1b;
+
+  --color-ink: #201e1d;
+  --color-cream: #f9f4ed;
+  --color-media: #2e2b25;
+  --color-danger-ink: #b42318;
+
+  --font-heading: "Caprasimo", system-ui, sans-serif;
+  --font-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --space-1: 4.4px;
+  --space-2: 8.8px;
+  --space-3: 13.2px;
+  --space-4: 17.6px;
+  --space-6: 26.4px;
+  --space-8: 35.2px;
+
+  --radius-sm: 8px;
+  --radius-md: 16px;
+  --radius-lg: 28px;
+  --radius-card: 32px;
+  --radius-pill: 999px;
+
+  --ease-snap: cubic-bezier(.2, .8, .2, 1);
+
+  /* Semantic: light */
+  color-scheme: light;
+  --color-bg: #f5ead8;
+  --color-surface: #ebddc5;
+  --color-raised: #f9f4ed;
+  --color-text: #201e1d;
+  --color-text-2: #474238;
+  --color-muted: #645c50;
+  --color-divider: rgba(32, 30, 29, 0.16);
+  --color-hover: #eee7db;
+  --color-accent: #c67139;
+  --color-link: #8c491a;
+  --color-primary-bg: #b2622d;
+  --color-primary-bg-hover: #8c491a;
+  --color-primary-ink: #f9f4ed;
+  --color-tag-bg: #f0fae1;
+  --color-tag-ink: #3d472b;
+  --color-tag-accent-bg: #fff2eb;
+  --color-tag-accent-ink: #643312;
+
+  --shadow-sm: 0 1px 2px rgba(46, 43, 37, 0.14);
+  --shadow-md: 0 3px 10px rgba(46, 43, 37, 0.16);
+  --shadow-lg: 0 12px 32px rgba(46, 43, 37, 0.22);
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #1b1917;
+  --color-surface: #2e2b25;
+  --color-raised: #26231f;
+  --color-text: #f5ead8;
+  --color-text-2: #dcd3c4;
+  --color-muted: #a19786;
+  --color-divider: rgba(245, 234, 216, 0.14);
+  --color-hover: #36322b;
+  --color-accent: #d67f48;
+  --color-link: #f6a06b;
+  --color-primary-bg: #b2622d;
+  --color-primary-bg-hover: #c67139;
+  --color-primary-ink: #f9f4ed;
+  --color-tag-bg: #3d472b;
+  --color-tag-ink: #e1eecc;
+  --color-tag-accent-bg: #643312;
+  --color-tag-accent-ink: #ffe1d0;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 0 0 1px rgba(245, 234, 216, 0.06), 0 3px 10px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 0 0 1px rgba(245, 234, 216, 0.06), 0 12px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* ─── Legacy tokens, re-pointed at Organic so older screens follow along ─── */
+:root {
+  --color-primary: var(--color-primary-bg);
+  --color-primary-hover: var(--color-primary-bg-hover);
+  --color-primary-active: var(--color-accent-800);
+  --color-primary-disabled: var(--color-accent-200);
+  --color-danger: #c0392b;
+  --color-danger-hover: #a93226;
+  --color-danger-active: #922b21;
+  --color-danger-disabled: #f2b8b0;
+  --color-dark-text: var(--color-ink);
+  --color-light-text: var(--color-cream);
+  --neutral-lightest: var(--color-neutral-100);
+  --neutral-lighter: var(--color-neutral-200);
+  --neutral-light: var(--color-neutral-300);
+  --neutral: var(--color-neutral-400);
+  --neutral-dark: var(--color-neutral-600);
+  --neutral-darker: var(--color-neutral-800);
+  --link-color: var(--color-link);
+  --link-hover: var(--color-accent-700);
+  --border-radius: var(--radius-pill);
   --btn-padding: 0.55rem 1.25rem;
   --btn-font-size: 0.95rem;
-  --btn-font-weight: 500;
-  --btn-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  --color-link-button: #0095cc;
-  --color-link-button-hover: #006a99;
-  --color-muted-text: #666;
-  --color-muted-dark: #999;
-  --color-warning: #ffc107;
-  --color-modal-dark-bg: #1c1c1c;
-  --color-neutral-text: #333;
-  --color-neutral-bg: rgba(248, 249, 250, 0.92);
-  --color-avatar-border: #00bfff;
-  --color-dropzone-border: #0095cc;
-  --color-dropzone-hover: rgba(240, 242, 245, 0.82);
-  --color-step-pill-bg: rgba(232, 236, 240, 0.82);
-  --color-step-pill-text: #006a99;
-  --bs-primary: #0095cc;
-  --bs-primary-rgb: 0, 149, 204;
-  --bs-link-color: #0095cc;
-  --bs-link-color-rgb: 0, 149, 204;
-  --bs-link-hover-color: #006a99;
-  --bs-link-hover-color-rgb: 0, 106, 153;
-  --tl-blue: #00bfff;
-  --tl-blue-mid: #0095cc;
-  --tl-blue-deep: #006a99;
-  --tl-blue-light: #d0f0ff;
-  --tl-blue-glow: rgba(0, 191, 255, 0.18);
-  --tl-blue-glow-strong: rgba(0, 191, 255, 0.45);
-  --tl-blue-subtle: rgba(0, 191, 255, 0.10);
-  --tl-blue-border: rgba(0, 191, 255, 0.20);
-  --tl-amber: #de8b38;
-  --tl-amber-rgb: 194, 101, 10;
-  --tl-amber-ink: #ffffff;
+  --btn-font-weight: 600;
+  --btn-shadow: var(--shadow-sm);
+  --color-link-button: var(--color-link);
+  --color-link-button-hover: var(--color-accent-700);
+  --color-muted-text: var(--color-muted);
+  --color-muted-dark: var(--color-neutral-500);
+  --color-warning: #d4a017;
+  --color-modal-dark-bg: var(--color-surface);
+  --color-neutral-text: var(--color-text-2);
+  --color-neutral-bg: var(--color-raised);
+  --color-avatar-border: var(--color-accent-2-600);
+  --color-dropzone-border: var(--color-accent);
+  --color-dropzone-hover: var(--color-hover);
+  --color-step-pill-bg: var(--color-surface);
+  --color-step-pill-text: var(--color-link);
+
+  --bs-primary: #b2622d;
+  --bs-primary-rgb: 178, 98, 45;
+  --bs-link-color: var(--color-link);
+  --bs-link-color-rgb: 140, 73, 26;
+  --bs-link-hover-color: var(--color-accent-700);
+  --bs-link-hover-color-rgb: 140, 73, 26;
+  --bs-body-font-family: var(--font-body);
+  --bs-body-bg: var(--color-bg);
+  --bs-body-color: var(--color-text);
+  --bs-border-color: var(--color-divider);
+
+  --tl-blue: var(--color-accent);
+  --tl-blue-mid: var(--color-primary-bg);
+  --tl-blue-deep: var(--color-accent-700);
+  --tl-blue-light: var(--color-accent-100);
+  --tl-blue-glow: rgba(198, 113, 57, 0.18);
+  --tl-blue-glow-strong: rgba(198, 113, 57, 0.4);
+  --tl-blue-subtle: rgba(198, 113, 57, 0.1);
+  --tl-blue-border: rgba(198, 113, 57, 0.22);
+  --tl-amber: var(--color-accent);
+  --tl-amber-rgb: 198, 113, 57;
+  --tl-amber-ink: var(--color-cream);
+
+  --todd-panel-bg: var(--color-raised);
+  --todd-panel-border: var(--color-divider);
+  --todd-panel-text: var(--color-text);
+  --todd-panel-subtext: var(--color-muted);
+  --todd-bg: var(--color-bg);
+  --todd-text: var(--color-text);
+  --todd-subtext: var(--color-muted);
+  --todd-border: var(--color-divider);
+  --todd-surface-1: var(--color-raised);
+  --todd-surface-2: var(--color-surface);
+  --todd-input-bg: var(--color-raised);
+  --todd-input-border: var(--color-divider);
+  --todd-placeholder: var(--color-muted);
+  --todd-table-cell-bg: var(--color-raised);
+  --todd-table-row-even-bg: var(--color-surface);
+  --todd-table-row-hover-bg: var(--color-hover);
+  --todd-navbar-bg: var(--color-raised);
+  --todd-card-bg: var(--color-raised);
+  --todd-modal-bg: var(--color-raised);
+  --todd-modal-chrome-bg: var(--color-surface);
+  --todd-btn-bg: var(--color-surface);
+  --todd-btn-text: var(--color-text);
+  --todd-link: var(--color-link);
+
+  --page-text: var(--color-text);
+  --field-bg: var(--color-raised);
+  --field-border: var(--color-divider);
+  --field-placeholder: var(--color-muted);
+  --field-text: var(--color-text);
+  --field-shadow: none;
+  --focus-ring: rgba(198, 113, 57, 0.35);
+
+  /* @taliferro/ui controls */
+  --tt-control-radius: var(--radius-pill);
+  --tt-control-radius-sm: var(--radius-md);
+  --tt-control-text: var(--color-text);
+  --tt-control-muted: var(--color-muted);
+  --tt-control-surface: var(--color-raised);
+  --tt-control-surface-subtle: var(--color-surface);
+  --tt-control-border: var(--color-divider);
+  --tt-control-border-strong: var(--color-neutral-500);
+  --tt-control-primary: var(--color-primary-bg);
+  --tt-control-primary-deep: var(--color-accent-700);
+  --tt-control-primary-contrast: var(--color-cream);
+  --tt-control-focus: var(--color-accent);
+  --tt-control-focus-ring: rgba(198, 113, 57, 0.25);
+  --tt-control-shadow: var(--shadow-md);
 }
 
-:root {
-  --todd-panel-bg: rgba(255, 255, 255, 0.94);
-  --todd-panel-border: rgba(0, 0, 0, .08);
-  --todd-panel-text: #222;
-  --todd-panel-subtext: #555;
-
-  --todd-bg: var(--todd-panel-bg);
-  --todd-text: var(--todd-panel-text);
-  --todd-subtext: var(--todd-panel-subtext);
-  --todd-border: var(--todd-panel-border);
-
-  --todd-surface-1: rgba(255, 255, 255, 0.92);
-  --todd-surface-2: rgba(248, 249, 250, 0.9);
-
-  --todd-input-bg: rgba(255, 255, 255, 0.92);
-  --todd-input-border: rgba(0, 0, 0, .18);
-  --todd-placeholder: #777;
-
-  --todd-table-cell-bg: rgba(255, 255, 255, 0.92);
-  --todd-table-row-even-bg: #f7f7f7;
-  --todd-table-row-hover-bg: rgba(236, 239, 242, 0.88);
-
-  --todd-navbar-bg: rgba(255, 255, 255, 0.92);
-  --todd-card-bg: rgba(255, 255, 255, 0.92);
-  --todd-modal-bg: rgba(255, 255, 255, 0.94);
-  --todd-modal-chrome-bg: rgba(248, 249, 250, 0.9);
-  --todd-btn-bg: #f2f2f2;
-  --todd-btn-text: #111;
-
-  --todd-link: #0095cc;
-
-  --page-text: var(--todd-panel-text);
-  --field-bg: linear-gradient(180deg, rgba(248, 250, 252, 0.95), rgba(241, 245, 249, 0.95));
-  --field-border: rgba(148, 163, 184, 0.22);
-  --field-placeholder: rgba(100, 116, 139, 0.88);
-  --field-text: #0f172a;
-  --field-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
-  --focus-ring: rgba(0, 149, 204, 0.55);
+/* The shared controls layer sets its own blue dark values on [data-theme="dark"];
+   the doubled attribute outranks it so SayIt stays on the Organic palette. */
+:root[data-theme="dark"][data-theme="dark"] {
+  --tt-control-text: var(--color-text);
+  --tt-control-muted: var(--color-muted);
+  --tt-control-surface: var(--color-raised);
+  --tt-control-surface-subtle: var(--color-surface);
+  --tt-control-border: var(--color-divider);
+  --tt-control-border-strong: var(--color-neutral-600);
+  --tt-control-primary: var(--color-primary-bg);
+  --tt-control-primary-deep: var(--color-accent-700);
+  --tt-control-focus-ring: rgba(214, 127, 72, 0.3);
+  --tt-control-shadow: var(--shadow-md);
+  --bs-link-color-rgb: 246, 160, 107;
+  --bs-link-hover-color-rgb: 255, 198, 165;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --todd-panel-bg: #0d1117;
-    --todd-panel-border: rgba(0, 191, 255, 0.12);
-    --todd-panel-text: #f0f6ff;
-    --todd-panel-subtext: #8ba4bd;
-
-    --todd-bg: var(--todd-panel-bg);
-    --todd-text: var(--todd-panel-text);
-    --todd-subtext: var(--todd-panel-subtext);
-    --todd-border: var(--todd-panel-border);
-
-    --todd-surface-1: #131c27;
-    --todd-surface-2: #1a2535;
-
-    --todd-input-bg: #1a2535;
-    --todd-input-border: rgba(0, 191, 255, 0.28);
-    --todd-placeholder: #5e7a94;
-
-    --todd-table-cell-bg: #1a2535;
-    --todd-table-row-even-bg: #131c27;
-    --todd-table-row-hover-bg: #1f3048;
-
-    --todd-navbar-bg: #131c27;
-    --todd-card-bg: #1a2535;
-    --todd-modal-bg: #131c27;
-    --todd-modal-chrome-bg: #1a2535;
-    --todd-btn-bg: #1f2d40;
-    --todd-btn-text: #e8f4ff;
-
-    --todd-link: #00bfff;
-
-    --tl-amber: #fcc168;
-    --tl-amber-rgb: 255, 181, 69;
-    --tl-amber-ink: #2b1400;
-
-    --page-text: var(--todd-panel-text);
-    --field-bg: linear-gradient(180deg, rgba(27, 30, 36, 0.88), rgba(20, 23, 29, 0.82));
-    --field-border: rgba(148, 163, 184, 0.18);
-    --field-placeholder: rgba(148, 163, 184, 0.72);
-    --field-text: #f8fafc;
-    --field-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
-    --focus-ring: rgba(0, 191, 255, 0.65);
-  }
-
-  .btn-close {
-    filter: invert(1);
-  }
+/* ─── Base ─── */
+html,
+body {
+  background: var(--color-bg);
 }
 
 body {
-  background: var(--todd-bg);
-  color: var(--todd-text);
+  color: var(--color-text);
+  font-family: var(--font-body);
   margin: 0;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
-/* ─── TODD Global Field Styles (source of truth: task-edit.component.css) ─── */
+h1,
+h2,
+h3,
+h4,
+.font-heading {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+a {
+  color: var(--color-link);
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--color-accent-700);
+}
+
+[data-theme="dark"] a:hover {
+  color: var(--color-accent-300);
+}
+
+::selection {
+  background: rgba(198, 113, 57, 0.3);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.text-muted {
+  color: var(--color-muted) !important;
+}
+
+/* Organic tags */
+.tag {
+  display: inline-flex;
+  align-items: center;
+  height: 22px;
+  padding: 0 10px;
+  border-radius: var(--radius-pill);
+  font: 700 11px/1 var(--font-body);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--color-tag-bg);
+  color: var(--color-tag-ink);
+}
+
+.tag-accent {
+  background: var(--color-tag-accent-bg);
+  color: var(--color-tag-accent-ink);
+}
+
+/* ─── Fields ─── */
 .form-group {
   display: flex;
   flex-direction: column;
@@ -162,8 +322,7 @@ body {
 .form-group label {
   font-size: 0.9rem;
   font-weight: 700;
-  letter-spacing: 0.01em;
-  color: var(--page-text, #0f172a);
+  color: var(--color-text);
 }
 
 .form-control,
@@ -172,29 +331,31 @@ body {
 .multi-select {
   width: 100%;
   min-height: 48px;
-  border-radius: 16px;
+  border-radius: var(--radius-md);
   border: 1px solid var(--field-border);
   background: var(--field-bg);
   color: var(--field-text);
   box-shadow: var(--field-shadow);
-  padding: 0.85rem 0.95rem;
-  font-family: 'Segoe UI', 'Inter', sans-serif;
+  padding: 0.85rem 1rem;
+  font-family: var(--font-body);
   font-size: 0.95rem;
+}
+
+input.form-control {
+  border-radius: var(--radius-pill);
+  padding-inline: 1.1rem;
 }
 
 .form-select,
 .todd-select {
   padding-right: 2.5rem;
-  font-weight: 700;
+  font-weight: 600;
 }
 
-@media (prefers-color-scheme: dark) {
-
-  .form-select option,
-  .todd-select option {
-    background-color: #1e2127;
-    color: #f8fafc;
-  }
+[data-theme="dark"] .form-select option,
+[data-theme="dark"] .todd-select option {
+  background-color: var(--color-surface);
+  color: var(--color-text);
 }
 
 .form-control::placeholder,
@@ -207,8 +368,8 @@ textarea.form-control::placeholder,
 .form-select:focus,
 .multi-select:focus {
   outline: none;
-  border-color: rgba(250, 250, 250, 0.54);
-  box-shadow: 0 0 0 4px var(--focus-ring), 0 10px 24px rgba(37, 99, 235, 0.10);
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 4px var(--focus-ring);
   background: var(--field-bg);
   color: var(--field-text);
 }
@@ -225,27 +386,27 @@ textarea.form-control {
   resize: vertical;
 }
 
-/* ─── Toast notifications ─── */
+[data-theme="dark"] .btn-close {
+  filter: invert(1);
+}
+
+/* ─── Toast notifications (Organic pill toast) ─── */
 .todd-notification {
   position: fixed;
-  top: 3.5rem;
+  top: 1.25rem;
   left: 50%;
   transform: translateX(-50%) translateY(-20px);
   z-index: 2000;
-  min-width: 280px;
-  max-width: 360px;
-  padding: 0.75rem 1.25rem;
-
-  border: 1px solid rgba(148, 163, 184, 0.4);
-  background: rgba(255, 255, 255, 0.08);
-  color: #0f172a;
-  backdrop-filter: saturate(180%) blur(20px);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, .5) inset, 0 8px 20px rgba(2, 6, 23, .12);
-
-  font-size: 0.85rem;
-  border-radius: 25px;
-
-  border-left: 4px solid var(--color-primary);
+  min-width: 260px;
+  max-width: 380px;
+  padding: 0.7rem 2.5rem 0.7rem 1.1rem;
+  border: 0;
+  border-left: 4px solid var(--color-accent-2-600);
+  border-radius: 22px;
+  background: var(--color-neutral-100);
+  color: var(--color-ink);
+  box-shadow: var(--shadow-lg);
+  font: 600 0.85rem/1.4 var(--font-body);
   transition: transform 0.3s ease, opacity 0.3s ease;
   opacity: 0;
 }
@@ -257,46 +418,44 @@ textarea.form-control {
 
 @media (max-width: 480px) {
   .todd-notification {
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%) translateY(20px);
     width: 90%;
     max-width: 90%;
-  }
-
-  .todd-notification.show {
-    transform: translateX(-50%) translateY(0);
   }
 }
 
 .todd-notification h4 {
-  font-size: 1rem;
-  margin: 0 0 0.25rem;
-  font-weight: 600;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin: 0 0 0.15rem;
 }
 
 .todd-notification p {
   margin: 0;
   font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-neutral-800);
 }
 
 .todd-notification .btn-close {
   position: absolute;
   right: 0.75rem;
   top: 0.75rem;
+  min-height: 0;
   background: none;
   border: none;
   font-size: 1rem;
-  color: var(--color-muted-text);
+  color: var(--color-neutral-700);
   cursor: pointer;
+  filter: none;
 }
 
 .todd-notification .btn-close:hover {
-  color: #000;
+  color: var(--color-ink);
 }
 
 .todd-notification.success {
-  border-left-color: var(--color-primary);
+  border-left-color: var(--color-accent-2-600);
 }
 
 .todd-notification.error {
@@ -307,185 +466,119 @@ textarea.form-control {
   border-left-color: var(--color-warning);
 }
 
-@media (prefers-color-scheme: dark) {
-  .todd-notification .btn-close:hover {
-    color: #fff;
-  }
-
-  .todd-notification {
-    color: #e5e7eb;
-    background: rgba(31, 41, 55, .6);
-    border-color: rgba(75, 85, 99, .6);
-  }
+[data-theme="dark"] .todd-notification {
+  background: var(--color-neutral-900);
+  color: var(--color-neutral-100);
 }
 
-/* ─── TODD button (.btn-todd) ─── */
-.btn-todd {
+[data-theme="dark"] .todd-notification p {
+  color: var(--color-neutral-300);
+}
+
+[data-theme="dark"] .todd-notification .btn-close {
+  color: var(--color-neutral-400);
+}
+
+[data-theme="dark"] .todd-notification .btn-close:hover {
+  color: var(--color-neutral-100);
+}
+
+/* ─── Buttons (.btn-todd → Organic outline pill; .active/.btn-todd-primary → terracotta).
+   Scoped under [data-theme] + !important to outrank @taliferro/ui's blue .btn-todd. ─── */
+[data-theme] .btn-todd {
   margin-top: 5px;
-  padding: 0.72rem 1.2rem;
-  font-size: var(--btn-font-size);
-  font-weight: 700;
+  padding: 0.6rem 1.15rem;
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: 0.95rem;
   line-height: 1;
-  letter-spacing: -0.01em;
-  border-radius: 18px;
-  border: 1px solid rgba(0, 149, 204, 0.24);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.86), rgba(235, 242, 247, 0.74));
-  color: #0d1820;
-  font-family: 'Segoe UI', 'Inter', sans-serif;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--color-divider) !important;
+  background: transparent !important;
+  color: var(--color-text) !important;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  min-height: 44px;
+  min-height: 42px;
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
-  backdrop-filter: blur(18px) saturate(180%);
-  -webkit-backdrop-filter: blur(18px) saturate(180%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.82),
-    0 14px 34px rgba(15, 23, 42, 0.10),
-    0 0 0 1px rgba(255, 255, 255, 0.55);
-  transition:
-    background 0.18s ease,
-    color 0.18s ease,
-    border-color 0.18s ease,
-    box-shadow 0.18s ease,
-    transform 0.18s ease;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.12s ease;
 }
 
-.btn-todd-sm {
-  padding: 0.56rem 0.95rem;
+[data-theme] .btn-todd-sm {
+  padding: 0.5rem 0.9rem;
   font-size: 0.85rem;
-  min-height: 38px;
-  border-radius: 15px;
+  min-height: 36px;
 }
 
-.btn-todd.icon-only {
+[data-theme] .btn-todd.icon-only {
   padding: 0;
   width: 42px;
   height: 42px;
   min-height: 42px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   font-size: 1rem;
-  border-radius: 16px;
 }
 
-.btn-todd.active {
-  background:
-    linear-gradient(180deg, rgba(0, 191, 255, 0.20), rgba(0, 149, 204, 0.14));
-  border-color: rgba(0, 149, 204, 0.46);
-  color: #06101a;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.76),
-    0 16px 36px rgba(0, 149, 204, 0.16),
-    0 0 0 3px rgba(0, 191, 255, 0.12);
-}
-
-.btn-todd-left {
-  font-size: 0.9rem;
-  border: 1px solid rgba(0, 149, 204, 0.24);
-  display: inline-flex;
+[data-theme] .btn-todd-left {
   justify-content: flex-start;
-  align-items: center;
   text-align: left;
   padding-left: 1rem;
   padding-right: 1rem;
   width: auto;
 }
 
-.btn-todd-left i {
+[data-theme] .btn-todd-left i {
   margin-right: 0.5rem;
 }
 
-.btn-todd:disabled {
-  background: rgba(226, 232, 240, 0.58);
-  color: var(--color-muted-text);
-  border-color: rgba(203, 213, 225, 0.58);
+[data-theme] .btn-todd:hover,
+[data-theme] .btn-todd:focus-visible {
+  background: var(--color-hover) !important;
+  border-color: var(--color-divider) !important;
+  color: var(--color-text) !important;
+  text-decoration: none;
+}
+
+[data-theme] .btn-todd:active {
+  transform: scale(0.97);
+}
+
+[data-theme] .btn-todd.active,
+[data-theme] .btn-todd-primary {
+  background: var(--color-primary-bg) !important;
+  border-color: var(--color-primary-bg) !important;
+  color: var(--color-primary-ink) !important;
+}
+
+[data-theme] .btn-todd.active:hover,
+[data-theme] .btn-todd-primary:hover,
+[data-theme] .btn-todd-primary:focus-visible {
+  background: var(--color-primary-bg-hover) !important;
+  border-color: var(--color-primary-bg-hover) !important;
+  color: var(--color-primary-ink) !important;
+}
+
+[data-theme] .btn-todd:disabled {
+  opacity: 0.5;
   cursor: not-allowed;
-  opacity: 0.68;
-  box-shadow: none;
   transform: none;
 }
 
-.btn-todd:hover,
-.btn-todd:focus {
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(226, 241, 250, 0.82));
-  border-color: rgba(0, 191, 255, 0.50);
-  color: #06101a;
-  text-decoration: none;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    0 18px 40px rgba(15, 23, 42, 0.14),
-    0 0 0 3px var(--tl-blue-glow);
-  transform: translateY(-1px);
-}
-
-.btn-todd:active {
-  background:
-    linear-gradient(180deg, rgba(216, 234, 244, 0.88), rgba(241, 247, 250, 0.76));
-  border-color: rgba(0, 149, 204, 0.42);
-  box-shadow:
-    inset 0 2px 10px rgba(15, 23, 42, 0.13),
-    0 7px 18px rgba(15, 23, 42, 0.10);
-  transform: translateY(0);
-}
-
-@media (prefers-color-scheme: dark) {
-  .btn-todd {
-    background:
-      linear-gradient(180deg, rgba(31, 45, 64, 0.82), rgba(13, 20, 31, 0.78));
-    color: #f0f8ff;
-    border: 1px solid rgba(0, 191, 255, 0.22);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.08),
-      0 14px 34px rgba(0, 0, 0, 0.42),
-      0 0 0 1px rgba(255, 255, 255, 0.03);
-  }
-
-  .btn-todd:hover,
-  .btn-todd:focus {
-    background:
-      linear-gradient(180deg, rgba(40, 58, 80, 0.92), rgba(17, 30, 46, 0.86));
-    border-color: rgba(0, 191, 255, 0.48);
-    color: #ffffff;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.12),
-      0 18px 42px rgba(0, 0, 0, 0.50),
-      0 0 0 3px var(--tl-blue-glow);
-  }
-
-  .btn-todd:active {
-    background:
-      linear-gradient(180deg, rgba(9, 16, 26, 0.92), rgba(18, 31, 48, 0.82));
-    border-color: rgba(0, 191, 255, 0.28);
-    box-shadow:
-      inset 0 2px 10px rgba(0, 0, 0, 0.38),
-      0 8px 18px rgba(0, 0, 0, 0.36);
-  }
-
-  .btn-todd:disabled {
-    background: rgba(51, 65, 85, 0.34);
-    color: #94a3b8;
-    border-color: rgba(148, 163, 184, 0.16);
-    cursor: not-allowed;
-    opacity: 0.58;
-    box-shadow: none;
-    transform: none;
-  }
-
-  .btn-todd.active {
-    background:
-      linear-gradient(180deg, rgba(0, 191, 255, 0.22), rgba(0, 106, 153, 0.18));
-    border-color: rgba(0, 191, 255, 0.42);
-    color: #ffffff;
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.12),
-      0 18px 42px rgba(0, 0, 0, 0.48),
-      0 0 0 3px rgba(0, 191, 255, 0.10);
-  }
+/* Bootstrap primary buttons follow the accent too */
+.btn-primary {
+  --bs-btn-bg: #b2622d;
+  --bs-btn-border-color: #b2622d;
+  --bs-btn-hover-bg: #8c491a;
+  --bs-btn-hover-border-color: #8c491a;
+  --bs-btn-active-bg: #643312;
+  --bs-btn-active-border-color: #643312;
+  --bs-btn-color: #f9f4ed;
+  --bs-btn-hover-color: #f9f4ed;
+  --bs-btn-active-color: #f9f4ed;
+  border-radius: var(--radius-pill);
 }

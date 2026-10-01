@@ -6,7 +6,7 @@
 .site-footer {
   width: 100%;
   padding: 1.25rem 1rem 1.5rem;
-  color: #68727d;
+  color: var(--color-muted);
   font-size: 0.68rem;
   line-height: 1.6;
   text-align: center;
@@ -18,7 +18,8 @@
 }
 
 .site-footer__design,
-.site-footer__links {
+.site-footer__links,
+.site-footer__theme {
   margin-left: 0.3rem;
 }
 

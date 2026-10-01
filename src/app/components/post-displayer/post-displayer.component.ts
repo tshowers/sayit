@@ -21,8 +21,6 @@ import { Email } from '../../shared/models/email.model';
 import { environment } from '../../../environments/environment';
 import { EmailService } from '../../services/email.service';
 import { SayItDataService } from '../../services/sayit-data.service';
-import { GetVideoPlatformPipe } from '../../pipes/get-video-platform.pipe';
-import { ExtractVideoIdPipe } from '../../pipes/extract-video-id.pipe';
 import { GetVideoIconPipe } from '../../pipes/get-video-icon.pipe';
 import { TruncatePipe } from '../../pipes/truncate.pipe';
 import { AIContentExtractorPipe } from '../../pipes/aicontent-extractor.pipe';
@@ -49,16 +47,12 @@ import {
     CommonModule,
     RouterModule,
     FormsModule,
-    IsVideoLinkPipe,
     SafeVideoUrlPipe,
     FormatAITextPipe,
     RelativeTimePipe,
     ExactTimePipe,
     LinkifyPipe,
-    GetVideoPlatformPipe,
-    ExtractVideoIdPipe,
     TruncatePipe,
-    GetVideoIconPipe,
     AIContentExtractorPipe, ClickSoundDirective],
   standalone: true,
   templateUrl: './post-displayer.component.html',
@@ -197,6 +191,103 @@ export class PostDisplayerComponent implements OnChanges {
 
   trackById ( index: number, post: any ): string {
     return post.id; // Use the unique 'id' to track each post
+  }
+
+  // ─── Card view helpers (Organic "overlay + rail" card, matching the iOS app) ───
+
+  /** Posts the visitor marked "I'm interested" this session. */
+  private interestedIds = new Set<string>();
+  /** Flagged posts the visitor chose to view anyway. */
+  private revealedIds = new Set<string>();
+  /** The card whose comment sheet is open. */
+  openCommentsPostId: string | null = null;
+
+  private readonly isVideoLinkPipe = new IsVideoLinkPipe();
+  private readonly videoIconPipe = new GetVideoIconPipe();
+
+  /** What fills the card: a video thumbnail, a photo, a link preview image, or nothing (a text post). */
+  cardMedia ( post: any ): { type: 'video' | 'image' | 'link' | 'none'; src: string; } {
+    const url = String( post?.linkPreview?.url || '' );
+    if ( url && this.isVideoLinkPipe.transform( url ) ) {
+      return { type: 'video', src: post.linkPreview.image || this.videoIconPipe.transform( url ) };
+    }
+    if ( post?.postImageUrl && !url ) {
+      return { type: 'image', src: post.postImageUrl };
+    }
+    if ( url && post?.linkPreview?.image ) {
+      return { type: 'link', src: post.linkPreview.image };
+    }
+    return { type: 'none', src: '' };
+  }
+
+  openCardMedia ( post: any ): void {
+    const media = this.cardMedia( post );
+    if ( media.type === 'video' ) {
+      this.toggleOnSelection();
+      this.openVideoLightbox( post );
+    } else if ( media.type === 'image' ) {
+      this.toggleOnSelection();
+      this.openLightbox( media.src );
+    } else if ( media.type === 'link' ) {
+      window.open( post.linkPreview.url, '_blank', 'noopener' );
+    }
+  }
+
+  /** Category as a small tag ("Hiring", "Food"…); hidden for the catch-all bucket. */
+  cardKind ( post: any ): string {
+    const category = String( post?.category || '' ).trim();
+    return !category || category.toLowerCase() === 'all' ? '' : category;
+  }
+
+  /** Author photo, or '' to fall back to initials (the generic no-photo icon clashes with the card). */
+  avatarUrl ( post: any ): string {
+    const url = String( post?.authorImageUrl || post?.imageUrl || '' ).trim();
+    return url && !url.includes( 'nophoto' ) ? url : '';
+  }
+
+  initials ( post: any ): string {
+    const words = this.getAssistantLabel( post ).replace( /[^\p{L}\p{N}\s]/gu, ' ' ).split( /\s+/ ).filter( Boolean );
+    return ( ( words[0]?.[0] || '' ) + ( words[1]?.[0] || '' ) ).toUpperCase() || '?';
+  }
+
+  likesLabel ( post: any ): string {
+    const n = Number( post?.favoriteCount || 0 );
+    return n >= 1000 ? ( n / 1000 ).toFixed( 1 ).replace( '.0', '' ) + 'k' : String( n );
+  }
+
+  toggleLike ( post: Post, event?: Event ): void {
+    if ( this.isFavorited( post ) ) {
+      event?.stopPropagation();
+      this.removeFavorite( post );
+    } else {
+      this.favoritePost( post, event );
+    }
+  }
+
+  isInterested ( post: any ): boolean {
+    return this.interestedIds.has( String( post?.id || '' ) );
+  }
+
+  isFlagged ( post: any ): boolean {
+    return Number( post?.contentRating || 0 ) >= 4 && !this.revealedIds.has( String( post?.id || '' ) );
+  }
+
+  revealPost ( post: any ): void {
+    this.revealedIds.add( String( post?.id || '' ) );
+  }
+
+  isOwnPost ( post: any ): boolean {
+    const uid = this.firebaseUser?.uid;
+    return !!uid && uid === ( post?.userId || post?.user );
+  }
+
+  toggleComments ( post: any ): void {
+    const postId = String( post?.id || '' );
+    this.openCommentsPostId = this.openCommentsPostId === postId ? null : postId;
+  }
+
+  areCommentsOpen ( post: any ): boolean {
+    return this.openCommentsPostId === String( post?.id || '' );
   }
 
   isAssistantPost ( post: any ): boolean {
@@ -632,9 +723,10 @@ export class PostDisplayerComponent implements OnChanges {
         this.logger.warn( 'Post interest email skipped: missing post author email.', { postId } );
       }
 
+      this.interestedIds.add( postId );
       this.notificationService.show(
-        'Sent',
-        'Interest sent to the author.',
+        'Added to inbox',
+        `Interest sent. Message ${String( post?.displayName || 'the author' ).split( ' ' )[0]} from your inbox.`,
         'success'
       );
     } catch ( e ) {

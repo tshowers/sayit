@@ -1,28 +1,18 @@
 :host { display: block; }
 
 .gs-shell {
-  --gs-accent: #0095cc;
-  --gs-accent-ink: #ffffff;
-  --gs-ink: #0f172a;
-  --gs-muted: #5b6475;
-  --gs-line: #dfe5ee;
-  --gs-surface: #ffffff;
-  --gs-paper: #f5f8fc;
+  /* Organic tokens from src/styles.css; they switch with the theme on their own */
+  --gs-accent: var(--color-primary-bg);
+  --gs-accent-ink: var(--color-primary-ink);
+  --gs-ink: var(--color-text);
+  --gs-muted: var(--color-muted);
+  --gs-line: var(--color-divider);
+  --gs-surface: var(--color-raised);
+  --gs-paper: var(--color-bg);
   min-height: 100vh;
   background: var(--gs-paper);
   color: var(--gs-ink);
   padding: 0 16px 48px;
-}
-@media (prefers-color-scheme: dark) {
-  .gs-shell {
-    --gs-accent: #33c1f2;
-    --gs-accent-ink: #04121f;
-    --gs-ink: #e8edf5;
-    --gs-muted: #9aa5b8;
-    --gs-line: #2a3446;
-    --gs-surface: #151c29;
-    --gs-paper: #0c111b;
-  }
 }
 .gs-shell * { box-sizing: border-box; }
 

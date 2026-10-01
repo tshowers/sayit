@@ -6,15 +6,13 @@
   --promo-line: rgba(32, 30, 29, 0.14);
   --promo-accent: #b2622d;
 }
-@media (prefers-color-scheme: dark) {
-  :host {
+:host-context([data-theme="dark"]) {
     --promo-ink: #f3ebdd;
     --promo-muted: #b3a898;
     --promo-surface: #25221e;
     --promo-line: rgba(243, 235, 221, 0.16);
     --promo-accent: #f6a06b;
   }
-}
 
 /* App Store button */
 .promo-store {

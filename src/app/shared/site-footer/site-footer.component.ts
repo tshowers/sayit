@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 
 @Component( {
   selector: 'app-site-footer',
   standalone: true,
+  imports: [ThemeToggleComponent],
   templateUrl: './site-footer.component.html',
   styleUrl: './site-footer.component.css'
 } )

@@ -355,17 +355,16 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .post-view-shell {
+:host-context([data-theme="dark"]) .post-view-shell {
     color: #f8fafc;
   }
 
-  .post-view-author-name,
-  .post-view-author-name a {
+:host-context([data-theme="dark"]) .post-view-author-name,
+  :host-context([data-theme="dark"]) .post-view-author-name a {
     color: #f8fafc !important;
   }
 
-  .post-view-card {
+:host-context([data-theme="dark"]) .post-view-card {
     background: linear-gradient(180deg, rgba(36, 39, 46, 0.84), rgba(30, 33, 39, 0.76));
     border-color: rgba(148, 163, 184, 0.14);
     box-shadow:
@@ -375,39 +374,38 @@
     -webkit-backdrop-filter: blur(14px);
   }
 
-  .post-view-header,
-  .post-view-footer {
+:host-context([data-theme="dark"]) .post-view-header,
+  :host-context([data-theme="dark"]) .post-view-footer {
     border-color: rgba(148, 163, 184, 0.12);
   }
 
-  .post-view-eyebrow,
-  .post-view-category,
-  .post-view-rating,
-  .post-view-author-time,
-  .post-view-rating-explainer,
-  .post-view-rating-notes,
-  .post-view-link-description {
+:host-context([data-theme="dark"]) .post-view-eyebrow,
+  :host-context([data-theme="dark"]) .post-view-category,
+  :host-context([data-theme="dark"]) .post-view-rating,
+  :host-context([data-theme="dark"]) .post-view-author-time,
+  :host-context([data-theme="dark"]) .post-view-rating-explainer,
+  :host-context([data-theme="dark"]) .post-view-rating-notes,
+  :host-context([data-theme="dark"]) .post-view-link-description {
     color: rgba(232, 232, 232, 0.76);
   }
 
-  .post-view-author-name,
-  .post-view-message,
-  .post-view-message a,
-  .post-view-link-title,
-  .post-view-link-title a {
+:host-context([data-theme="dark"]) .post-view-author-name,
+  :host-context([data-theme="dark"]) .post-view-message,
+  :host-context([data-theme="dark"]) .post-view-message a,
+  :host-context([data-theme="dark"]) .post-view-link-title,
+  :host-context([data-theme="dark"]) .post-view-link-title a {
     color: #f8fafc;
   }
 
-  .post-view-video-frame,
-  .post-view-link-preview {
+:host-context([data-theme="dark"]) .post-view-video-frame,
+  :host-context([data-theme="dark"]) .post-view-link-preview {
     background: rgba(19, 28, 39, 0.6);
-    border-color: rgba(0, 191, 255, 0.14);
+    border-color: rgba(245, 234, 216, 0.14);
   }
 
-  .custom-lightbox .modal-content {
+:host-context([data-theme="dark"]) .custom-lightbox .modal-content {
     background: rgba(20, 20, 20, 0.94) !important;
   }
-}
 
 @media (max-width: 767.98px) {
   .post-view-video-frame {

@@ -23,7 +23,24 @@
   <meta name="twitter:image" content="https://sayit.taliferro.tech/assets/seo/sayit-card.webp">
   <meta name="twitter:image:alt" content="SayIt business profiles and updates by Taliferro Tech">
 
-  <meta name="theme-color" content="#141a1e">
+  <meta name="theme-color" content="#f5ead8">
+  <!-- Set the theme before first paint: saved choice, else the system setting. Keep in sync with ThemeService. -->
+  <script>
+    (function () {
+      var theme;
+      try { theme = localStorage.getItem('sayit-theme'); } catch (e) {}
+      if (theme !== 'light' && theme !== 'dark') {
+        theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      var root = document.documentElement;
+      root.setAttribute('data-theme', theme);
+      root.setAttribute('data-bs-theme', theme);
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'dark' ? '#1b1917' : '#f5ead8');
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;500;600;700&display=swap">
   <link rel="icon" type="image/png" sizes="128x111" href="/assets/seo/sayit-icon.png">
   <link rel="apple-touch-icon" href="/assets/seo/sayit-icon.png">
   <!-- Google Analytics 4 / SayIt web stream -->

@@ -26,17 +26,15 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .preloader-inline {
+:host-context([data-theme="dark"]) .preloader-inline {
     color: rgba(255, 255, 255, 0.82);
   }
 
-  .preloader-inline-spinner {
+:host-context([data-theme="dark"]) .preloader-inline-spinner {
     border-color: rgba(255, 255, 255, 0.16);
     border-top-color: #6fccff;
     border-right-color: #ffb56e;
   }
-}
 
 /* Preloader styles */
 #preloader {
@@ -177,19 +175,18 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  #preloader {
+:host-context([data-theme="dark"]) #preloader {
     background:
       radial-gradient(circle at 18% 18%, rgba(111, 204, 255, 0.14), transparent 24%),
       radial-gradient(circle at 82% 82%, rgba(255, 181, 110, 0.14), transparent 26%),
       linear-gradient(180deg, rgba(6, 10, 18, 0.34), rgba(6, 10, 18, 0.48));
   }
 
-  #preloader::before {
+:host-context([data-theme="dark"]) #preloader::before {
     background: rgba(6, 10, 18, 0.20);
   }
 
-  #preloader .taliferro-hero-graphic {
+:host-context([data-theme="dark"]) #preloader .taliferro-hero-graphic {
     background: linear-gradient(180deg, rgba(18, 22, 30, 0.52) 0%, rgba(18, 22, 30, 0.34) 100%);
     border: 1px solid rgba(255, 255, 255, 0.10);
     box-shadow:
@@ -197,10 +194,9 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.05);
   }
 
-  #preloader .preloader-message {
+:host-context([data-theme="dark"]) #preloader .preloader-message {
     color: rgba(255, 255, 255, 0.84);
   }
-}
 
 .home-promo-banner {
   position: relative;
@@ -782,173 +778,145 @@ main[role="main"] {
 }
 
 /* Dark mode (system) */
-@media (prefers-color-scheme: dark) {
-
-  .tt-services-card,
-  .tt-products-top,
-  .tt-bms-card,
-  .tt-services-note,
-  .home-guidance-frame,
-  .home-right,
-  .siteHeaderInner,
-  .siteFooterInner,
-  .home-below>#appBelow,
-  .home-explore-toggle,
-  .home-explore-panel {
+:host-context([data-theme="dark"]) .tt-services-card,
+  :host-context([data-theme="dark"]) .tt-products-top,
+  :host-context([data-theme="dark"]) .tt-bms-card,
+  :host-context([data-theme="dark"]) .tt-services-note,
+  :host-context([data-theme="dark"]) .home-guidance-frame,
+  :host-context([data-theme="dark"]) .home-right,
+  :host-context([data-theme="dark"]) .siteHeaderInner,
+  :host-context([data-theme="dark"]) .siteFooterInner,
+  :host-context([data-theme="dark"]) .home-below>#appBelow,
+  :host-context([data-theme="dark"]) .home-explore-toggle,
+  :host-context([data-theme="dark"]) .home-explore-panel {
     background: rgba(19, 28, 39, 0.78) !important;
-    border: 1px solid rgba(0, 191, 255, 0.16);
+    border: 1px solid rgba(245, 234, 216, 0.16);
     color: rgba(255, 255, 255, 0.92) !important;
     box-shadow: 0 16px 44px rgba(0, 0, 0, 0.55);
   }
-
-  .home-guidance-intro p,
-  .home-right .microCopy,
-  .home-right .collapseHint,
-  .tt-panel-intro,
-  .tt-panel-sub,
-  .tt-services-note p,
-  .tt-bms-sub,
-  .siteFooterInner {
+:host-context([data-theme="dark"]) .home-guidance-intro p,
+  :host-context([data-theme="dark"]) .home-right .microCopy,
+  :host-context([data-theme="dark"]) .home-right .collapseHint,
+  :host-context([data-theme="dark"]) .tt-panel-intro,
+  :host-context([data-theme="dark"]) .tt-panel-sub,
+  :host-context([data-theme="dark"]) .tt-services-note p,
+  :host-context([data-theme="dark"]) .tt-bms-sub,
+  :host-context([data-theme="dark"]) .siteFooterInner {
     color: rgba(255, 255, 255, 0.78) !important;
   }
-
-  .headerBtn {
+:host-context([data-theme="dark"]) .headerBtn {
     background: rgba(255, 255, 255, 0.10);
     color: rgba(255, 255, 255, 0.92);
     border: 1px solid rgba(255, 255, 255, 0.18);
   }
-
-  .home-explore-label,
-  .home-explore-group h3 {
+:host-context([data-theme="dark"]) .home-explore-label,
+  :host-context([data-theme="dark"]) .home-explore-group h3 {
     color: rgba(255, 255, 255, 0.72);
   }
-
-  .home-guidance-kicker,
-  .home-explore-kicker,
-  .tt-note-eyebrow {
+:host-context([data-theme="dark"]) .home-guidance-kicker,
+  :host-context([data-theme="dark"]) .home-explore-kicker,
+  :host-context([data-theme="dark"]) .tt-note-eyebrow {
     color: rgba(255, 255, 255, 0.62);
   }
-
-  .tt-panel-kicker,
-  .tt-panel-sub,
-  .home-explore-label,
-  .home-explore-group h3 {
+:host-context([data-theme="dark"]) .tt-panel-kicker,
+  :host-context([data-theme="dark"]) .tt-panel-sub,
+  :host-context([data-theme="dark"]) .home-explore-label,
+  :host-context([data-theme="dark"]) .home-explore-group h3 {
     color: rgba(255, 255, 255, 0.70);
   }
-
-  .home-guidance-intro h2,
-  .home-explore-intro h2,
-  .tt-service-label,
-  .tt-panel-head h2,
-  .tt-product-top-label,
-  .tt-bms-title-row h3,
-  .tt-tile-label {
+:host-context([data-theme="dark"]) .home-guidance-intro h2,
+  :host-context([data-theme="dark"]) .home-explore-intro h2,
+  :host-context([data-theme="dark"]) .tt-service-label,
+  :host-context([data-theme="dark"]) .tt-panel-head h2,
+  :host-context([data-theme="dark"]) .tt-product-top-label,
+  :host-context([data-theme="dark"]) .tt-bms-title-row h3,
+  :host-context([data-theme="dark"]) .tt-tile-label {
     color: rgba(255, 255, 255, 0.92);
   }
-
-  .home-explore-title {
+:host-context([data-theme="dark"]) .home-explore-title {
     color: rgba(255, 255, 255, 0.92);
   }
-
-  .home-explore-copy {
+:host-context([data-theme="dark"]) .home-explore-copy {
     color: rgba(255, 255, 255, 0.78);
   }
-
-  .home-explore-icon {
+:host-context([data-theme="dark"]) .home-explore-icon {
     background: rgba(255, 255, 255, 0.10);
     color: rgba(255, 255, 255, 0.92);
   }
-
-  .home-explore-pills .pillStatic {
+:host-context([data-theme="dark"]) .home-explore-pills .pillStatic {
     background: rgba(255, 255, 255, 0.10);
     color: rgba(255, 255, 255, 0.90);
     border: 1px solid rgba(255, 255, 255, 0.10);
   }
-
-  .tt-icon-slot,
-  .tt-product-mark,
-  .tt-bms-tile,
-  .tt-services-note-pills span,
-  #appRight .exampleChip,
-  #appBelow .choice.categoryBtn {
+:host-context([data-theme="dark"]) .tt-icon-slot,
+  :host-context([data-theme="dark"]) .tt-product-mark,
+  :host-context([data-theme="dark"]) .tt-bms-tile,
+  :host-context([data-theme="dark"]) .tt-services-note-pills span,
+  :host-context([data-theme="dark"]) #appRight .exampleChip,
+  :host-context([data-theme="dark"]) #appBelow .choice.categoryBtn {
     background: rgba(255, 255, 255, 0.10);
     color: rgba(255, 255, 255, 0.92);
     border: 1px solid rgba(255, 255, 255, 0.14);
     box-shadow: none;
   }
-
-  .tt-service-item a {
+:host-context([data-theme="dark"]) .tt-service-item a {
     border-top: 1px solid rgba(255, 255, 255, 0.08);
   }
-
-  .tt-product-mark,
-  .tt-icon-slot,
-  .tt-bms-tile {
+:host-context([data-theme="dark"]) .tt-product-mark,
+  :host-context([data-theme="dark"]) .tt-icon-slot,
+  :host-context([data-theme="dark"]) .tt-bms-tile {
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
   }
-
-  #appRight .freeText {
+:host-context([data-theme="dark"]) #appRight .freeText {
     background: rgba(255, 255, 255, 0.08);
     color: rgba(255, 255, 255, 0.92);
     border: 1px solid rgba(255, 255, 255, 0.12);
     box-shadow: none;
   }
-
-  .tt-bms-line {
+:host-context([data-theme="dark"]) .tt-bms-line {
     background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.30), rgba(255, 255, 255, 0));
   }
-
-  .tt-bms-tile img {
+:host-context([data-theme="dark"]) .tt-bms-tile img {
     filter: saturate(0.82) contrast(0.96);
   }
-
-  .tt-center-stage::before {
+:host-context([data-theme="dark"]) .tt-center-stage::before {
     background:
       radial-gradient(circle at 30% 50%, rgba(104, 190, 255, 0.12), transparent 36%),
       radial-gradient(circle at 70% 50%, rgba(255, 176, 105, 0.12), transparent 36%);
   }
-
-  .tt-center-stage::after {
+:host-context([data-theme="dark"]) .tt-center-stage::after {
     background:
       radial-gradient(circle, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.04) 10%, transparent 52%);
   }
-
-  .siteHeader .brand {
+:host-context([data-theme="dark"]) .siteHeader .brand {
     color: rgba(255, 255, 255, 0.92);
   }
-
-  /* Make sure links remain readable */
-  .siteFooterInner a {
+/* Make sure links remain readable */
+:host-context([data-theme="dark"]) .siteFooterInner a {
     color: rgba(255, 255, 255, 0.88);
   }
-
-  /* Slightly dim the background video in dark mode so cards pop */
-  video.bgVideo {
+/* Slightly dim the background video in dark mode so cards pop */
+:host-context([data-theme="dark"]) video.bgVideo {
     opacity: 0.45;
   }
-
-  .home-promo-inner {
+:host-context([data-theme="dark"]) .home-promo-inner {
     background: rgba(26, 37, 53, 0.82) !important;
-    border: 1px solid rgba(0, 191, 255, 0.16);
+    border: 1px solid rgba(245, 234, 216, 0.16);
     color: rgba(255, 255, 255, 0.92) !important;
     box-shadow: 0 16px 44px rgba(0, 0, 0, 0.55);
   }
-
-  .home-promo-copy span {
+:host-context([data-theme="dark"]) .home-promo-copy span {
     color: rgba(255, 255, 255, 0.78);
   }
-
-  .leadvaultBtn {
+:host-context([data-theme="dark"]) .leadvaultBtn {
     background: rgba(255, 255, 255, 0.92);
     color: rgba(0, 0, 0, 0.92);
   }
-
-  .pulseBtn {
+:host-context([data-theme="dark"]) .pulseBtn {
     background: rgba(170, 210, 255, 0.95);
     color: rgba(0, 0, 0, 0.92);
   }
-}
 
 /* Make the interactive area look interactive */
 #appRight .inputRow {
@@ -1025,23 +993,17 @@ main[role="main"] {
   color: rgba(0, 0, 0, 0.92);
 }
 
-@media (prefers-color-scheme: dark) {
-  #appRight .promptMount .prompt {
+:host-context([data-theme="dark"]) #appRight .promptMount .prompt {
     color: rgba(255, 255, 255, 0.92);
   }
-}
 
 #appRight .promptMount .prompt {
   color: rgba(20, 90, 140, 0.95);
 }
 
-@media (prefers-color-scheme: dark) {
-  #appRight .promptMount .prompt {
+:host-context([data-theme="dark"]) #appRight .promptMount .prompt {
     color: rgba(170, 210, 255, 0.95);
   }
-
-
-}
 
 /* Input row should fill the panel width */
 #appRight .inputRow {
@@ -1164,48 +1126,53 @@ main[role="main"] {
 }
 
 
-@media (prefers-color-scheme: dark) {
-  #appRight .promptMount .prompt {
+:host-context([data-theme="dark"]) #appRight .promptMount .prompt {
     color: rgba(255, 255, 255, 0.92);
   }
 
-  .home-products h2 {
+
+:host-context([data-theme="dark"]) .home-products h2 {
     color: rgba(255, 255, 255, 0.94);
   }
 
-  .home-products-intro {
+
+:host-context([data-theme="dark"]) .home-products-intro {
     color: rgba(255, 255, 255, 0.78);
     opacity: 1;
   }
 
-  .product-card {
+
+:host-context([data-theme="dark"]) .product-card {
     background: rgba(26, 37, 53, 0.82);
-    border: 1px solid rgba(0, 191, 255, 0.16);
+    border: 1px solid rgba(245, 234, 216, 0.16);
     color: rgba(255, 255, 255, 0.92);
     box-shadow: 0 16px 44px rgba(0, 0, 0, 0.55);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
   }
 
-  .product-card:hover {
+
+:host-context([data-theme="dark"]) .product-card:hover {
     box-shadow: 0 18px 48px rgba(0, 0, 0, 0.62);
   }
 
-  .product-card h3 {
+
+:host-context([data-theme="dark"]) .product-card h3 {
     color: rgba(255, 255, 255, 0.94);
   }
 
-  .product-card p {
+
+:host-context([data-theme="dark"]) .product-card p {
     color: rgba(255, 255, 255, 0.78);
     opacity: 1;
   }
 
-  #appBelow .loadingNotice {
+
+:host-context([data-theme="dark"]) #appBelow .loadingNotice {
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid rgba(255, 255, 255, 0.18);
     color: rgba(255, 255, 255, 0.92);
   }
-}
 
 
 .taliferro-hero-graphic {
@@ -1893,12 +1860,11 @@ main[role="main"] {
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .tt-signal-ring {
+:host-context([data-theme="dark"]) .tt-signal-ring {
     filter: drop-shadow(0 0 12px rgba(110, 197, 255, 0.42)) drop-shadow(0 0 18px rgba(255, 185, 114, 0.22));
   }
 
-  .tt-signal-ring::before {
+:host-context([data-theme="dark"]) .tt-signal-ring::before {
     background:
       conic-gradient(from 210deg,
         rgba(255, 255, 255, 0) 0deg,
@@ -1910,10 +1876,10 @@ main[role="main"] {
         rgba(255, 255, 255, 0) 360deg);
   }
 
-  .tt-services-card,
-  .tt-products-top,
-  .tt-bms-card,
-  .tt-services-note {
+:host-context([data-theme="dark"]) .tt-services-card,
+  :host-context([data-theme="dark"]) .tt-products-top,
+  :host-context([data-theme="dark"]) .tt-bms-card,
+  :host-context([data-theme="dark"]) .tt-services-note {
     background: rgba(20, 20, 21, 0.60) !important;
     border: 1px solid rgba(255, 255, 255, 0.08) !important;
     box-shadow:
@@ -1921,34 +1887,34 @@ main[role="main"] {
       inset 0 1px 0 rgba(255, 255, 255, 0.04) !important;
   }
 
-  .tt-panel-head h2,
-  .tt-bms-title-row h3,
-  .tt-service-label,
-  .tt-product-top-label,
-  .tt-tile-label {
+:host-context([data-theme="dark"]) .tt-panel-head h2,
+  :host-context([data-theme="dark"]) .tt-bms-title-row h3,
+  :host-context([data-theme="dark"]) .tt-service-label,
+  :host-context([data-theme="dark"]) .tt-product-top-label,
+  :host-context([data-theme="dark"]) .tt-tile-label {
     color: rgba(255, 255, 255, 0.94) !important;
   }
 
-  .tt-panel-kicker,
-  .tt-note-eyebrow {
+:host-context([data-theme="dark"]) .tt-panel-kicker,
+  :host-context([data-theme="dark"]) .tt-note-eyebrow {
     color: rgba(255, 255, 255, 0.42) !important;
   }
 
-  .tt-panel-sub,
-  .tt-panel-intro,
-  .tt-services-note p,
-  .tt-bms-sub {
+:host-context([data-theme="dark"]) .tt-panel-sub,
+  :host-context([data-theme="dark"]) .tt-panel-intro,
+  :host-context([data-theme="dark"]) .tt-services-note p,
+  :host-context([data-theme="dark"]) .tt-bms-sub {
     color: rgba(255, 255, 255, 0.72) !important;
   }
 
-  .tt-service-item a {
+:host-context([data-theme="dark"]) .tt-service-item a {
     border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
   }
 
-  .tt-icon-slot,
-  .tt-product-mark,
-  .tt-bms-tile,
-  .tt-services-note-pills span {
+:host-context([data-theme="dark"]) .tt-icon-slot,
+  :host-context([data-theme="dark"]) .tt-product-mark,
+  :host-context([data-theme="dark"]) .tt-bms-tile,
+  :host-context([data-theme="dark"]) .tt-services-note-pills span {
     background: rgba(255, 255, 255, 0.06) !important;
     border: 1px solid rgba(255, 255, 255, 0.07) !important;
     color: rgba(255, 255, 255, 0.92) !important;
@@ -1957,19 +1923,18 @@ main[role="main"] {
       0 8px 18px rgba(0, 0, 0, 0.18) !important;
   }
 
-  .tt-icon-slot img {
+:host-context([data-theme="dark"]) .tt-icon-slot img {
     filter: brightness(1.1) contrast(0.95);
   }
 
-  .tt-product-mark {
+:host-context([data-theme="dark"]) .tt-product-mark {
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
   }
 
-  .tt-bms-line {
+:host-context([data-theme="dark"]) .tt-bms-line {
     background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0)) !important;
   }
 
-  .tt-bms-tile img {
+:host-context([data-theme="dark"]) .tt-bms-tile img {
     filter: saturate(0.80) contrast(0.95) brightness(0.96);
   }
-}

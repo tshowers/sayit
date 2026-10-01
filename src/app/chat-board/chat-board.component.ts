@@ -43,6 +43,7 @@ import { SayItDataService } from '../services/sayit-data.service';
 import { SayItOnboardingService } from '../services/sayit-onboarding.service';
 import { ClickSoundDirective } from '../shared/directives/click-sound.directive';
 import { AppPromoComponent } from '../shared/app-promo/app-promo.component';
+import { ThemeToggleComponent } from '../shared/theme-toggle/theme-toggle.component';
 declare var bootstrap: any;
 
 // Group interface for private/public groups
@@ -58,7 +59,8 @@ declare var bootstrap: any;
     PreloaderComponent,
     NewsDisplayerComponent,
     ClickSoundDirective,
-    AppPromoComponent
+    AppPromoComponent,
+    ThemeToggleComponent
   ],
   templateUrl: './chat-board.component.html',
   styleUrl: './chat-board.component.css'

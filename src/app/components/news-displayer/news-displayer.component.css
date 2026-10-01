@@ -111,71 +111,59 @@ a {
     padding: 1.5rem;
 }
 
-@media (prefers-color-scheme: dark) {
-
-
-    a {
+:host-context([data-theme="dark"]) a {
         color: white;
     }
 
-    a:hover {
+:host-context([data-theme="dark"]) a:hover {
         color: #3399FF;
     }
 
-
-    #groupManagerModal .modal-content {
+:host-context([data-theme="dark"]) #groupManagerModal .modal-content {
         background: rgba(19, 28, 39, 0.92);
         border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    #groupManagerModal .modal-title {
+:host-context([data-theme="dark"]) #groupManagerModal .modal-title {
         color: #f0f0f0;
     }
 
-    #groupManagerModal .modal-header {
+:host-context([data-theme="dark"]) #groupManagerModal .modal-header {
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
-}
 
-@media (prefers-color-scheme: dark) {
-    #groupModal .modal-content {
+:host-context([data-theme="dark"]) #groupModal .modal-content {
         background: rgba(19, 28, 39, 0.92);
         border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
-    #groupModal .modal-title {
+:host-context([data-theme="dark"]) #groupModal .modal-title {
         color: #f0f0f0;
     }
 
-    #groupModal .modal-header {
+:host-context([data-theme="dark"]) #groupModal .modal-header {
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
-}
 
 /* Dark mode support for general modals */
-@media (prefers-color-scheme: dark) {
-    .modal-content {
+:host-context([data-theme="dark"]) .modal-content {
         background: rgba(19, 28, 39, 0.92) !important;
         border: 1px solid rgba(255, 255, 255, 0.1);
     }
-
-    .modal-title,
-    .modal .form-label,
-    .modal .form-check-label,
-    .modal-body,
-    .form-text {
+:host-context([data-theme="dark"]) .modal-title,
+    :host-context([data-theme="dark"]) .modal .form-label,
+    :host-context([data-theme="dark"]) .modal .form-check-label,
+    :host-context([data-theme="dark"]) .modal-body,
+    :host-context([data-theme="dark"]) .form-text {
         color: #f0f0f0;
     }
-
-    .form-check-input:checked {
+:host-context([data-theme="dark"]) .form-check-input:checked {
         background-color: #0d6efd;
         border-color: #0d6efd;
     }
-
-    .btn-close {
+:host-context([data-theme="dark"]) .btn-close {
         filter: invert(1);
     }
-}
 
 /* Override bg-light utility for group manager modal */
 #groupManagerModal .modal-content.bg-light {
@@ -244,11 +232,9 @@ a {
     object-fit: cover;
 }
 
-@media (prefers-color-scheme: dark) {
-    .source-avatar-fallback {
+:host-context([data-theme="dark"]) .source-avatar-fallback {
         border: 1px solid rgba(255, 255, 255, 0.12);
     }
-}
 
 /* NewsStand loading state */
 .newsstand-loading {
@@ -276,9 +262,7 @@ a {
     opacity: 0.8;
 }
 
-@media (prefers-color-scheme: dark) {
-    .newsstand-loading-inner {
+:host-context([data-theme="dark"]) .newsstand-loading-inner {
         border: 1px solid rgba(255, 255, 255, 0.12);
         background: rgba(19, 28, 39, 0.55);
     }
-}
