@@ -128,7 +128,7 @@
                     <input type="text" name="comment" [(ngModel)]="commentDraft" maxlength="500" placeholder="Add a comment…" aria-label="Add a comment">
                     <button type="submit" class="btn btn-primary" [disabled]="commentBusy || !commentDraft.trim()">{{ commentBusy ? 'Posting…' : 'Post' }}</button>
                 </form>
-                <p *ngIf="!isLoggedIn" class="post-view-signin-hint"><a routerLink="/login" [queryParams]="{ returnUrl: '/post/' + post.id }">Sign in</a> to join the conversation.</p>
+                <p *ngIf="!isLoggedIn" class="post-view-signin-hint"><a routerLink="/get-started" [queryParams]="{ returnUrl: '/post/' + post.id }">Sign in</a> to join the conversation.</p>
             </section>
         </article>
     </div>

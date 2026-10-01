@@ -20,7 +20,7 @@ export const COMMAND_PALETTE_ENTRIES: CommandPaletteEntry[] = [
   { id: 'sayit-businesses', label: 'Business Directory', group: 'SayIt', path: '/businesses', keywords: ['businesses', 'directory', 'business directory'] },
   { id: 'sayit-profile', label: 'Profile', group: 'SayIt', path: '/profile', keywords: ['profile', 'my profile', 'account'] },
   { id: 'sayit-interests', label: 'Interests', group: 'SayIt', path: '/interests', keywords: ['interests', 'inbox', 'interest inbox'] },
-  { id: 'sayit-login', label: 'Sign In', group: 'SayIt', path: '/login', keywords: ['login', 'sign in', 'log in'] },
+  { id: 'sayit-login', label: 'Sign In', group: 'SayIt', path: '/get-started', keywords: ['login', 'sign in', 'log in'] },
 
   // --- Other Apps -----------------------------------------------------------
   { id: 'app-maya', label: 'Maya', group: 'Other Apps', path: 'https://maya.taliferro.tech', icon: 'assets/find/entities/maya/logo-bw-icon.png', external: true, keywords: ['maya', 'marketing director'] },

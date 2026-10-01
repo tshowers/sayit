@@ -22,9 +22,9 @@ describe( 'sayItSignInGuard', () => {
     expect( await run( { uid: 'u1' } ) ).toBeTrue();
   } );
 
-  it( 'sends a signed-out user to /login with a returnUrl', async () => {
+  it( 'sends a signed-out user to the get-started wizard with a returnUrl', async () => {
     const result = await run( null, '/post/abc' );
     const router = TestBed.inject( Router );
-    expect( router.serializeUrl( result as UrlTree ) ).toBe( '/login?returnUrl=%2Fpost%2Fabc' );
+    expect( router.serializeUrl( result as UrlTree ) ).toBe( '/get-started?returnUrl=%2Fpost%2Fabc' );
   } );
 } );

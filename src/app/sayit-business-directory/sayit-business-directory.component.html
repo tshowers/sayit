@@ -1,67 +1,75 @@
 <app-preloader [isLoading]="loading"></app-preloader>
-<div class="sayit-directory-shell container-fluid" data-cy="directory-shell" *ngIf="!loading">
-    <div class="row justify-content-center">
-        <div class="col-12 col-xl-10">
-            <div class="sayit-directory-hero">
-                <div>
-                    <div class="sayit-directory-badge">SayIt Discovery</div>
-                    <h1>Browse Businesses</h1>
-                    <p>Browse businesses. Watch the ones you want to follow.</p>
-                </div>
-                <a class="btn btn-todd" routerLink="/">Open SayIt</a>
-            </div>
-            <div class="sayit-directory-controls">
-                <input type="search" data-cy="directory-search" class="form-control sayit-directory-search" placeholder="Search by business name, category, location, or what they do" [(ngModel)]="searchTerm" [ngModelOptions]="{standalone: true}">
-                <div class="sayit-directory-mode-row">
-                    <button *ngFor="let mode of browseModes" type="button" class="btn-todd" [class.active]="browseMode === mode.id" (click)="setBrowseMode(mode.id)">
-                        {{ mode.label }}
-                    </button>
-                </div>
-                <div class="sayit-directory-mode-row">
-                    <button *ngFor="let category of categoryPills | slice:0:10; trackBy: trackByCategory" type="button" class="btn-todd" [class.active]="categoryFilter === category" (click)="setCategoryFilter(category)">
-                        {{ category === 'all' ? 'All Categories' : category }}
-                    </button>
-                </div>
-            </div>
-            <div class="sayit-directory-grid" *ngIf="filteredProfiles.length; else emptyState">
-                <a *ngFor="let profile of filteredProfiles | slice:0:24; trackBy: trackByProfile" class="sayit-directory-card" data-cy="directory-card" [routerLink]="getProfileRoute(profile)">
-                    <div class="sayit-directory-top">
-                        <img [src]="profile?.photoURL || '/assets/nophoto.svg'" [alt]="getProfileTitle(profile)" class="sayit-directory-avatar" width="64" height="64">
-                        <div>
-                            <div class="sayit-directory-status-row">
-                                <span *ngIf="isSeededTeaserProfile(profile)" class="sayit-directory-seed-badge">{{ getSeedStatusLabel(profile) }}</span>
-                                <span *ngIf="!isSeededTeaserProfile(profile)" class="sayit-directory-live-badge">Active member</span>
-                            </div>
-                            <h2>{{ getProfileTitle(profile) }}</h2>
-                            <p>{{ getProfileSummary(profile) }}</p>
-                        </div>
-                    </div>
-                    <div class="sayit-directory-meta">
-                        <span *ngIf="profile?.businessCategory || profile?.industry">{{ profile?.businessCategory || profile?.industry }}</span>
-                        <span *ngIf="profile?.location">{{ profile?.location }}</span>
-                        <span>{{ getCompleteness(profile) }}% complete</span>
-                        <span>{{ profile?.watcherCount || 0 }} watching</span>
-                    </div>
-                    <div class="sayit-directory-presence">{{ getProfilePresenceCopy(profile) }}</div>
-                    <div class="sayit-directory-trust">
-                        <span class="sayit-directory-trust-badge" [class.verified]="hasListedWebsite(profile)">
-                            {{ hasListedWebsite(profile) ? 'Website listed' : 'No website yet' }}
-                        </span>
-                        <span *ngIf="isDomainAligned(profile)" class="sayit-directory-trust-badge verified">Domain aligned</span>
-                        <span class="sayit-directory-trust-badge">{{ getActivityLabel(profile) }}</span>
-                        <span class="sayit-directory-trust-badge">{{ getTrustLabel(profile) }}</span>
-                    </div>
-                    <div class="mt-3">
-                        <span class="btn btn-outline-secondary btn-sm">View Page</span>
-                    </div>
-                </a>
-            </div>
-            <ng-template #emptyState>
-                <div class="sayit-directory-empty" data-cy="directory-empty">
-                    <h2>No businesses match that view yet</h2>
-                    <p>Try a different search term, category, or browse mode.</p>
-                </div>
-            </ng-template>
-        </div>
+<div class="orgs-page" data-cy="directory-shell" *ngIf="!loading">
+  <app-sayit-topbar active="orgs"></app-sayit-topbar>
+
+  <main class="orgs-main">
+    <div class="orgs-head">
+      <h1 class="orgs-title">Orgs</h1>
+      <label class="orgs-sort">
+        <span class="visually-hidden">Sort organizations</span>
+        <select [ngModel]="browseMode" (ngModelChange)="setBrowseMode($event)" [ngModelOptions]="{standalone: true}" aria-label="Sort organizations">
+          <option *ngFor="let mode of browseModes" [value]="mode.id">{{ mode.label }}</option>
+        </select>
+        <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+      </label>
     </div>
+
+    <div class="orgs-search">
+      <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+      <input type="search" data-cy="directory-search" placeholder="Search organizations" aria-label="Search organizations"
+        [(ngModel)]="searchTerm" [ngModelOptions]="{standalone: true}">
+    </div>
+
+    <div class="orgs-chips" role="group" aria-label="Filter organizations">
+      <button type="button" class="orgs-chip" [class.active]="followFilter === 'all' && categoryFilter === 'all'" (click)="setFollowFilter('all'); setCategoryFilter('all')">All</button>
+      <button *ngIf="currentUid" type="button" class="orgs-chip" [class.active]="followFilter === 'following'" (click)="setFollowFilter(followFilter === 'following' ? 'all' : 'following')">
+        Following<span class="orgs-chip__count">{{ followedProfiles.length }}</span>
+      </button>
+      <button *ngFor="let category of categoryPills | slice:1:10; trackBy: trackByCategory" type="button" class="orgs-chip orgs-chip--category"
+        [class.active]="categoryFilter === category" (click)="setCategoryFilter(categoryFilter === category ? 'all' : category)">{{ category }}</button>
+    </div>
+
+    <section *ngIf="followFilter === 'all' && categoryFilter === 'all' && !searchTerm.trim() && followedProfiles.length" class="orgs-following" aria-label="Orgs you follow">
+      <span class="orgs-following__label">Following</span>
+      <div class="orgs-following__row">
+        <a *ngFor="let profile of followedProfiles; trackBy: trackByProfile" class="orgs-following__item" [routerLink]="getProfileRoute(profile)">
+          <span class="org-circle org-circle--lg" [style.background]="orgColor(profile)">
+            <img *ngIf="profile?.photoURL" [src]="profile.photoURL" alt="" loading="lazy" referrerpolicy="no-referrer">
+            <ng-container *ngIf="!profile?.photoURL">{{ orgInitial(profile) }}</ng-container>
+          </span>
+          <span class="orgs-following__name">{{ orgShortName(profile) }}</span>
+        </a>
+      </div>
+    </section>
+
+    <div class="orgs-list" *ngIf="filteredProfiles.length; else emptyState">
+      <div *ngFor="let profile of filteredProfiles | slice:0:60; trackBy: trackByProfile" class="org-row" data-cy="directory-card">
+        <span class="org-circle" [style.background]="orgColor(profile)">
+          <img *ngIf="profile?.photoURL" [src]="profile.photoURL" alt="" loading="lazy" referrerpolicy="no-referrer">
+          <ng-container *ngIf="!profile?.photoURL">{{ orgInitial(profile) }}</ng-container>
+        </span>
+        <span class="org-row__body">
+          <a class="org-row__name" [routerLink]="getProfileRoute(profile)">{{ getProfileTitle(profile) }}</a>
+          <span *ngIf="orgSubtitle(profile)" class="org-row__sub">{{ orgSubtitle(profile) }}</span>
+          <span class="org-row__stats">
+            {{ profile?.watcherCount || 0 }} following · {{ getActivityLabel(profile) }}
+            <span *ngIf="isSeededTeaserProfile(profile)" class="org-row__tag">{{ getSeedStatusLabel(profile) }}</span>
+          </span>
+        </span>
+        <button *ngIf="canFollow(profile)" type="button" class="org-follow" [class.org-follow--on]="isFollowing(profile)"
+          (click)="toggleFollow(profile, $event)" [attr.aria-pressed]="isFollowing(profile)">
+          {{ isFollowing(profile) ? 'Following' : 'Follow' }}
+        </button>
+      </div>
+    </div>
+
+    <ng-template #emptyState>
+      <div class="orgs-empty" data-cy="directory-empty">
+        <ng-container *ngIf="searchTerm.trim(); else noFilterMatch">No organizations match “{{ searchTerm.trim() }}”.</ng-container>
+        <ng-template #noFilterMatch>
+          {{ followFilter === 'following' ? 'You aren’t following any organizations yet.' : 'No organizations here yet.' }}
+        </ng-template>
+      </div>
+    </ng-template>
+  </main>
 </div>

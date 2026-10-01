@@ -1,6 +1,5 @@
 import { Routes } from '@angular/router';
 import { sayItSignInGuard } from './guards/sayit-signin.guard';
-import { sayItProfilePageGuard } from './guards/sayit-profile-page.guard';
 import { legacyPostLinkGuard } from './guards/legacy-post-link.guard';
 
 export const routes: Routes = [
@@ -15,20 +14,22 @@ export const routes: Routes = [
     path: 'businesses',
     loadComponent: () =>
       import( './sayit-business-directory/sayit-business-directory.component' ).then( ( m ) => m.SayitBusinessDirectoryComponent ),
-    title: 'Say It - Directory',
+    title: 'Say It - Orgs',
+    canActivate: [sayItSignInGuard],
   },
   {
     path: 'business/:identifier',
     loadComponent: () =>
       import( './sayit-business-profile/sayit-business-profile.component' ).then( ( m ) => m.SayitBusinessProfileComponent ),
     title: 'Say It - Business',
+    canActivate: [sayItSignInGuard],
   },
   {
     path: 'profile',
     loadComponent: () =>
       import( './sayit-profile-editor/sayit-profile-editor.component' ).then( ( m ) => m.SayitProfileEditorComponent ),
     title: 'Say It - Profile',
-    canActivate: [sayItProfilePageGuard],
+    canActivate: [sayItSignInGuard],
   },
   {
     path: 'interests',

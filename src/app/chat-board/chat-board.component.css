@@ -26,79 +26,6 @@
   margin: 0.75rem 0 0.75rem;
 }
 
-.sayit-topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  flex-wrap: wrap;
-}
-
-.sayit-brand {
-  display: flex;
-  align-items: center;
-  gap: 1.75rem;
-  min-width: 0;
-}
-
-.sayit-wordmark {
-  margin: 0;
-  font-family: var(--font-heading);
-  font-size: clamp(1.75rem, 3.4vw, 2.25rem);
-  line-height: 1;
-  color: var(--color-text);
-}
-
-.sayit-tabs {
-  display: flex;
-  gap: 0.25rem;
-  padding: 4px;
-  border-radius: var(--radius-pill);
-  background: var(--color-surface);
-}
-
-.sayit-tab {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.95rem;
-  border-radius: var(--radius-pill);
-  font: 600 0.85rem/1.2 var(--font-body);
-  color: var(--color-text);
-  opacity: 0.7;
-  text-decoration: none;
-  transition: background 0.18s ease, opacity 0.18s ease;
-}
-
-.sayit-tab:hover {
-  opacity: 1;
-  color: var(--color-text);
-  background: var(--color-hover);
-}
-
-.sayit-tab.active {
-  opacity: 1;
-  background: var(--color-text);
-  color: var(--color-bg);
-}
-
-.sayit-tab-badge {
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-  border-radius: var(--radius-pill);
-  background: var(--color-primary-bg);
-  color: var(--color-primary-ink);
-  font: 700 10.5px/18px var(--font-body);
-  text-align: center;
-}
-
-.sayit-quick-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-}
-
 .sayit-quick-action {
   position: relative;
   width: 2.75rem;
@@ -422,15 +349,6 @@
 @media (max-width: 767.98px) {
   .chat-header {
     margin: 0.5rem 0 0.5rem;
-  }
-
-  .sayit-brand {
-    gap: 0.75rem;
-    flex-wrap: wrap;
-  }
-
-  .sayit-quick-actions {
-    gap: 0.25rem;
   }
 
   .sayit-quick-action {

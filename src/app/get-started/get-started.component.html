@@ -114,7 +114,7 @@
       <p class="gs-fine">By posting you agree to keep Say It respectful - no spam, harassment, or objectionable content.</p>
     </ng-container>
 
-    <a class="gs-existing" routerLink="/login" data-cy="get-started-existing">Already have an account? Sign in</a>
+    <a class="gs-existing" routerLink="/login" [queryParams]="returnUrl ? { returnUrl } : {}" data-cy="get-started-existing">Already have an account? Sign in</a>
     <app-promo *ngIf="step.key === 'intent'" variant="link"></app-promo>
   </section>
 </main>

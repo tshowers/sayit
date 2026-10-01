@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthContextService } from '../services/auth-context.service';
+import { NotificationService } from '../services/notification.service';
+import { SayitTopbarComponent } from '../shared/sayit-topbar/sayit-topbar.component';
 import { SayItDataService } from '../services/sayit-data.service';
 import { LoggerService } from '../services/logger.service';
 import { PreloaderComponent } from '../shared/preloader/preloader.component';
@@ -10,7 +13,7 @@ import { ClickSoundDirective } from '../shared/directives/click-sound.directive'
 @Component( {
   selector: 'app-sayit-business-directory',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, PreloaderComponent, ClickSoundDirective],
+  imports: [CommonModule, FormsModule, RouterModule, PreloaderComponent, ClickSoundDirective, SayitTopbarComponent],
   templateUrl: './sayit-business-directory.component.html',
   styleUrl: './sayit-business-directory.component.css',
 } )
@@ -19,7 +22,14 @@ export class SayitBusinessDirectoryComponent implements OnInit {
   private _searchTerm = '';
   private _categoryFilter = 'all';
   private _browseMode = 'active';
+  private _followFilter: 'all' | 'following' = 'all';
   loading = true;
+
+  /** Signed-in viewer and the orgs they follow (the SayIt "watchlist"). */
+  currentUid = '';
+  private followedIds = new Set<string>();
+  private followBusyIds = new Set<string>();
+  followedProfiles: any[] = [];
 
   /**
    * categoryPills/filteredProfiles used to be getters that filtered/sorted
@@ -47,6 +57,9 @@ export class SayitBusinessDirectoryComponent implements OnInit {
   get browseMode (): string { return this._browseMode; }
   set browseMode ( value: string ) { this._browseMode = value; this.recomputeDerived(); }
 
+  get followFilter (): 'all' | 'following' { return this._followFilter; }
+  set followFilter ( value: 'all' | 'following' ) { this._followFilter = value; this.recomputeDerived(); }
+
   readonly browseModes = [
     { id: 'active', label: 'Recently Active' },
     { id: 'watched', label: 'Most Watched' },
@@ -56,10 +69,103 @@ export class SayitBusinessDirectoryComponent implements OnInit {
 
   constructor (
     private dataService: SayItDataService,
-    private logger: LoggerService) { }
+    private logger: LoggerService,
+    private authService: AuthContextService,
+    private notificationService: NotificationService,
+    private router: Router ) { }
 
   async ngOnInit (): Promise<void> {
-    await this.loadProfiles();
+    this.currentUid = this.authService.getCurrentUserIdSync();
+    await Promise.all( [this.loadProfiles(), this.loadFollowing()] );
+  }
+
+  // ─── Following (Organic Orgs screen) ───
+
+  private profileId ( profile: any ): string {
+    return String( profile?.id || profile?.uid || '' ).trim();
+  }
+
+  isFollowing ( profile: any ): boolean {
+    return this.followedIds.has( this.profileId( profile ) );
+  }
+
+  canFollow ( profile: any ): boolean {
+    const id = this.profileId( profile );
+    return !!id && id !== this.currentUid;
+  }
+
+  async toggleFollow ( profile: any, event?: Event ): Promise<void> {
+    event?.preventDefault();
+    event?.stopPropagation();
+    if ( !this.currentUid ) {
+      void this.router.navigate( ['/get-started'], { queryParams: { returnUrl: '/businesses' } } );
+      return;
+    }
+    const id = this.profileId( profile );
+    if ( !this.canFollow( profile ) || this.followBusyIds.has( id ) ) return;
+
+    const wasFollowing = this.followedIds.has( id );
+    this.followBusyIds.add( id );
+    this.applyFollow( id, !wasFollowing, Number( profile?.watcherCount || 0 ) + ( wasFollowing ? -1 : 1 ) );
+    try {
+      const result = await this.dataService.toggleSayItBusinessWatch( this.currentUid, id, this.currentUid );
+      this.followedIds = new Set( result.watchlistProfileIds );
+      this.applyFollow( id, result.watching, result.watcherCount );
+    } catch ( e ) {
+      this.logger.error( 'toggleFollow error', e );
+      this.applyFollow( id, wasFollowing, Number( profile?.watcherCount || 0 ) + ( wasFollowing ? 1 : -1 ) );
+      this.notificationService.show( 'Could not save', 'Could not update who you follow. Try again.', 'error' );
+    } finally {
+      this.followBusyIds.delete( id );
+    }
+  }
+
+  private applyFollow ( id: string, following: boolean, watcherCount: number ): void {
+    const next = new Set( this.followedIds );
+    if ( following ) next.add( id ); else next.delete( id );
+    this.followedIds = next;
+    this.profiles = this._profiles.map( profile =>
+      this.profileId( profile ) === id ? { ...profile, watcherCount: Math.max( 0, watcherCount ) } : profile );
+  }
+
+  private async loadFollowing (): Promise<void> {
+    if ( !this.currentUid ) return;
+    try {
+      const viewer = await this.dataService.getSayItProfileByUidOnce( this.currentUid, 'SayIt Orgs Following' );
+      const ids = Array.isArray( viewer?.watchlistProfileIds ) ? viewer.watchlistProfileIds : [];
+      this.followedIds = new Set( ids.map( ( id: any ) => String( id || '' ).trim() ).filter( Boolean ) );
+      this.recomputeDerived();
+    } catch ( e ) {
+      this.logger.warn( 'loadFollowing failed', e );
+    }
+  }
+
+  /** Brand-ish circle color per org, picked from the Organic palette so it stays legible. */
+  orgColor ( profile: any ): string {
+    const palette = ['#728157', '#b2622d', '#645c50', '#8c491a', '#56633f', '#d67f48'];
+    const key = this.getProfileTitle( profile );
+    let hash = 0;
+    for ( let i = 0; i < key.length; i++ ) hash = ( hash * 31 + key.charCodeAt( i ) ) | 0;
+    return palette[Math.abs( hash ) % palette.length];
+  }
+
+  orgInitial ( profile: any ): string {
+    return ( this.getProfileTitle( profile ).match( /[\p{L}\p{N}]/u )?.[0] || '?' ).toUpperCase();
+  }
+
+  orgShortName ( profile: any ): string {
+    return this.getProfileTitle( profile ).split( /\s+/ )[0];
+  }
+
+  orgSubtitle ( profile: any ): string {
+    return [profile?.businessCategory || profile?.industry, profile?.location]
+      .map( value => String( value || '' ).trim() )
+      .filter( Boolean )
+      .join( ' · ' );
+  }
+
+  setFollowFilter ( filter: 'all' | 'following' ): void {
+    this.followFilter = filter;
   }
 
   trackByCategory ( _index: number, category: string ): string {
@@ -98,9 +204,12 @@ export class SayitBusinessDirectoryComponent implements OnInit {
 
         const matchesSearch = !search || haystack.includes( search );
         const matchesCategory = category === 'all' || this.normalizeCategory( profile ) === category;
-        return matchesSearch && matchesCategory;
+        const matchesFollow = this._followFilter === 'all' || this.followedIds?.has( this.profileId( profile ) );
+        return matchesSearch && matchesCategory && matchesFollow;
       } )
       .sort( ( a, b ) => this.compareProfiles( a, b ) );
+
+    this.followedProfiles = this._profiles.filter( profile => this.followedIds?.has( this.profileId( profile ) ) );
   }
 
   setBrowseMode ( mode: string ): void {

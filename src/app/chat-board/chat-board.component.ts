@@ -43,7 +43,7 @@ import { SayItDataService } from '../services/sayit-data.service';
 import { SayItOnboardingService } from '../services/sayit-onboarding.service';
 import { ClickSoundDirective } from '../shared/directives/click-sound.directive';
 import { AppPromoComponent } from '../shared/app-promo/app-promo.component';
-import { ThemeToggleComponent } from '../shared/theme-toggle/theme-toggle.component';
+import { SayitTopbarComponent } from '../shared/sayit-topbar/sayit-topbar.component';
 declare var bootstrap: any;
 
 // Group interface for private/public groups
@@ -60,7 +60,7 @@ declare var bootstrap: any;
     NewsDisplayerComponent,
     ClickSoundDirective,
     AppPromoComponent,
-    ThemeToggleComponent
+    SayitTopbarComponent
   ],
   templateUrl: './chat-board.component.html',
   styleUrl: './chat-board.component.css'
@@ -269,14 +269,13 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
       this.logger.info( "USER RETURNED", u );
 
       if ( !u ) {
-        // Guests browse freely; the banner and every action that needs an
-        // account point to /get-started (or /login) - no sign-in popup.
+        // Guests see the app landing only - posts are for members. The banner
+        // and every action that needs an account point to /get-started.
         this.firebaseUser = null;
         this.isLoggedIn = false;
         this.showAuthGate = false;
-
-        await this.loadMessages();
-        this.setupPage();
+        this.isLoading = false;
+        this.refreshPageActions();
         return;
       }
 
@@ -737,7 +736,7 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
   openProfileIntentFromMenu (): void {
     try {
       if ( !this.firebaseUser ) {
-        this.router.navigate( ['/not-authorized'] );
+        this.router.navigate( ['/get-started'], { queryParams: { returnUrl: '/profile' } } );
         return;
       }
       this.router.navigate( ['/profile'] );
@@ -759,7 +758,7 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   openMyBusinessPage (): void {
     if ( !this.isLoggedIn ) {
-      void this.router.navigate( ['/login'] );
+      void this.router.navigate( ['/get-started'] );
       return;
     }
     const route = this.getSayItProfileRoute();

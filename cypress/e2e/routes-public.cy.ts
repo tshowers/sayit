@@ -4,9 +4,6 @@
  * the local emulator instead of the real taliferrotech project, and each
  * test seeds exactly the data it needs.
  */
-const TENANT = 'yH3nWanUv0RqDCNfwXBOXLWuxt52';
-const profilesPath = `tenants/${TENANT}/say-it-profiles`;
-
 describe( 'SayIt routes - signed out', () => {
   beforeEach( () => {
     // TODD's hosted login is another site - stub it so handoffs are observable offline.
@@ -21,6 +18,9 @@ describe( 'SayIt routes - signed out', () => {
     cy.get( '[data-cy="app-store-link"]' ).should( 'not.exist' );
     cy.get( '[data-cy="chat-board-shell"]' ).should( 'exist' );
     cy.get( '[role="dialog"]' ).should( 'not.exist' );
+    // Posts are for members only.
+    cy.get( 'app-post-displayer' ).should( 'not.exist' );
+    cy.get( '.sy-card' ).should( 'not.exist' );
     cy.get( '[data-cy="guest-get-started"]' ).click();
     cy.location( 'pathname' ).should( 'eq', '/get-started' );
   } );
@@ -36,48 +36,11 @@ describe( 'SayIt routes - signed out', () => {
     cy.wait( '@toddLogin' ).its( 'request.url' ).should( 'include', 'client=sayit-web-local' ).and( 'include', 'state=' );
   } );
 
-  it( 'lists public businesses in the directory and filters by search', () => {
-    const stamp = Date.now();
-    cy.seedFirestoreDoc( `${profilesPath}/cy-dir-acme-${stamp}`, {
-      uid: `cy-dir-acme-${stamp}`, publicProfile: true, businessName: `Acme Plumbing ${stamp}`, businessCategory: 'Plumbing', location: 'Seattle, WA',
-      lastUpdated: new Date(),
-    } );
-    cy.seedFirestoreDoc( `${profilesPath}/cy-dir-zen-${stamp}`, {
-      uid: `cy-dir-zen-${stamp}`, publicProfile: true, businessName: `Zen Yoga ${stamp}`, businessCategory: 'Fitness', lastUpdated: new Date(),
-    } );
-    cy.seedFirestoreDoc( `${profilesPath}/cy-dir-private-${stamp}`, {
-      uid: `cy-dir-private-${stamp}`, publicProfile: false, businessName: `Hidden Co ${stamp}`,
-    } );
-
-    cy.visitWithFirebaseEmulators( '/businesses' );
-    cy.get( '[data-cy="directory-shell"]', { timeout: 15000 } ).should( 'be.visible' );
-    cy.contains( 'h1', 'Browse Businesses' );
-    cy.contains( '[data-cy="directory-card"]', `Acme Plumbing ${stamp}` ).should( 'contain.text', 'Seattle, WA' );
-    cy.contains( '[data-cy="directory-card"]', `Zen Yoga ${stamp}` );
-    cy.contains( '[data-cy="directory-card"]', `Hidden Co ${stamp}` ).should( 'not.exist' );
-
-    cy.get( '[data-cy="directory-search"]' ).type( `Zen Yoga ${stamp}` );
-    cy.get( '[data-cy="directory-card"]' ).should( 'have.length', 1 ).and( 'contain.text', `Zen Yoga ${stamp}` );
-
-    cy.get( '[data-cy="directory-search"]' ).clear().type( 'no-business-matches-this' );
-    cy.get( '[data-cy="directory-empty"]' ).should( 'contain.text', 'No businesses match that view yet' );
-  } );
-
-  it( 'opens a business page from the directory', () => {
-    const id = `cy-biz-${Date.now()}`;
-    cy.seedFirestoreDoc( `${profilesPath}/${id}`, {
-      uid: id, publicProfile: true, businessName: `Directory Link Co ${id}`, businessCategory: 'Consulting', lastUpdated: new Date(),
-    } );
-
-    cy.visitWithFirebaseEmulators( '/businesses' );
-    cy.get( '[data-cy="directory-search"]', { timeout: 15000 } ).type( id );
-    cy.contains( '[data-cy="directory-card"]', `Directory Link Co ${id}` ).click();
-    cy.location( 'pathname' ).should( 'match', /^\/business\// );
-    cy.get( '[data-cy="business-profile-shell"]', { timeout: 15000 } ).should( 'contain.text', `Directory Link Co ${id}` );
-  } );
-
-  it( 'sends signed-out visitors from /interests to sign in, remembering where they were going', () => {
+  it( 'sends signed-out visitors from /interests to the wizard, and returning members on to sign in', () => {
     cy.visitWithFirebaseEmulators( '/interests' );
+    cy.location( 'pathname' ).should( 'eq', '/get-started' );
+    cy.location( 'search' ).should( 'eq', '?returnUrl=%2Finterests' );
+    cy.get( '[data-cy="get-started-existing"]' ).should( 'have.attr', 'href', '/login?returnUrl=%2Finterests' ).click();
     cy.wait( '@toddLogin' ).its( 'request.url' ).should( 'include', 'client=sayit-web-local' );
     // Back on SayIt's origin, the pending login carries the page they wanted.
     cy.visitWithFirebaseEmulators( '/not-authorized' );
@@ -85,6 +48,21 @@ describe( 'SayIt routes - signed out', () => {
       const pending = JSON.parse( win.sessionStorage.getItem( 'sayit_hosted_login_pending' ) || '{}' );
       expect( pending.returnUrl ).to.equal( '/interests' );
     } );
+  } );
+
+  it( 'sends signed-out visitors from Orgs and business pages to the wizard', () => {
+    cy.visitWithFirebaseEmulators( '/businesses' );
+    cy.location( 'pathname' ).should( 'eq', '/get-started' );
+    cy.location( 'search' ).should( 'eq', '?returnUrl=%2Fbusinesses' );
+    cy.visitWithFirebaseEmulators( '/business/some-org' );
+    cy.location( 'pathname' ).should( 'eq', '/get-started' );
+  } );
+
+  it( 'sends the landing page Sign in link to the wizard first', () => {
+    cy.visitWithFirebaseEmulators( '/' );
+    cy.get( '[data-cy="guest-sign-in"]', { timeout: 15000 } ).click();
+    cy.location( 'pathname' ).should( 'eq', '/get-started' );
+    cy.get( '[data-cy="get-started-existing"]' ).should( 'contain.text', 'Already have an account' );
   } );
 
   it( 'shows a shared post to signed-out visitors, read-only', () => {
@@ -97,7 +75,7 @@ describe( 'SayIt routes - signed out', () => {
     cy.location( 'pathname' ).should( 'eq', `/post/${id}` );
     cy.get( '[data-cy="post-view"]', { timeout: 15000 } ).should( 'contain.text', `Looking for a bookkeeper ${id}` );
     cy.contains( '.post-view-signin-hint', 'to join the conversation.' );
-    cy.get( '.post-view-signin-hint a' ).should( 'have.attr', 'href', `/login?returnUrl=%2Fpost%2F${id}` );
+    cy.get( '.post-view-signin-hint a' ).should( 'have.attr', 'href', `/get-started?returnUrl=%2Fpost%2F${id}` );
     cy.get( '.post-view-comment-form' ).should( 'not.exist' );
   } );
 
@@ -106,11 +84,10 @@ describe( 'SayIt routes - signed out', () => {
     cy.location( 'pathname' ).should( 'eq', '/post/legacy-post-id' );
   } );
 
-  it( 'sends signed-out visitors from /profile to /not-authorized', () => {
+  it( 'sends signed-out visitors from /profile to the wizard', () => {
     cy.visitWithFirebaseEmulators( '/profile' );
-    cy.location( 'pathname' ).should( 'eq', '/not-authorized' );
-    cy.get( '[data-cy="not-authorized-shell"]' ).should( 'contain.text', 'Not authorized' );
-    cy.contains( 'a', 'Back to Say It' ).should( 'have.attr', 'href', '/' );
+    cy.location( 'pathname' ).should( 'eq', '/get-started' );
+    cy.location( 'search' ).should( 'eq', '?returnUrl=%2Fprofile' );
   } );
 
   it( 'redirects unknown routes home', () => {

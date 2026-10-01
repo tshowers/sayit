@@ -1,40 +1,29 @@
 <app-preloader [isLoading]="isLoading"></app-preloader>
 <div class="container-fluid chat-page-shell  todd-page" data-cy="chat-board-shell">
-  <div class="row no-print m-2 chat-header" *ngIf="!showAuthGate">
-    <div class="col-12 sayit-topbar">
-      <div class="sayit-brand">
-        <h1 class="sayit-wordmark">Say It</h1>
-        <nav class="sayit-tabs" aria-label="Say It sections">
-          <a class="sayit-tab active" routerLink="/" aria-current="page">For you</a>
-          <a class="sayit-tab" routerLink="/businesses">Orgs</a>
-          <a class="sayit-tab" routerLink="/interests">Inbox<span *ngIf="interestUnreadCount > 0" class="sayit-tab-badge">{{ interestUnreadCount }}</span></a>
-        </nav>
-      </div>
-      <nav class="sayit-quick-actions" aria-label="Say It tools">
-        <app-theme-toggle></app-theme-toggle>
-        <button type="button" class="sayit-quick-action sayit-hover-action" (mouseenter)="openComposerPanel()" (click)="toggleComposerPanel()" title="Create a post" aria-label="Create a post">
-          <i class="fa-solid fa-pen"></i>
-        </button>
-        <button type="button" class="sayit-quick-action sayit-hover-action" (mouseenter)="openSearchPanel()" (click)="toggleSearchPanel()" title="Search posts" aria-label="Search posts">
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-        <button type="button" class="sayit-quick-action" (click)="openMyBusinessPage()" title="Your Say It profile" aria-label="Open your Say It profile">
-          <i class="fa-solid fa-user"></i>
-          <span *ngIf="interestUnreadCount > 0" class="sayit-interest-dot" aria-label="New interest"></span>
-        </button>
-        <button type="button" class="sayit-quick-action" [class.active]="isPrimaryView('newsstand')" (click)="toggleNewsstand()" [title]="isPrimaryView('newsstand') ? 'Back to posts' : 'Open Newsstand'" [attr.aria-label]="isPrimaryView('newsstand') ? 'Back to posts' : 'Open Newsstand'">
-          <i *ngIf="!isPrimaryView('newsstand'); else postsIcon" class="fa-solid fa-newspaper"></i>
-          <ng-template #postsIcon><i class="fa-solid fa-comments"></i></ng-template>
-        </button>
-        <button *ngIf="isMasterTenant && sayitSchedulerEnabled !== null" type="button" class="sayit-quick-action sayit-seed-action" [class.active]="sayitSchedulerEnabled" (click)="toggleScheduler()" [disabled]="sayitSchedulerLoading" [title]="sayitSchedulerEnabled ? 'AI seed posts on — click to turn off' : 'AI seed posts off — click to turn on'" [attr.aria-label]="sayitSchedulerEnabled ? 'Turn off AI seed posts' : 'Turn on AI seed posts'">
-          <i *ngIf="sayitSchedulerLoading; else seedIcon" class="fa-solid fa-spinner fa-spin"></i>
-          <ng-template #seedIcon><i class="fa-solid fa-robot"></i></ng-template>
-        </button>
-        <button *ngIf="isLoggedIn" type="button" class="sayit-quick-action" (click)="logout()" title="Log out" aria-label="Log out">
-          <i class="fa-solid fa-arrow-right-from-bracket"></i>
-        </button>
-      </nav>
-    </div>
+  <div class="no-print mx-2 chat-header" *ngIf="!showAuthGate">
+    <app-sayit-topbar active="feed" [unreadCount]="interestUnreadCount">
+      <button type="button" class="sayit-quick-action sayit-hover-action" (mouseenter)="openComposerPanel()" (click)="toggleComposerPanel()" title="Create a post" aria-label="Create a post">
+        <i class="fa-solid fa-pen"></i>
+      </button>
+      <button *ngIf="isLoggedIn" type="button" class="sayit-quick-action sayit-hover-action" (mouseenter)="openSearchPanel()" (click)="toggleSearchPanel()" title="Search posts" aria-label="Search posts">
+        <i class="fa-solid fa-magnifying-glass"></i>
+      </button>
+      <button type="button" class="sayit-quick-action" (click)="openMyBusinessPage()" title="Your Say It profile" aria-label="Open your Say It profile">
+        <i class="fa-solid fa-user"></i>
+        <span *ngIf="interestUnreadCount > 0" class="sayit-interest-dot" aria-label="New interest"></span>
+      </button>
+      <button *ngIf="isLoggedIn" type="button" class="sayit-quick-action" [class.active]="isPrimaryView('newsstand')" (click)="toggleNewsstand()" [title]="isPrimaryView('newsstand') ? 'Back to posts' : 'Open Newsstand'" [attr.aria-label]="isPrimaryView('newsstand') ? 'Back to posts' : 'Open Newsstand'">
+        <i *ngIf="!isPrimaryView('newsstand'); else postsIcon" class="fa-solid fa-newspaper"></i>
+        <ng-template #postsIcon><i class="fa-solid fa-comments"></i></ng-template>
+      </button>
+      <button *ngIf="isMasterTenant && sayitSchedulerEnabled !== null" type="button" class="sayit-quick-action sayit-seed-action" [class.active]="sayitSchedulerEnabled" (click)="toggleScheduler()" [disabled]="sayitSchedulerLoading" [title]="sayitSchedulerEnabled ? 'AI seed posts on — click to turn off' : 'AI seed posts off — click to turn on'" [attr.aria-label]="sayitSchedulerEnabled ? 'Turn off AI seed posts' : 'Turn on AI seed posts'">
+        <i *ngIf="sayitSchedulerLoading; else seedIcon" class="fa-solid fa-spinner fa-spin"></i>
+        <ng-template #seedIcon><i class="fa-solid fa-robot"></i></ng-template>
+      </button>
+      <button *ngIf="isLoggedIn" type="button" class="sayit-quick-action" (click)="logout()" title="Log out" aria-label="Log out">
+        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      </button>
+    </app-sayit-topbar>
   </div>
   <!-- Landing: lead with the iPhone app; the web stays one tap away (same account). -->
   <div class="m-2" *ngIf="!isLoggedIn" data-cy="guest-banner">
@@ -52,7 +41,8 @@
       <a class="btn-todd btn-todd-primary" routerLink="/profile">Finish profile</a>
     </div>
   </div>
-  <div class="container-fluid chat-content-shell" *ngIf="!showAuthGate">
+  <!-- Posts are for members: signed-out visitors get the landing above and the get-started wizard. -->
+  <div class="container-fluid chat-content-shell" *ngIf="!showAuthGate && isLoggedIn">
     <div class="row mt-4 justify-content-center chat-main-row">
       <div class="col-12">
         <div class="sayit-slide-panel sayit-search-panel mb-3" [class.open]="showSearch" (mouseleave)="closeHoverPanel('search')">

@@ -66,6 +66,8 @@ export class GetStartedComponent implements OnInit {
   stepIndex = 0;
   categoryListOpen = false;
   isSigningIn = false;
+  /** Where a guard was sending the visitor before routing them here (e.g. /interests). */
+  returnUrl = '';
 
   constructor (
     private readonly route: ActivatedRoute,
@@ -77,6 +79,8 @@ export class GetStartedComponent implements OnInit {
   ngOnInit (): void {
     this.title.setTitle( 'Get started - Say It' );
     this.draft = this.onboarding.load();
+    const returnUrl = String( this.route.snapshot.queryParamMap.get( 'returnUrl' ) || '' ).trim();
+    this.returnUrl = returnUrl.startsWith( '/' ) && !returnUrl.startsWith( '//' ) ? returnUrl : '';
     this.focusAnswer();
   }
 

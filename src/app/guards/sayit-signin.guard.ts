@@ -15,7 +15,9 @@ export const sayItSignInGuard: CanActivateFn = (route, state) => {
         return true;
       }
 
-      return router.createUrlTree(['/login'], {
+      // Everyone signs in through the get-started wizard first; returning
+      // members use its "Already have an account?" link (which keeps returnUrl).
+      return router.createUrlTree(['/get-started'], {
         queryParams: {
           returnUrl: state.url,
         },
