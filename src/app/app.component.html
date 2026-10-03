@@ -1,5 +1,5 @@
 <app-notification></app-notification>
-<app-command-palette></app-command-palette>
+<div class="app-global-actions"><app-platform-menu [isLoggedIn]="(isLoggedIn$ | async) ?? false" [userName]="(userName$ | async) ?? ''" [userEmail]="(userEmail$ | async) ?? ''" (signOut)="signOut()" /></div>
 <router-outlet></router-outlet>
 
 <app-site-footer></app-site-footer>

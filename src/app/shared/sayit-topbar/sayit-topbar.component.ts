@@ -96,6 +96,8 @@ import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
       display: flex;
       align-items: center;
       gap: 0.45rem;
+      /* Leave room for the universal Menu button floating top right. */
+      margin-right: 104px;
     }
     @media (max-width: 767.98px) {
       .sayit-topbar { padding: 0.5rem 0; }
