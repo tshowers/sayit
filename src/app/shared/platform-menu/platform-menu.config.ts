@@ -4,7 +4,6 @@ import { MenuAppConfig } from '@taliferro/ui/platform/universal-menu.model';
 export const PLATFORM_MENU_CONFIG: MenuAppConfig = {
   app: 'sayit',
   name: 'SayIt',
-  logo: 'assets/find/entities/sayit/logo.png',
   items: [
     { label: 'For you', icon: 'home', route: '/', keywords: 'feed home' },
     { label: 'Orgs', icon: 'building', route: '/businesses', keywords: 'businesses companies' },
