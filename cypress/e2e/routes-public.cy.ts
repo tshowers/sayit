@@ -90,9 +90,13 @@ describe( 'SayIt routes - signed out', () => {
     cy.location( 'search' ).should( 'eq', '?returnUrl=%2Fprofile' );
   } );
 
-  it( 'redirects unknown routes home', () => {
+  it( 'shows a noindex Not Found page for unknown routes', () => {
     cy.visitWithFirebaseEmulators( '/this-route-does-not-exist' );
-    cy.location( 'pathname' ).should( 'eq', '/' );
+    cy.location( 'pathname' ).should( 'eq', '/this-route-does-not-exist' );
+    cy.contains( '.not-found-shell h1', "We couldn't find that." );
+    cy.get( 'meta[name="robots"]' ).should( 'have.attr', 'content', 'noindex' );
+    cy.title().should( 'eq', 'Page not found | SayIt' );
+    cy.get( '.not-found-shell a' ).should( 'have.attr', 'href', '/' );
   } );
 
   it( 'shows the build version in the footer', () => {
