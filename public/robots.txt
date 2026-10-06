@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+Disallow: /businesses
+Disallow: /business/
+Disallow: /profile
+Disallow: /interests
+Disallow: /get-started
+Disallow: /login
+Disallow: /auth/
+Disallow: /not-authorized
+
+Sitemap: https://sayit.taliferro.tech/sitemap.xml
