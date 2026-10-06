@@ -1,0 +1,68 @@
+1. What the app does and the problem it solves
+
+SayIt is a public board where businesses post what they're looking for or what they're offering, for example "Looking for a bookkeeper for a 10-person firm" or "Offering commercial photography, $400 per half day." Each post shows one at a time, full screen, with a photo, headline, category and price. When someone taps "I'm interested," the app opens a private one-on-one conversation with the author, tied to that post, and emails the author when they have an unread message.
+
+The problem it solves: a small business with a specific need or offer has no direct place to say it and reach the businesses that can act on it. Social networks bury these posts under general content. Classifieds sites are built around consumer goods and anonymous sellers. Freelance marketplaces charge fees and only support one direction, where a client hires a provider. On SayIt, any business can post a need or an offer, and every reply is a direct, private conversation about that one post.
+
+The app has its own features beyond the feed:
+
+A first-run setup that helps the person write their first post before asking them to sign in.
+Search that matches every word across the post text, author, organization, category and price.
+Organization profiles built from the people who post under the same business.
+An inbox filtered by "I'm interested" and "In my posts."
+AI moderation on every new post.
+Report and Block on every post.
+Browsing never needs an account.
+
+2. Intended user
+
+The main users are owners and staff of small and mid-sized businesses, independent consultants, contractors, nonprofits and local service providers. Each person on SayIt is both a buyer and a seller: on a given day they might be looking for a vendor or offering a service to other businesses. Typical users don't have a sales team or a marketing budget and need a low-effort way to announce a need or an offer to people who can actually respond. Anyone can browse without an account. Posting, commenting and messaging need sign-in, through Sign in with Apple or Google.
+
+3. The gap it fills
+
+Professional networks (e.g. LinkedIn): posts compete with general content in an algorithmic feed. There's no structured way to mark a post as "looking for" or "selling," and no built-in path from interest to a conversation about that specific post.
+Classifieds and marketplaces (e.g. Craigslist, Facebook Marketplace): these are designed for consumer goods and individuals, not business services. Anonymous listings give no sense of the organization behind them.
+Freelance platforms (e.g. Upwork, Fiverr): these take a commission and are one-directional (clients hire freelancers). They don't support a business announcing a need to its peers, or two businesses connecting with each other.
+SayIt is free, with no fees, no paywall and no in-app purchases. Every post is labelled as a need or an offer and tied to a business identity, through the author's role and organization profile. "I'm interested" creates a private conversation pinned to the post. AI moderation rates every post: sensitive content is blurred behind a warning, offensive content is hidden, and users can report posts and block people. Posts and conversations are the same as on the web version at sayit.taliferro.tech, so a business can post from either and reply from either.
+
+4. Beta testing and feedback applied
+
+Beta testing has been going on for months, prior to App Store submission.
+
+Who tested the app, and how: An email marketing campaign was sent out to test the web version, then the Taliferro team loaded the app on our devices via Xcode to test locally, then we tested through TestFlight.
+Feedback example 1: Company listing was too long and cumbersome, so we shortened it.
+Feedback example 2: Users wanted questions about their profile asked before they actually signed in.
+Feedback example 3: Look and feel felt off so we redesigned the entire interface to make the app more mobile friendly.
+
+Other changes made during beta:
+
+Three feed layouts, with each person's engagement recorded per layout so the default can be chosen from real use.
+Posts without a photo get a band in the organization's color instead of an empty area.
+The entire post is always visible and scrolls on small screens.
+Post search was added.
+Report, Block, community guidelines and content blurring were added in build 2.
+
+5. Standalone or part of a suite?
+
+SayIt is a standalone product. It's a public community where many businesses interact with each other. The other apps we submitted (TODD Network, Outreach, Docs, Pulse, Moves and Maya) are private workspace tools that a single business uses to manage its own contacts, outreach, documents, surveys and tasks. SayIt has no CRM, outreach, document or task features, and those apps have no public board, posts, interest system or messaging between businesses.
+
+6. Could it be delivered inside another app on our account?
+
+No. Our other published apps are Taliferro Find and Taliferro Music Radio, and neither is related. SayIt is free and public, and anyone can browse it without an account. Our TODD apps are private, signed-in workspaces for a single organization's own data. Putting a public board inside a private business tool would hide it from the audience it's built for: businesses that don't use TODD at all.
+
+7. Code shared with our other apps
+
+Yes, three in-house Swift packages that we wrote and own:
+
+TODDAuthKit: the Sign in with Apple and Google Sign-In screens, plus Face ID/Touch ID re-entry for a restored session.
+TODDProfileKit: the account profile screen, including in-app account deletion (guideline 5.1.1(v)).
+TODDAwardsKit: a general engine for achievement badges and the unlock celebration. SayIt defines its own nine awards and rules (e.g. "The Connector" for sending interest, "In Demand" when five people are interested in your post).
+All three are account and infrastructure features. None of SayIt's own features (feed, posts, search, organizations, interest, inbox, threads, moderation display, reporting and blocking) is shared with any other app. SayIt also uses the same Taliferro account and backend as our other apps, so one sign-in works across our products.
+
+8. Code shared with third-party apps
+
+No. Apart from standard frameworks (Firebase Auth, Firestore and Storage, and Google Sign-In), all of the app's code was written by us for SayIt. It wasn't built from a template, an app builder or a white-label product.
+
+9. Built for a client?
+
+No. Taliferro Tech created, owns and operates SayIt, including the web version at sayit.taliferro.tech, and provides all of its content and branding. The app is submitted by its content provider, as guideline 4.2.6 requires.
