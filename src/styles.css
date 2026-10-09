@@ -583,3 +583,12 @@ textarea.form-control {
   --bs-btn-active-color: #f9f4ed;
   border-radius: var(--radius-pill);
 }
+
+/* Universal menu pill in Say It's Organic colors, not the shared white/black. */
+.app-global-actions .um-trigger {
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: none;
+  font-family: var(--font-body);
+}
+.app-global-actions .um-trigger:hover { background: var(--color-hover); }

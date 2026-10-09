@@ -1,3 +1,11 @@
 /* The universal menu floats top right, as in the other Taliferro apps. */
 .app-global-actions { position: fixed; top: 1rem; right: 1.25rem; z-index: 10002; display: inline-flex; align-items: center; gap: .5rem; }
 
+/* The page shows its own Menu button (the Say It top bar); the open menu still lifts itself to <body>. */
+.app-global-actions--inline { display: none; }
+
+/* On phones a floating pill covers page headers, so it takes its own row instead. */
+@media (max-width: 767.98px) {
+  .app-global-actions { position: static; display: flex; justify-content: flex-end; padding: .75rem 16px 0; }
+  .app-global-actions--inline { display: none; }
+}

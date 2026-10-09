@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { MenuHostService } from '../../services/menu-host.service';
 import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
 
 /**
  * The app's top bar: "Say It" wordmark, For you / Orgs / Inbox tabs (as in the
- * iOS app), the theme toggle, and any page actions projected after it.
+ * iOS app), the theme toggle, any page actions projected after it, and the
+ * Menu button for the universal menu (in place of its floating pill).
  */
 @Component( {
   selector: 'app-sayit-topbar',
@@ -26,6 +28,9 @@ import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
       <div class="sayit-topbar__actions">
         <app-theme-toggle></app-theme-toggle>
         <ng-content></ng-content>
+        <button type="button" class="sayit-menu-button" (click)="menuHost.open()" aria-haspopup="dialog" aria-label="Open menu" title="Menu" data-cy="topbar-menu">
+          <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        </button>
       </div>
     </header>
   `,
@@ -96,17 +101,43 @@ import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
       display: flex;
       align-items: center;
       gap: 0.45rem;
-      /* Leave room for the universal Menu button floating top right. */
-      margin-right: 104px;
+      flex-wrap: wrap;
     }
+    .sayit-menu-button {
+      width: 2.75rem;
+      height: 2.75rem;
+      min-height: 0;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 0;
+      border-radius: 50%;
+      background: var(--color-text);
+      color: var(--color-bg);
+      transition: opacity 0.18s ease, transform 0.12s ease;
+    }
+    .sayit-menu-button:hover { opacity: 0.85; }
+    .sayit-menu-button:active { transform: scale(0.94); }
     @media (max-width: 767.98px) {
       .sayit-topbar { padding: 0.5rem 0; }
       .sayit-brand { gap: 0.75rem; flex-wrap: wrap; }
       .sayit-topbar__actions { gap: 0.25rem; }
+      .sayit-menu-button { width: 2.35rem; height: 2.35rem; }
     }
   `]
 } )
-export class SayitTopbarComponent {
+export class SayitTopbarComponent implements OnInit, OnDestroy {
+  readonly menuHost = inject( MenuHostService );
+
   @Input() active: 'feed' | 'orgs' | 'inbox' | '' = '';
   @Input() unreadCount = 0;
+
+  ngOnInit (): void {
+    this.menuHost.registerInlineTrigger();
+  }
+
+  ngOnDestroy (): void {
+    this.menuHost.unregisterInlineTrigger();
+  }
 }
