@@ -4,18 +4,19 @@
             <div>
                 <div class="profile-intent-page-badge">SayIt Profile</div>
                 <h1>Edit Your SayIt Profile</h1>
-                <p>Update your business details, public intro, and website in a full-page editor that works on desktop and mobile.</p>
+                <p>Your name, business and intro: what people see beside your posts and on your page.</p>
             </div>
-            <button type="button" class="btn btn-outline-secondary" (click)="close()">Back to SayIt</button>
+            <button type="button" class="btn btn-todd" (click)="close()">Back to SayIt</button>
         </div>
     </div>
     <div class="profile-intent-card" [class.profile-intent-card-page]="isPageMode()">
-        <div class="profile-intent-header">
+        <!-- The page has its own header above; the overlay prompt needs this one. -->
+        <div class="profile-intent-header" *ngIf="!isPageMode()">
             <div class="profile-intent-title text-center">social media for organizations</div>
             <button *ngIf="!forced && !isPageMode()" type="button" class="profile-intent-close" (click)="close()" aria-label="Close">×</button>
         </div>
         <div class="profile-intent-body">
-            <p class="profile-intent-subtext"> Say it. Find it. Get it done </p>
+            <p class="profile-intent-subtext" *ngIf="!isPageMode()"> Say it. Find it. Get it done </p>
             <div class="form-group">
                 <label for="piDisplayName">Display name</label>
                 <input id="piDisplayName" class="form-control" type="text" [placeholder]="isQuickSignupMode() ? 'Ty Showers' : 'How your name shows up on SayIt'" [(ngModel)]="displayName" [disabled]="busy" maxlength="40" />
@@ -60,7 +61,7 @@
                 <input id="piWebsite" class="form-control" type="url" placeholder="https://yourcompany.com" [(ngModel)]="websiteUrl" [disabled]="busy" />
             </div>
             <div class="profile-intent-actions">
-                <button type="button" class="btn btn-todd" (click)="save()" [disabled]="busy || !canSave()">
+                <button type="button" class="btn btn-todd btn-todd-primary" (click)="save()" [disabled]="busy || !canSave()">
                     {{ busy ? 'Saving…' : getSaveButtonLabel() }}
                 </button>
             </div>

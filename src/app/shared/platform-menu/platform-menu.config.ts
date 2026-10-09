@@ -11,6 +11,9 @@ export const PLATFORM_MENU_CONFIG: MenuAppConfig = {
   ],
   secondaryItems: [
     { label: 'Profile', icon: 'user', route: '/profile' },
+    // Static pages (public/help.html, about.html), not app routes.
+    { label: 'Help', icon: 'help', url: '/help', keywords: 'faq support guidelines report delete' },
+    { label: 'About SayIt', icon: 'info', url: '/about' },
   ],
   signInRoute: '/get-started',
   profileRoute: '/profile',

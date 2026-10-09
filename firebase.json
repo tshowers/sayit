@@ -2,6 +2,7 @@
   "hosting": {
     "site": "todd-sayit",
     "public": "dist/sayit/browser",
+    "cleanUrls": true,
     "ignore": [
       "firebase.json",
       "**/.DS_Store",
@@ -10,7 +11,7 @@
     "rewrites": [
       {
         "source": "**",
-        "destination": "/index.html"
+        "destination": "/index.csr.html"
       }
     ],
     "headers": [

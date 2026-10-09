@@ -1,0 +1,274 @@
+/*
+ * SayIt's static pages: the home page's crawlable landing (inside <app-root>
+ * in src/index.html) and /about and /help (public/about.html, help.html).
+ * Plain HTML with no Angular, so search engines and link previews read the
+ * words directly. Organic tokens copied from src/styles.css; keep in sync.
+ * Theme is <html data-theme>, set before paint by each page's inline script.
+ */
+:root {
+  --st-bg: #f5ead8;
+  --st-raised: #f9f4ed;
+  --st-surface: #ebddc5;
+  --st-text: #201e1d;
+  --st-muted: #645c50;
+  --st-divider: rgba(32, 30, 29, 0.16);
+  --st-accent: #c67139;
+  --st-link: #8c491a;
+  --st-primary: #b2622d;
+  --st-primary-hover: #8c491a;
+  --st-primary-ink: #f9f4ed;
+  --st-tag-bg: #f0fae1;
+  --st-tag-ink: #3d472b;
+  --st-heading: "Caprasimo", Georgia, serif;
+  --st-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  --st-bg: #1b1917;
+  --st-raised: #26231f;
+  --st-surface: #2e2b25;
+  --st-text: #f5ead8;
+  --st-muted: #a19786;
+  --st-divider: rgba(245, 234, 216, 0.14);
+  --st-accent: #d67f48;
+  --st-link: #f6a06b;
+  --st-primary-hover: #c67139;
+  --st-tag-bg: #3d472b;
+  --st-tag-ink: #e1eecc;
+  color-scheme: dark;
+}
+
+.st-page {
+  margin: 0;
+  background: var(--st-bg);
+  color: var(--st-text);
+  font: 400 17px/1.6 var(--st-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+.st {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 16px 3rem;
+  color: var(--st-text);
+  font: 400 17px/1.6 var(--st-body);
+}
+
+/* Signed-in members go straight to the board: the app replaces this as soon as it starts. */
+html.sayit-member .st--landing {
+  display: none;
+}
+
+.st a {
+  color: var(--st-link);
+}
+
+.st-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 0;
+  flex-wrap: wrap;
+}
+
+.st-wordmark {
+  font: 400 2rem/1 var(--st-heading);
+  color: var(--st-text) !important;
+  text-decoration: none;
+}
+
+.st-nav__links {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.st-nav__links a {
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  color: var(--st-text);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+.st-nav__links a:hover,
+.st-nav__links a[aria-current="page"] {
+  background: var(--st-surface);
+}
+
+.st h1,
+.st h2 {
+  font-family: var(--st-heading);
+  font-weight: 400;
+  line-height: 1.1;
+  margin: 0 0 0.75rem;
+  text-wrap: balance;
+}
+
+.st h1 {
+  font-size: clamp(2.3rem, 7vw, 3.6rem);
+}
+
+.st main > h1:first-child {
+  margin-top: 1.5rem;
+}
+
+.st h2 {
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  margin-top: 2.5rem;
+}
+
+.st h3 {
+  font-size: 1.1rem;
+  margin: 1.5rem 0 0.35rem;
+}
+
+.st p {
+  margin: 0 0 1rem;
+}
+
+.st-lede {
+  font-size: 1.2rem;
+  color: var(--st-muted);
+  max-width: 38rem;
+}
+
+.st-hero {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 2rem;
+  align-items: center;
+  padding: 2rem 0 1rem;
+}
+
+.st-hero img {
+  width: 150px;
+  height: auto;
+}
+
+.st-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin: 1.5rem 0 0.5rem;
+}
+
+.st-button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0 1.4rem;
+  border-radius: 999px;
+  background: var(--st-primary);
+  color: var(--st-primary-ink) !important;
+  font: 400 1.05rem/1 var(--st-heading);
+  text-decoration: none;
+}
+
+.st-button:hover {
+  background: var(--st-primary-hover);
+}
+
+.st-soon {
+  color: var(--st-muted);
+  font-weight: 600;
+}
+
+.st-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding: 0;
+  margin: 1rem 0 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.st-card,
+.st-steps li {
+  padding: 1.25rem;
+  border-radius: 28px;
+  border: 1px solid var(--st-divider);
+  background: var(--st-raised);
+}
+
+.st-steps li::before {
+  counter-increment: step;
+  content: counter(step);
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 0.75rem;
+  border-radius: 50%;
+  background: var(--st-tag-bg);
+  color: var(--st-tag-ink);
+  font-weight: 700;
+}
+
+.st-steps strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.st-steps span,
+.st-muted {
+  color: var(--st-muted);
+}
+
+.st-card {
+  margin: 1rem 0;
+}
+
+.st-card > :last-child {
+  margin-bottom: 0;
+}
+
+.st-faq details {
+  border-bottom: 1px solid var(--st-divider);
+  padding: 0.9rem 0;
+}
+
+.st-faq summary {
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.st-faq details p,
+.st-faq details ul {
+  margin: 0.6rem 0 0;
+  color: var(--st-text);
+}
+
+.st-footer {
+  margin-top: 3rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--st-divider);
+  color: var(--st-muted);
+  font-size: 0.9rem;
+}
+
+.st-footer a {
+  color: var(--st-muted);
+  margin-right: 1rem;
+}
+
+@media (max-width: 640px) {
+  .st-hero {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .st-hero img {
+    width: 96px;
+    order: -1;
+  }
+
+  .st-steps {
+    grid-template-columns: 1fr;
+  }
+}

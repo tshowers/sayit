@@ -1,5 +1,6 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, ViewChild, effect, inject, untracked } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 import { map } from 'rxjs';
 
@@ -31,6 +32,14 @@ export class AppComponent {
     effect( () => {
       if ( this.menuHost.openRequests() === 0 ) return;
       untracked( () => this.platformMenu?.open() );
+    } );
+
+    // index.html hides its static landing before paint for signed-in members.
+    this.isLoggedIn$.pipe( takeUntilDestroyed() ).subscribe( ( loggedIn ) => {
+      try {
+        if ( loggedIn ) localStorage.setItem( 'sayit-member', '1' );
+        else localStorage.removeItem( 'sayit-member' );
+      } catch { /* storage blocked: the landing just shows until the app starts */ }
     } );
   }
 
