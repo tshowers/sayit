@@ -67,11 +67,15 @@ export interface Post {
    */
   timestamp: Date;
   likeUserIds: string[];
+  /** Saved by the backend's posts trigger when the post has a link (see shared/post-link.ts). */
   linkPreview?: {
     title: string;
     description: string;
     url: string;
     image: string;
+    siteName?: string;
+    /** Set for YouTube and Vimeo links, which play in place. */
+    video?: { provider: 'youtube' | 'vimeo'; id: string; };
   };
   contentRating: number;
   ratingExplanation: string;

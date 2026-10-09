@@ -733,3 +733,41 @@ a.sy-card__name:hover {
     max-height: calc(100vh - 3rem);
   }
 }
+
+/* Link previews: a link with no image shows its site in the media area; the
+ * site name sits above the page title in the card body. */
+.sy-card__linkpanel {
+  position: absolute;
+  inset: 0 0 45% 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  color: var(--cream);
+  font: 700 15px/1.2 var(--font-body);
+  letter-spacing: 0.02em;
+}
+
+.sy-card__linkpanel i {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  font-size: 24px;
+}
+
+.sy-card__link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sy-card__site {
+  font: 700 11px/1.2 var(--font-body);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cream-2);
+}

@@ -13,8 +13,12 @@
 
       <!-- Media fills the card; a text post's words are the visual instead -->
       <button *ngIf="media.type !== 'none'" type="button" class="sy-card__media" (click)="openCardMedia(post)"
-        [attr.aria-label]="media.type === 'video' ? 'Play video' : media.type === 'link' ? 'Open link' : 'View image'">
-        <img [src]="media.src" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" (error)="onImageError($event)">
+        [attr.aria-label]="media.type === 'video' ? 'Play video' : media.type === 'image' ? 'View image' : 'Open link'">
+        <img *ngIf="media.src" [src]="media.src" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" (error)="onImageError($event)">
+        <span *ngIf="media.type === 'link-text'" class="sy-card__linkpanel" aria-hidden="true">
+          <i class="fa-solid fa-link"></i>
+          <span>{{ linkSite(post) }}</span>
+        </span>
         <span *ngIf="media.type === 'video'" class="sy-card__play" aria-hidden="true"><i class="fa-solid fa-play"></i></span>
       </button>
       <div *ngIf="media.type === 'none'" class="sy-card__quote" [class.sy-card__quote--long]="(post.content || '').length > 90">
@@ -65,12 +69,20 @@
 
           <div *ngIf="cardKind(post)" class="sy-card__kind"><span class="sy-card__tag">{{ cardKind(post) }}</span></div>
 
-          <a *ngIf="media.type === 'link' && post.linkPreview?.title" class="sy-card__title" [href]="post.linkPreview.url" target="_blank" rel="noopener">{{ post.linkPreview.title | truncate:90 }}</a>
-
-          <div *ngIf="media.type !== 'none' && post.content" class="sy-card__caption" [attr.title]="post.content">
-            <span *ngIf="!isAssistantPost(post); else toddCaption" [innerHTML]="post.content | linkify | truncate:155"></span>
-            <ng-template #toddCaption><span [innerHTML]="post.content | aicontentextractor | formatAIText | linkify | truncate:155"></span></ng-template>
+          <!-- Link or video: site, then the page's title (the URL itself is not shown) -->
+          <div *ngIf="media.type !== 'none' && media.type !== 'image' && post.linkPreview?.title" class="sy-card__link">
+            <span *ngIf="linkSite(post)" class="sy-card__site">{{ linkSite(post) }}</span>
+            <a class="sy-card__title" [href]="post.linkPreview.url" target="_blank" rel="noopener">{{ post.linkPreview.title | truncate:90 }}</a>
           </div>
+
+          <!-- What the person wrote, without the link; a bare link shows the page's summary instead -->
+          <div *ngIf="media.type !== 'none' && captionText(post) as caption; else linkSummary" class="sy-card__caption" [attr.title]="caption">
+            <span *ngIf="!isAssistantPost(post); else toddCaption" [innerHTML]="caption | linkify | truncate:155"></span>
+            <ng-template #toddCaption><span [innerHTML]="caption | aicontentextractor | formatAIText | linkify | truncate:155"></span></ng-template>
+          </div>
+          <ng-template #linkSummary>
+            <div *ngIf="media.type !== 'none' && media.type !== 'image' && post.linkPreview?.description" class="sy-card__caption">{{ post.linkPreview.description | truncate:155 }}</div>
+          </ng-template>
         </div>
 
         <!-- Right rail -->

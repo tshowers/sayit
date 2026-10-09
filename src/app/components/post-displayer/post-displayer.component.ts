@@ -12,7 +12,6 @@ import {
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IsVideoLinkPipe } from '../../pipes/is-video-link.pipe';
 import { LoggerService } from '../../services/logger.service';
 import { RouterModule } from '@angular/router';
 
@@ -30,6 +29,7 @@ import { LinkifyPipe } from '../../pipes/linkify-pipe';
 import { ExactTimePipe } from '../../pipes/exact-time.pipe';
 import { RelativeTimePipe } from '../../pipes/relative-time.pipe';
 import { SafeVideoUrlPipe } from '../../pipes/safe-video-url-pipe';
+import { postLinkUrl, postVideo, textWithoutLink, videoEmbedUrl, videoThumbnail } from '../../shared/post-link';
 import { NotificationService } from '../../services/notification.service';
 import { SayItService, SayItComment } from '../../services/say-it-service';
 import { SoundService } from '../../services/sound.service';
@@ -202,20 +202,27 @@ export class PostDisplayerComponent implements OnChanges {
   /** The card whose comment sheet is open. */
   openCommentsPostId: string | null = null;
 
-  private readonly isVideoLinkPipe = new IsVideoLinkPipe();
   private readonly videoIconPipe = new GetVideoIconPipe();
 
-  /** What fills the card: a video thumbnail, a photo, a link preview image, or nothing (a text post). */
-  cardMedia ( post: any ): { type: 'video' | 'image' | 'link' | 'none'; src: string; } {
-    const url = String( post?.linkPreview?.url || '' );
-    if ( url && this.isVideoLinkPipe.transform( url ) ) {
-      return { type: 'video', src: post.linkPreview.image || this.videoIconPipe.transform( url ) };
+  /**
+   * What fills the card: a video thumbnail (YouTube/Vimeo, played in place),
+   * a photo, a link preview image, a link with no image (its title is the
+   * visual), or nothing (a text post).
+   */
+  cardMedia ( post: any ): { type: 'video' | 'image' | 'link' | 'link-text' | 'none'; src: string; } {
+    const video = postVideo( post );
+    if ( video ) {
+      return { type: 'video', src: post?.linkPreview?.image || videoThumbnail( video ) || this.videoIconPipe.transform( postLinkUrl( post ) || '' ) };
     }
+    const url = String( post?.linkPreview?.url || '' );
     if ( post?.postImageUrl && !url ) {
       return { type: 'image', src: post.postImageUrl };
     }
     if ( url && post?.linkPreview?.image ) {
       return { type: 'link', src: post.linkPreview.image };
+    }
+    if ( url && post?.linkPreview?.title ) {
+      return { type: 'link-text', src: '' };
     }
     return { type: 'none', src: '' };
   }
@@ -224,13 +231,39 @@ export class PostDisplayerComponent implements OnChanges {
     const media = this.cardMedia( post );
     if ( media.type === 'video' ) {
       this.toggleOnSelection();
-      this.openVideoLightbox( post );
+      this.openPostVideo( post );
     } else if ( media.type === 'image' ) {
       this.toggleOnSelection();
       this.openLightbox( media.src );
-    } else if ( media.type === 'link' ) {
+    } else if ( media.type === 'link' || media.type === 'link-text' ) {
       window.open( post.linkPreview.url, '_blank', 'noopener' );
     }
+  }
+
+  /** The post's words without the link the card already shows. */
+  captionText ( post: any ): string {
+    return textWithoutLink( post );
+  }
+
+  /** "YouTube", "ESPN.com"… shown above a link or video title. */
+  linkSite ( post: any ): string {
+    const site = String( post?.linkPreview?.siteName || '' ).trim();
+    if ( site ) return site;
+    try {
+      return new URL( String( post?.linkPreview?.url || '' ) ).hostname.replace( /^www\./, '' );
+    } catch {
+      return '';
+    }
+  }
+
+  /** Plays a YouTube/Vimeo post in the theater-mode player. */
+  openPostVideo ( post: any ): void {
+    const video = postVideo( post );
+    if ( !video ) return;
+    this.isImageLightboxOpen = false;
+    this.lightboxImage = null;
+    this.lightboxVideoUrl = videoEmbedUrl( video );
+    this.isVideoLightboxOpen = true;
   }
 
   /** Category as a small tag ("Hiring", "Food"…); hidden for the catch-all bucket. */
@@ -775,35 +808,6 @@ export class PostDisplayerComponent implements OnChanges {
       post.favoriteCount++;
       this.dataService.updateMessage( post.id, post );
     }
-  }
-
-  /**
-   * Opens a video lightbox if a valid video URL is found in the post.
-   * The function will determine the video platform (YouTube, Vimeo, TikTok), generate an embeddable URL,
-   * and display the video in a modal dialog.
-   * @param post - The Post object that may contain video content to display.
-   */
-  openVideoLightbox ( post: any ) {
-    if ( !post ) return;
-
-    this.logger.log( 'Passed Post for Lightbox', post );
-
-    let url = post?.linkPreview?.url || post?.link;
-    if ( !url ) {
-      this.logger.warn( 'No valid video URL found in post.', post );
-    }
-
-    this.logger.info( 'Passed Post', post );
-
-    const videoUrl = this.extractUrl( post.content ) || url;
-    this.logger.info( 'Extracted video URL', videoUrl );
-
-    if ( !videoUrl ) {
-      this.logger.info( 'No valid video URL found in post.', post );
-      return;
-    }
-
-    this.openVideoInLightbox( videoUrl, post );
   }
 
   extractUrl ( content: string ): string | null {

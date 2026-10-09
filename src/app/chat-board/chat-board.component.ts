@@ -25,7 +25,6 @@ import {
 } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AuthContextService } from '../services/auth-context.service';
-import { LinkPreviewService } from '../services/link-preview.service';
 import { LoggerService } from '../services/logger.service';
 import { NotificationService } from '../services/notification.service';
 import { SoundService } from '../services/sound.service';
@@ -209,7 +208,6 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
    * @param userService - User service for user-related operations.
    * @param openAIService - OpenAI service for AI operations.
    * @param messageService - Message service for message handling.
-   * @param linkPreviewService - Service for generating link previews.
    * @param notificationService - Service for handling notifications.
    */
   constructor (
@@ -220,7 +218,6 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
     private sayItService: SayItService,
     private dataService: SayItDataService,
     private renderer: Renderer2,
-    private linkPreviewService: LinkPreviewService,
     private notificationService: NotificationService,
     private onboarding: SayItOnboardingService
   ) { }
@@ -1470,19 +1467,7 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
     this.isPosting = true;
 
-    let linkPreview: any;
-    const urlPattern = /(https?:\/\/[^\s]+)/g;
-    const urls = msg.match( urlPattern );
-
-    if ( urls && urls.length > 0 ) {
-      try {
-        linkPreview = await this.linkPreviewService
-          .fetchLinkPreview( urls[0] )
-          .toPromise();
-      } catch ( error ) {
-        this.logger.error( 'Error fetching link preview: ', error );
-      }
-    }
+    // Link previews are saved by the backend's posts trigger, for web and app posts alike.
 
     // Build a minimal payload and let SayItService handle moderation + persistence.
     const ident = this.getSayItIdentity();
@@ -1525,14 +1510,6 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
       groupId: this.currentGroupId || null,
 
-      linkPreview: linkPreview
-        ? {
-          title: linkPreview.title,
-          description: linkPreview.description,
-          url: linkPreview.url,
-          image: linkPreview.image
-        }
-        : null,
       postImageUrl: this.downloadURL ? String( this.downloadURL ) : null,
       postImageThumbUrl: null, // for later
       postImagePath: this.downloadPath ? String( this.downloadPath ) : null,

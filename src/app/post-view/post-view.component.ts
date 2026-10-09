@@ -20,6 +20,7 @@ import { environment } from '../../environments/environment';
 import { buildSayitPostUrl } from '../shared/public-app-url.util';
 import { BackToTopComponent } from '../shared/back-to-top/back-to-top.component';
 import { SafeVideoUrlPipe } from '../pipes/safe-video-url-pipe';
+import { postVideo, textWithoutLink, videoEmbedUrl } from '../shared/post-link';
 import { SayItComment, SayItService } from '../services/say-it-service';
 
 @Component( {
@@ -45,7 +46,7 @@ export class PostViewComponent implements OnInit, OnDestroy {
   lightboxImage: string | null = null;
   isImageLightboxOpen: boolean = false;
   embeddedVideoUrl: string | null = null;
-  embeddedVideoPlatform: 'youtube' | 'vimeo' | 'tiktok' | null = null;
+  embeddedVideoPlatform: 'youtube' | 'vimeo' | null = null;
   readonly COMPANY_NAME = environment.COMPANY_NAME;
   displayName = '';
   isSmallScreen: boolean = window.innerWidth < 992;
@@ -228,139 +229,27 @@ export class PostViewComponent implements OnInit, OnDestroy {
     this.lightboxImage = null;
   }
 
+  /** YouTube and Vimeo links play on the page; TikTok and other links show the link card. */
   private setEmbeddedVideoFromPost ( post: Post | null | undefined ): void {
-    const videoUrl = this.getPostVideoUrl( post );
-
-    if ( !videoUrl ) {
-      this.embeddedVideoUrl = null;
-      this.embeddedVideoPlatform = null;
-      return;
-    }
-
-    this.embeddedVideoPlatform = this.getVideoPlatform( videoUrl );
-    this.embeddedVideoUrl = this.buildEmbeddedVideoUrl( videoUrl );
-
-    this.logger.info( '[PostView] embedded video resolved', {
-      videoUrl,
-      platform: this.embeddedVideoPlatform,
-      embeddedVideoUrl: this.embeddedVideoUrl
-    } );
+    const video = postVideo( post );
+    this.embeddedVideoPlatform = video?.provider ?? null;
+    this.embeddedVideoUrl = video ? videoEmbedUrl( video, false ) : null;
   }
 
-  private getPostVideoUrl ( post: Post | null | undefined ): string | null {
-    if ( !post ) return null;
-
-    const previewUrl = post.linkPreview?.url ? String( post.linkPreview.url ).trim() : '';
-    if ( previewUrl ) {
-      return previewUrl;
-    }
-
-    const postLink = ( post as any )?.link ? String( ( post as any ).link ).trim() : '';
-    if ( postLink ) {
-      return postLink;
-    }
-
-    const content = post.content ? String( post.content ) : '';
-    const urlMatch = content.match( /(https?:\/\/[^\s]+)/i );
-    return urlMatch ? urlMatch[1] : null;
+  /** The post's words without the link the card already shows. */
+  get postText (): string {
+    return textWithoutLink( this.post );
   }
 
-  private getVideoPlatform ( videoUrl: string ): 'youtube' | 'vimeo' | 'tiktok' | null {
-    const lower = videoUrl.toLowerCase();
-
-    if (
-      lower.includes( 'youtube.com' ) ||
-      lower.includes( 'youtu.be' ) ||
-      lower.includes( 'youtube-nocookie.com' )
-    ) {
-      return 'youtube';
-    }
-
-    if ( lower.includes( 'vimeo.com' ) ) {
-      return 'vimeo';
-    }
-
-    if ( lower.includes( 'tiktok.com' ) ) {
-      return 'tiktok';
-    }
-
-    return null;
-  }
-
-  private buildEmbeddedVideoUrl ( videoUrl: string ): string | null {
-    const platform = this.getVideoPlatform( videoUrl );
-
-    if ( platform === 'youtube' ) {
-      const videoId = this.extractVideoIdFromUrl( videoUrl, 'youtube' );
-      return videoId
-        ? `https://www.youtube.com/embed/${videoId}?rel=0`
-        : null;
-    }
-
-    if ( platform === 'vimeo' ) {
-      const videoId = this.extractVideoIdFromUrl( videoUrl, 'vimeo' );
-      return videoId
-        ? `https://player.vimeo.com/video/${videoId}`
-        : null;
-    }
-
-    if ( platform === 'tiktok' ) {
-      const videoId = this.extractVideoIdFromUrl( videoUrl, 'tiktok' );
-      return videoId
-        ? `https://www.tiktok.com/embed/v2/${videoId}`
-        : null;
-    }
-
-    return null;
-  }
-
-  private extractVideoIdFromUrl ( videoUrl: string, platform: 'youtube' | 'vimeo' | 'tiktok' ): string | null {
+  /** "YouTube", "ESPN.com"… shown above the link's title. */
+  get linkSite (): string {
+    const site = String( this.post?.linkPreview?.siteName || '' ).trim();
+    if ( site ) return site;
     try {
-      if ( platform === 'youtube' ) {
-        const parsed = new URL( videoUrl );
-        const host = parsed.hostname.toLowerCase();
-        const pathParts = parsed.pathname.split( '/' ).filter( Boolean );
-
-        if ( host.includes( 'youtu.be' ) && pathParts[0] ) {
-          return pathParts[0];
-        }
-
-        const watchId = parsed.searchParams.get( 'v' );
-        if ( watchId ) {
-          return watchId;
-        }
-
-        const shortsIndex = pathParts.indexOf( 'shorts' );
-        if ( shortsIndex >= 0 && pathParts[shortsIndex + 1] ) {
-          return pathParts[shortsIndex + 1];
-        }
-
-        const embedIndex = pathParts.indexOf( 'embed' );
-        if ( embedIndex >= 0 && pathParts[embedIndex + 1] ) {
-          return pathParts[embedIndex + 1];
-        }
-
-        return pathParts.length ? pathParts[pathParts.length - 1] : null;
-      }
-
-      if ( platform === 'vimeo' ) {
-        const match = videoUrl.match( /vimeo\.com\/(?:video\/)?(\d+)/i );
-        return match ? match[1] : null;
-      }
-
-      if ( platform === 'tiktok' ) {
-        const match = videoUrl.match( /\/video\/(\d+)/i );
-        return match ? match[1] : null;
-      }
-    } catch ( error ) {
-      this.logger.error( '[PostView] failed to extract video id', {
-        videoUrl,
-        platform,
-        error
-      } );
+      return new URL( String( this.post?.linkPreview?.url || '' ) ).hostname.replace( /^www\./, '' );
+    } catch {
+      return '';
     }
-
-    return null;
   }
 
   favoritePost ( post: Post, event?: Event ): void {

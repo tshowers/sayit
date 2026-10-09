@@ -41,12 +41,13 @@
                 </div>
             </header>
             <div class="post-view-body" [class.blur-content]="post.contentRating >= 4" #postContent>
-                <section class="post-view-content-block">
+                <!-- What the person wrote; a previewed link shows as the card below, not as text -->
+                <section class="post-view-content-block" *ngIf="postText">
                     <div *ngIf="post.user != 'TODD'; else toddMessage">
-                        <div class="message-chat-message post-view-message" [innerHTML]="post.content | aicontentextractor | formatAIText | linkify | truncate:155" [attr.title]="post.ratingExplanation ? post.ratingExplanation : null"></div>
+                        <div class="message-chat-message post-view-message" [innerHTML]="postText | aicontentextractor | formatAIText | linkify | truncate:155" [attr.title]="post.ratingExplanation ? post.ratingExplanation : null"></div>
                     </div>
                     <ng-template #toddMessage>
-                        <div class="message-chat-message post-view-message" [innerHTML]="post.content | aicontentextractor | formatAIText | linkify" [attr.title]="post.ratingExplanation ? post.ratingExplanation : null"></div>
+                        <div class="message-chat-message post-view-message" [innerHTML]="postText | aicontentextractor | formatAIText | linkify" [attr.title]="post.ratingExplanation ? post.ratingExplanation : null"></div>
                     </ng-template>
                 </section>
                 <section class="post-view-media-block" *ngIf="post.linkPreview">
@@ -54,13 +55,14 @@
                         <iframe [src]="embeddedVideoUrl | safeVideoUrl" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="responsive-iframe"></iframe>
                     </div>
                     <div class="link-preview post-view-link-preview">
-                        <div *ngIf="!hasEmbeddedVideo()" class="preview-link-image-container post-view-link-image-wrap">
+                        <div *ngIf="!hasEmbeddedVideo() && post.linkPreview.image" class="preview-link-image-container post-view-link-image-wrap">
                             <img [src]="post.linkPreview.image" class="img-fluid post-view-link-image" alt="Link image" (error)="onImageError($event)" (click)="openLightbox(post.linkPreview.image)">
                         </div>
                         <div class="link-details post-view-link-details">
+                            <span *ngIf="linkSite" class="post-view-link-site">{{ linkSite }}</span>
                             <h2 class="message-link-title post-view-link-title">{{ post.linkPreview.title | truncate:155 }}</h2>
-                            <p class="message-link-description post-view-link-description"><i>{{ post.linkPreview.description | truncate:155 }}</i></p>
-                            <a [href]="post.linkPreview.url" class="btn-ios post-view-link-button" target="_blank">Go to link</a>
+                            <p *ngIf="post.linkPreview.description" class="message-link-description post-view-link-description"><i>{{ post.linkPreview.description | truncate:155 }}</i></p>
+                            <a [href]="post.linkPreview.url" class="btn-ios post-view-link-button" target="_blank" rel="noopener">{{ hasEmbeddedVideo() ? 'Watch on ' + linkSite : 'Go to link' }}</a>
                         </div>
                     </div>
                 </section>
