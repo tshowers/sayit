@@ -6,7 +6,7 @@
     "generate-version": "node scripts/generate-version.js",
     "start": "ng serve",
     "prebuild": "npm run generate-version",
-    "build": "ng build && node scripts/static-shell.js",
+    "build": "ng build",
     "deploy:hosting": "./deploy.sh",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",

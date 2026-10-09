@@ -36,14 +36,11 @@
       root.setAttribute('data-theme', theme);
       root.setAttribute('data-bs-theme', theme);
       document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'dark' ? '#1b1917' : '#f5ead8');
-      // Signed-in members skip the static landing below (AppComponent keeps this flag current).
-      try { if (localStorage.getItem('sayit-member') === '1') root.classList.add('sayit-member'); } catch (e) {}
     })();
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;500;600;700&display=swap">
-  <link rel="stylesheet" href="/assets/static/sayit-static.css">
   <link rel="icon" type="image/png" sizes="128x111" href="/assets/seo/sayit-icon.png">
   <link rel="apple-touch-icon" href="/assets/seo/sayit-icon.png">
   <!-- Google Analytics 4 / SayIt web stream -->
@@ -63,46 +60,6 @@
   </script>
 </head>
 <body>
-  <app-root>
-    <!--static-landing:start-->
-    <!-- What search engines, link previews and first-time visitors see before
-         the app starts; the app replaces it. scripts/static-shell.js strips it
-         from index.csr.html, the shell every other route is served from. -->
-    <div class="st st--landing">
-      <nav class="st-nav" aria-label="SayIt">
-        <a class="st-wordmark" href="/">Say It</a>
-        <div class="st-nav__links">
-          <a href="/about">About</a>
-          <a href="/help">Help</a>
-          <a href="/get-started">Sign in</a>
-        </div>
-      </nav>
-      <main>
-        <section class="st-hero">
-          <div>
-            <h1>Say what you need. Get found.</h1>
-            <p class="st-lede">SayIt is a community board for real businesses and the people who need them. Post what you're looking for or what you're selling, and talk it over one-on-one with the people who are interested.</p>
-            <div class="st-actions">
-              <a class="st-button" href="/get-started">Start on the web</a>
-              <span class="st-soon">Coming soon to iPhone &amp; iPad</span>
-            </div>
-          </div>
-          <img src="/assets/sayit/sayit.png" alt="" width="150" height="131">
-        </section>
-        <h2>How it works</h2>
-        <ol class="st-steps">
-          <li><strong>Say it</strong><span>Post what you're looking for or what you're selling, with a photo or a link if it helps.</span></li>
-          <li><strong>Get found</strong><span>People who can help tap I'm interested, and it lands in your inbox.</span></li>
-          <li><strong>Talk it over</strong><span>Message each other one-on-one and get it done. No followers, no noise.</span></li>
-        </ol>
-        <h2>One account, web or iPhone</h2>
-        <p>Start here on the web and pick up in the iPhone app, or the other way around. SayIt is free. Every post is screened automatically and reports are reviewed within 24 hours.</p>
-      </main>
-      <footer class="st-footer">
-        <a href="/about">About SayIt</a><a href="/help">Help</a><a href="https://taliferro.com/privacy-policy">Privacy</a><a href="mailto:info@taliferro.com">info@taliferro.com</a>
-      </footer>
-    </div>
-    <!--static-landing:end-->
-  </app-root>
+  <app-root></app-root>
 </body>
 </html>

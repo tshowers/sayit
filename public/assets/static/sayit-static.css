@@ -1,6 +1,6 @@
 /*
- * SayIt's static pages: the home page's crawlable landing (inside <app-root>
- * in src/index.html) and /about and /help (public/about.html, help.html).
+ * SayIt's static /about and /help pages (public/about.html, help.html). The
+ * home page (public/index.html) carries its own styles.
  * Plain HTML with no Angular, so search engines and link previews read the
  * words directly. Organic tokens copied from src/styles.css; keep in sync.
  * Theme is <html data-theme>, set before paint by each page's inline script.
@@ -53,11 +53,6 @@
   padding: 0 16px 3rem;
   color: var(--st-text);
   font: 400 17px/1.6 var(--st-body);
-}
-
-/* Signed-in members go straight to the board: the app replaces this as soon as it starts. */
-html.sayit-member .st--landing {
-  display: none;
 }
 
 .st a {
@@ -136,86 +131,13 @@ html.sayit-member .st--landing {
   max-width: 38rem;
 }
 
-.st-hero {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 2rem;
-  align-items: center;
-  padding: 2rem 0 1rem;
-}
-
-.st-hero img {
-  width: 150px;
-  height: auto;
-}
-
-.st-actions {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem 1.25rem;
-  margin: 1.5rem 0 0.5rem;
-}
-
-.st-button {
-  display: inline-flex;
-  align-items: center;
-  min-height: 48px;
-  padding: 0 1.4rem;
-  border-radius: 999px;
-  background: var(--st-primary);
-  color: var(--st-primary-ink) !important;
-  font: 400 1.05rem/1 var(--st-heading);
-  text-decoration: none;
-}
-
-.st-button:hover {
-  background: var(--st-primary-hover);
-}
-
-.st-soon {
-  color: var(--st-muted);
-  font-weight: 600;
-}
-
-.st-steps {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  padding: 0;
-  margin: 1rem 0 0;
-  list-style: none;
-  counter-reset: step;
-}
-
-.st-card,
-.st-steps li {
+.st-card {
   padding: 1.25rem;
   border-radius: 28px;
   border: 1px solid var(--st-divider);
   background: var(--st-raised);
 }
 
-.st-steps li::before {
-  counter-increment: step;
-  content: counter(step);
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  margin-bottom: 0.75rem;
-  border-radius: 50%;
-  background: var(--st-tag-bg);
-  color: var(--st-tag-ink);
-  font-weight: 700;
-}
-
-.st-steps strong {
-  display: block;
-  margin-bottom: 0.25rem;
-}
-
-.st-steps span,
 .st-muted {
   color: var(--st-muted);
 }
@@ -257,18 +179,3 @@ html.sayit-member .st--landing {
   margin-right: 1rem;
 }
 
-@media (max-width: 640px) {
-  .st-hero {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .st-hero img {
-    width: 96px;
-    order: -1;
-  }
-
-  .st-steps {
-    grid-template-columns: 1fr;
-  }
-}

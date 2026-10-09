@@ -3,8 +3,16 @@ import { sayItSignInGuard } from './guards/sayit-signin.guard';
 import { legacyPostLinkGuard } from './guards/legacy-post-link.guard';
 
 export const routes: Routes = [
+  // A page load of "/" is the static home page (public/index.html), never the
+  // app. In-app links and redirects to "/" mean the board, so send them there
+  // (query params carry over, so the board's guard still catches /?post=<id>).
   {
     path: '',
+    pathMatch: 'full',
+    redirectTo: 'board',
+  },
+  {
+    path: 'board',
     loadComponent: () =>
       import( './chat-board/chat-board.component' ).then( ( m ) => m.ChatBoardComponent ),
     title: 'Say It',
