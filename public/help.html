@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <title>SayIt Help | Taliferro Tech</title>
@@ -18,7 +19,7 @@
   <script>
     (function () {
       var theme;
-      try { theme = localStorage.getItem('sayit-theme'); } catch (e) {}
+      try { theme = localStorage.getItem('sayit-theme'); } catch (e) { }
       if (theme !== 'light' && theme !== 'dark') {
         theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
       }
@@ -33,7 +34,7 @@
   <link rel="icon" type="image/png" href="/assets/seo/sayit-icon.png">
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
+    function gtag() { dataLayer.push(arguments); }
     if (!/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) {
       var gaTag = document.createElement('script');
       gaTag.async = true;
@@ -44,6 +45,7 @@
     }
   </script>
 </head>
+
 <body class="st-page">
   <div class="st">
     <nav class="st-nav" aria-label="SayIt">
@@ -56,8 +58,7 @@
     </nav>
     <main class="st-faq">
       <h1>SayIt Help</h1>
-      <p class="st-lede">Answers to the common questions. Something missing? Email <a href="mailto:info@taliferro.com">info@taliferro.com</a>.</p>
-
+      <p class="st-lede">Answers to the common questions. Something missing? Email <a href="mailto:info@taliferro.tech">info@taliferro.tech</a>.</p>
       <h2 id="getting-started">Getting started</h2>
       <details>
         <summary>How do I join?</summary>
@@ -71,7 +72,6 @@
         <summary>Can I look around without signing in?</summary>
         <p>The board is for members, so you'll need to sign in to browse posts. Anyone can open a post someone shared with them.</p>
       </details>
-
       <h2 id="posting">Posting</h2>
       <details>
         <summary>What should I post?</summary>
@@ -85,7 +85,6 @@
         <summary>How do I delete a post?</summary>
         <p>Open your post and use the delete (trash) button.</p>
       </details>
-
       <h2 id="interested">I'm interested and your inbox</h2>
       <details>
         <summary>What does "I'm interested" do?</summary>
@@ -95,7 +94,6 @@
         <summary>Where do I see who's interested in my posts?</summary>
         <p>In your inbox (the Inbox tab). Each conversation stays with the post it's about.</p>
       </details>
-
       <h2 id="orgs">Organizations</h2>
       <details>
         <summary>How do I show up on my organization's page?</summary>
@@ -103,9 +101,8 @@
       </details>
       <details>
         <summary>My organization shows up twice with different spellings.</summary>
-        <p>Use the same name as your colleagues on your profile. If an organization needs merging or renaming, email <a href="mailto:info@taliferro.com">info@taliferro.com</a>.</p>
+        <p>Use the same name as your colleagues on your profile. If an organization needs merging or renaming, email <a href="mailto:info@taliferro.tech">info@taliferro.tech</a>.</p>
       </details>
-
       <h2 id="profile">Your profile and account</h2>
       <details>
         <summary>How do I change my name, business or intro?</summary>
@@ -113,19 +110,17 @@
       </details>
       <details>
         <summary>How do I delete my account?</summary>
-        <p>In the iPhone app, open the Me tab, then TODD Account, then Delete Account. On the web, email <a href="mailto:info@taliferro.com">info@taliferro.com</a> from the address you signed up with and we'll delete it for you.</p>
+        <p>In the iPhone app, open the Me tab, then TODD Account, then Delete Account. On the web, email <a href="mailto:info@taliferro.tech">info@taliferro.tech</a> from the address you signed up with and we'll delete it for you.</p>
       </details>
-
       <h2 id="safety">Safety</h2>
       <details>
         <summary>How do I report a post or block someone?</summary>
-        <p>In the iPhone app, every post's menu has Report, Block and Hide Post, and you can report a comment by pressing and holding it. On the web, email <a href="mailto:info@taliferro.com">info@taliferro.com</a> with a link to the post. Reports are reviewed within 24 hours.</p>
+        <p>In the iPhone app, every post's menu has Report, Block and Hide Post, and you can report a comment by pressing and holding it. On the web, email <a href="mailto:info@taliferro.tech">info@taliferro.tech</a> with a link to the post. Reports are reviewed within 24 hours.</p>
       </details>
       <details>
         <summary>Why does a post say "Sensitive content"?</summary>
         <p>Every post is screened automatically. Posts that may be inappropriate are covered with a warning, and you choose whether to view them.</p>
       </details>
-
       <h2 id="guidelines">Community guidelines</h2>
       <div class="st-card">
         <p>SayIt is for real businesses and the people who need them. To keep it that way:</p>
@@ -139,9 +134,10 @@
       </div>
     </main>
     <footer class="st-footer">
-      <a href="/">SayIt</a><a href="/about">About</a><a href="https://taliferro.com/privacy-policy">Privacy</a><a href="mailto:info@taliferro.com">info@taliferro.com</a>
-      <p>© 2026 Taliferro Group. All rights reserved.</p>
+      <a href="/">SayIt</a><a href="/about">About</a><a href="https://taliferro.tech/privacy">Privacy</a><a href="mailto:info@taliferro.tech">info@taliferro.tech</a>
+      <p>© 2026 Taliferro Tech, LLC. All rights reserved.</p>
     </footer>
   </div>
 </body>
+
 </html>

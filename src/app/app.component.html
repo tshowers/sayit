@@ -1,5 +1,3 @@
 <app-notification></app-notification>
 <div class="app-global-actions" [class.app-global-actions--inline]="menuHost.hasInlineTrigger()"><app-platform-menu [showTrigger]="!menuHost.hasInlineTrigger()" [isLoggedIn]="(isLoggedIn$ | async) ?? false" [userName]="(userName$ | async) ?? ''" [userEmail]="(userEmail$ | async) ?? ''" (signOut)="signOut()" /></div>
 <router-outlet></router-outlet>
-
-<app-site-footer></app-site-footer>

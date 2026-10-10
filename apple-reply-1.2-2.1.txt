@@ -1,0 +1,24 @@
+Thank you. Build 4 adds email sign-in so you can use the demo account below; every 1.2 safeguard was already in the app behind sign-in.
+
+Demo account (Beta App Review Information is updated too):
+Email: [DEMO EMAIL]
+Password: [DEMO PASSWORD]
+On the sign-in screen, tick the agreement box, then tap "Sign in with email".
+
+Guideline 1.2:
+
+- Age rating: set to 18+ in App Store Connect.
+
+- Terms (EULA): no one can sign in until they tick "I agree to the Terms of Use (EULA) and the Community Guidelines. There is zero tolerance for objectionable content or abusive users." The Community Guidelines (sign-in screen, and Me > Community Guidelines) say offending content is removed and its author banned.
+
+- Filtering: every new post is screened by automated moderation. Posts rated offensive are never shown; sensitive posts are blurred behind a warning.
+
+- Flag: on any post, tap ••• > Report Post. On a comment, press and hold > Report Comment.
+
+- Block: ••• > Block [name] on a post, or press and hold a comment > Block. Blocked people's posts, comments and messages disappear immediately. Manage them in Me > Blocked People.
+
+- Remove from feed: ••• > Hide Post removes it from the feed immediately.
+
+- 24-hour action: every report emails our moderator at once, with one-tap actions to remove the post and ban its author. Banned accounts can no longer post, comment or message. We act on reports within 24 hours.
+
+- Contact: Me > Contact Support, the Community Guidelines page, and every report screen show info@taliferro.com.

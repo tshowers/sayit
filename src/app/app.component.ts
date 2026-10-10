@@ -8,11 +8,10 @@ import { AuthContextService } from './services/auth-context.service';
 import { MenuHostService } from './services/menu-host.service';
 import { NotificationComponent } from './shared/notification/notification.component';
 import { PlatformMenuComponent } from './shared/platform-menu/platform-menu.component';
-import { SiteFooterComponent } from './shared/site-footer/site-footer.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, NotificationComponent, PlatformMenuComponent, SiteFooterComponent, AsyncPipe],
+  imports: [RouterOutlet, NotificationComponent, PlatformMenuComponent, AsyncPipe],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
