@@ -15,15 +15,15 @@ describe( 'SayIt routes - signed in', () => {
     cy.intercept( { url: 'https://api.taliferro.tech/api/**' }, { statusCode: 200, body: { success: true } } );
   } );
 
-  it( 'shows the board instead of the sign-in gate at /', () => {
-    cy.visitWithFirebaseEmulators( '/', credentials() );
+  it( 'shows the board instead of the sign-in gate at /board', () => {
+    cy.visitWithFirebaseEmulators( '/board', credentials() );
     cy.get( '[data-cy="chat-board-shell"]', { timeout: 20000 } ).should( 'exist' );
     cy.get( '[data-cy="guest-banner"]' ).should( 'not.exist' );
     cy.get( 'button[aria-label="Log out"]' ).should( 'exist' );
   } );
 
   it( 'offers signed-in web users the app, and remembers when they dismiss it', () => {
-    cy.visitWithFirebaseEmulators( '/', credentials() );
+    cy.visitWithFirebaseEmulators( '/board', credentials() );
     cy.get( '[data-cy="app-promo-bar"]', { timeout: 20000 } ).should( 'contain.text', 'Say It' );
     cy.get( '[data-cy="app-promo-dismiss"]' ).click();
     cy.get( '[data-cy="app-promo-bar"]' ).should( 'not.exist' );

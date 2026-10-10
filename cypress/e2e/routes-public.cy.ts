@@ -11,7 +11,7 @@ describe( 'SayIt routes - signed out', () => {
   } );
 
   it( 'leads guests to the app, with the web one tap away and no popup', () => {
-    cy.visitWithFirebaseEmulators( '/' );
+    cy.visitWithFirebaseEmulators( '/board' );
     cy.get( '[data-cy="guest-banner"]', { timeout: 15000 } ).should( 'contain.text', 'Say It is best on iPhone' );
     // No Apple ID yet, so no dead App Store link - just "coming soon".
     cy.get( '[data-cy="app-coming-soon"]' ).should( 'be.visible' );
@@ -26,7 +26,7 @@ describe( 'SayIt routes - signed out', () => {
   } );
 
   it( 'sends guests who try to post to the wizard', () => {
-    cy.visitWithFirebaseEmulators( '/' );
+    cy.visitWithFirebaseEmulators( '/board' );
     cy.get( 'button[aria-label="Create a post"]', { timeout: 15000 } ).click();
     cy.location( 'pathname' ).should( 'eq', '/get-started' );
   } );
@@ -59,7 +59,7 @@ describe( 'SayIt routes - signed out', () => {
   } );
 
   it( 'sends the landing page Sign in link to the wizard first', () => {
-    cy.visitWithFirebaseEmulators( '/' );
+    cy.visitWithFirebaseEmulators( '/board' );
     cy.get( '[data-cy="guest-sign-in"]', { timeout: 15000 } ).click();
     cy.location( 'pathname' ).should( 'eq', '/get-started' );
     cy.get( '[data-cy="get-started-existing"]' ).should( 'contain.text', 'Already have an account' );
@@ -99,8 +99,9 @@ describe( 'SayIt routes - signed out', () => {
     cy.get( '.not-found-shell a' ).should( 'have.attr', 'href', '/' );
   } );
 
-  it( 'shows the build version in the footer', () => {
+  it( 'shows the build version in the menu', () => {
     cy.visitWithFirebaseEmulators( '/not-authorized' );
-    cy.get( 'footer.site-footer' ).should( 'contain.text', 'Version:' );
+    cy.get( '.platform-menu-trigger', { timeout: 15000 } ).click();
+    cy.get( '.um-foot__legal' ).invoke( 'text' ).should( 'match', /v\d{4}\.\d+\.\d+/ );
   } );
 } );

@@ -39,7 +39,7 @@ describe( 'SayIt link previews', () => {
   } );
 
   it( 'shows link and video cards on the board without the bare URL', () => {
-    cy.visitWithFirebaseEmulators( '/', credentials() );
+    cy.visitWithFirebaseEmulators( '/board', credentials() );
 
     cy.contains( '.sy-card', `Buccaneers explode for first win ${run}`, { timeout: 20000 } ).within( () => {
       cy.get( '.sy-card__site' ).should( 'have.text', 'ESPN.com' );

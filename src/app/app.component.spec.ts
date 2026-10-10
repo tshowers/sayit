@@ -20,10 +20,11 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('sayit');
   });
 
-  it('should render the footer', () => {
+  it('should not render a global footer in the app shell', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('footer.site-footer')).toBeTruthy();
+    expect(compiled.querySelector('router-outlet')).toBeTruthy();
+    expect(compiled.querySelector('footer')).toBeNull();
   });
 });
