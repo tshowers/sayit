@@ -1,0 +1,62 @@
+/*
+ * The landing-page footer (site-footer-component). Import after tokens.css.
+ *
+ * Short page: the footer sits at the bottom of the window. Long page: it comes
+ * after the content. Give the landing page's outermost element `tt-page` (or
+ * the same three rules on its :host) and make <app-site-footer> its last child.
+ */
+.tt-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+app-site-footer {
+  display: block;
+  margin-top: auto;
+}
+
+.tt-foot {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 24px 40px 28px;
+  border-top: 1px solid var(--surface2);
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.tt-foot__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+}
+
+/* Every link reads as ordinary text: no underline, no link colour. */
+.tt-foot a,
+.tt-foot a:hover,
+.tt-foot a:visited {
+  color: inherit;
+  text-decoration: none;
+}
+
+.tt-foot a:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* The app's own links (Help, About), projected in; hidden when there are none. */
+.tt-foot__app:empty { display: none; }
+
+.tt-foot__brand {
+  color: var(--text) !important;
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .tt-foot { padding: 20px 16px 24px; }
+}

@@ -1,0 +1,647 @@
+/*
+ * The universal menu (design_handoff_outreach 3, 6a/6b) - one look for
+ * every Taliferro web product. Import once in the app's styles.css:
+ *
+ *   @import "@taliferro/ui/styles/universal-menu.css";
+ *
+ * The menu carries its own Find tokens (--um-*), so it looks the same in
+ * apps that don't define them. Dark follows the system, and also an app's
+ * own html.dark / [data-theme="dark"] switch.
+ */
+.um {
+  --um-bg: #ffffff;
+  --um-surface: #f2f3f6;
+  --um-surface2: #e4e7ed;
+  --um-text: #0f1115;
+  --um-muted: #5a6170;
+  --um-blue: #2f6bff;
+  --um-blue-ink: #1f55e0;
+  --um-t-blue: #e3ecff; --um-t-blue-fg: #1d4fd6;
+  --um-t-cyan: #daf6fc; --um-t-cyan-fg: #08657d;
+  --um-t-pink: #ffe3f1; --um-t-pink-fg: #a8105a;
+  --um-t-violet: #efe5ff; --um-t-violet-fg: #6427c9;
+  --um-t-yellow: #fff4c2; --um-t-yellow-fg: #6e5700;
+  --um-t-green: #e0f6e6; --um-t-green-fg: #17703a;
+  --um-t-teal: #d9f5ef; --um-t-teal-fg: #0b6656;
+  --um-shadow: 0 24px 64px rgba(15, 17, 21, .18);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: var(--um-text);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not(.light):not([data-theme="light"]) .um {
+    --um-bg: #0c0e13;
+    --um-surface: #171a22;
+    --um-surface2: #242936;
+    --um-text: #f2f4f8;
+    --um-muted: #9aa2b2;
+    --um-blue: #3d7bff;
+    --um-blue-ink: #86aeff;
+    --um-t-blue: #15254a; --um-t-blue-fg: #a3c1ff;
+    --um-t-cyan: #0c2d35; --um-t-cyan-fg: #74e4f8;
+    --um-t-pink: #3a1029; --um-t-pink-fg: #ff92c9;
+    --um-t-violet: #2a1847; --um-t-violet-fg: #cdaaff;
+    --um-t-yellow: #2f2906; --um-t-yellow-fg: #ffe56a;
+    --um-t-green: #0e2c19; --um-t-green-fg: #80e2a4;
+    --um-t-teal: #0b2c27; --um-t-teal-fg: #72e6d1;
+    --um-shadow: 0 24px 64px rgba(0, 0, 0, .6);
+  }
+}
+
+html.dark .um,
+html[data-theme="dark"] .um,
+body.dark .um {
+  --um-bg: #0c0e13;
+  --um-surface: #171a22;
+  --um-surface2: #242936;
+  --um-text: #f2f4f8;
+  --um-muted: #9aa2b2;
+  --um-blue: #3d7bff;
+  --um-blue-ink: #86aeff;
+  --um-t-blue: #15254a; --um-t-blue-fg: #a3c1ff;
+  --um-t-cyan: #0c2d35; --um-t-cyan-fg: #74e4f8;
+  --um-t-pink: #3a1029; --um-t-pink-fg: #ff92c9;
+  --um-t-violet: #2a1847; --um-t-violet-fg: #cdaaff;
+  --um-t-yellow: #2f2906; --um-t-yellow-fg: #ffe56a;
+  --um-t-green: #0e2c19; --um-t-green-fg: #80e2a4;
+  --um-t-teal: #0b2c27; --um-t-teal-fg: #72e6d1;
+  --um-shadow: 0 24px 64px rgba(0, 0, 0, .6);
+}
+
+.um *,
+.um *::before,
+.um *::after {
+  box-sizing: border-box;
+}
+
+.um a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* The Menu pill that opens it. */
+.um-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 40px;
+  padding: 0 16px 0 12px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--um-text);
+  color: var(--um-bg);
+  /* A hairline of the opposite color keeps the pill visible on pages whose
+   * own background matches it (Social's dark hero, photos). */
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--um-bg) 22%, transparent), 0 4px 14px rgba(0, 0, 0, .12);
+  font: 700 14px/1 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  cursor: pointer;
+}
+
+/* The sheet over the page. */
+.um-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10020;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 32px;
+  overflow-y: auto;
+  background: rgba(15, 17, 21, .45);
+  backdrop-filter: blur(4px);
+}
+
+.um-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(1280px, 100%);
+  min-height: min(760px, calc(100vh - 64px));
+  border-radius: 28px;
+  background: var(--um-bg);
+  box-shadow: var(--um-shadow);
+  animation: um-in .18s ease-out;
+}
+
+@keyframes um-in {
+  from { opacity: 0; transform: translateY(-8px) scale(.99); }
+  to { opacity: 1; transform: none; }
+}
+
+.um-head {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 40px;
+  padding: 22px 32px 8px;
+}
+
+.um-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.um-logo {
+  display: block;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--um-logo) center / cover no-repeat;
+}
+
+/* 64px copies (2x the 32px slot) so opening the menu doesn't pull a full-size logo. */
+.um-logo[data-app="todd"],
+.um-logo[data-app="ask-todd"] { --um-logo: url("../menu-logos/todd-logo.png"); }
+.um-logo[data-app="email-creator"] { --um-logo: url("../menu-logos/email-creator-logo.png"); }
+.um-logo[data-app="image-creator"] { --um-logo: url("../menu-logos/image-creator-logo.png"); }
+.um-logo[data-app="email-signature"] { --um-logo: url("../menu-logos/email-signature-logo.png"); }
+.um-logo[data-app="docs"] { --um-logo: url("../menu-logos/docs-logo.png"); }
+.um-logo[data-app="find"] { --um-logo: url("../menu-logos/find-logo.png"); }
+.um-logo[data-app="lead-vault"] { --um-logo: url("../menu-logos/lead-vault-logo.png"); }
+.um-logo[data-app="network"] { --um-logo: url("../menu-logos/network-logo.png"); }
+.um-logo[data-app="outreach"] { --um-logo: url("../menu-logos/outreach-logo.png"); }
+.um-logo[data-app="music"] { --um-logo: url("../menu-logos/music-logo.png"); border-radius: 50%; }
+.um-logo[data-app="moves"] { --um-logo: url("../menu-logos/moves-logo.png"); }
+.um-logo[data-app="maya"] { --um-logo: url("../menu-logos/maya-logo.png"); }
+.um-logo[data-app="social"] { --um-logo: url("../menu-logos/social-logo.png"); }
+.um-logo[data-app="pulse"] { --um-logo: url("../menu-logos/pulse-logo.png"); }
+.um-logo[data-app="sayit"] { --um-logo: url("../menu-logos/sayit-logo.png"); }
+
+.um-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  max-width: 560px;
+  height: 48px;
+  padding: 0 8px 0 18px;
+  border-radius: 999px;
+  background: var(--um-surface);
+  color: var(--um-muted);
+}
+
+.um-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--um-text);
+  font: 400 16px "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* Apps style inputs globally; the pill owns the focus ring here. */
+.um .um-search input,
+.um .um-search input:focus,
+.um .um-search input:focus-visible {
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  outline: 0;
+  /* controls.css rings every focused input with !important. */
+  border-color: transparent !important;
+  box-shadow: none !important;
+  background: transparent;
+}
+
+.um-search:has(input:focus-visible) {
+  box-shadow: 0 0 0 2px var(--um-blue, #2f6bff);
+}
+
+.um-search input::placeholder {
+  color: var(--um-muted);
+}
+
+.um-kbd {
+  padding: 3px 8px;
+  border-radius: 8px;
+  background: var(--um-bg);
+  color: var(--um-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.um-close {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 18px 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--um-text);
+  color: var(--um-bg);
+  font: 700 15px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  cursor: pointer;
+}
+
+.um-body {
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr) 300px;
+  gap: 40px;
+  flex: 1;
+  padding: 24px 32px 32px;
+}
+
+.um-body--no-app {
+  grid-template-columns: minmax(0, 1fr) 300px;
+}
+
+.um-eyebrow {
+  display: block;
+  margin: 0 0 12px;
+  padding: 0 12px;
+  color: var(--um-muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.um-products .um-eyebrow,
+.um-account .um-eyebrow {
+  padding: 0;
+}
+
+.um-section-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.um-section-head small {
+  color: var(--um-muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* Grid children may shrink below their content; the tiles reflow instead. */
+.um-body > * {
+  min-width: 0;
+}
+
+/* 1 · This app */
+.um-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.um-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 44px;
+  padding: 0 12px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  color: var(--um-text);
+  font: 400 16px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-align: left;
+  cursor: pointer;
+}
+
+.um-row:hover {
+  background: var(--um-surface);
+}
+
+.um-row.is-current {
+  background: var(--um-surface);
+  font-weight: 700;
+}
+
+.um-row > span {
+  flex: 1;
+}
+
+.um-row > .um-row__icon {
+  display: inline-flex;
+  flex: none;
+  color: var(--um-text);
+}
+
+.um-row > .um-ext {
+  flex: none;
+  color: var(--um-muted);
+}
+
+.um-divider {
+  height: 1px;
+  margin: 10px 12px;
+  background: var(--um-surface2);
+}
+
+/* A heading inside the left column's rows, e.g. "Admin". */
+.um-eyebrow--group {
+  margin: 6px 0 4px;
+}
+
+/* 2 · Products */
+.um-tiles {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 22px 12px;
+}
+
+.um-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 4px;
+  border-radius: 16px;
+  color: var(--um-text);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.um-tile:hover .um-chip {
+  transform: translateY(-2px);
+}
+
+.um-chip {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  transition: transform .15s ease;
+}
+
+.um-chip[data-tint="blue"] { background: var(--um-t-blue); color: var(--um-t-blue-fg); }
+.um-chip[data-tint="cyan"] { background: var(--um-t-cyan); color: var(--um-t-cyan-fg); }
+.um-chip[data-tint="pink"] { background: var(--um-t-pink); color: var(--um-t-pink-fg); }
+.um-chip[data-tint="violet"] { background: var(--um-t-violet); color: var(--um-t-violet-fg); }
+.um-chip[data-tint="yellow"] { background: var(--um-t-yellow); color: var(--um-t-yellow-fg); }
+.um-chip[data-tint="green"] { background: var(--um-t-green); color: var(--um-t-green-fg); }
+.um-chip[data-tint="teal"] { background: var(--um-t-teal); color: var(--um-t-teal-fg); }
+
+/* The product icons are black-on-transparent; as a mask they take the tint. */
+.um-glyph {
+  display: block;
+  width: 28px;
+  height: 28px;
+  background: currentColor;
+  -webkit-mask: var(--um-glyph) center / contain no-repeat;
+  mask: var(--um-glyph) center / contain no-repeat;
+}
+
+.um-glyph[data-key="ask-todd"] { --um-glyph: url("../menu-icons/ask-todd.png"); }
+.um-glyph[data-key="maya"] { --um-glyph: url("../menu-icons/maya.png"); }
+.um-glyph[data-key="find"] { --um-glyph: url("../menu-icons/find.png"); }
+.um-glyph[data-key="network"] { --um-glyph: url("../menu-icons/network.png"); }
+.um-glyph[data-key="moves"] { --um-glyph: url("../menu-icons/moves.png"); }
+.um-glyph[data-key="outreach"] { --um-glyph: url("../menu-icons/outreach.png"); }
+.um-glyph[data-key="pulse"] { --um-glyph: url("../menu-icons/pulse.png"); }
+.um-glyph[data-key="lead-vault"] { --um-glyph: url("../menu-icons/lead-vault.png"); }
+.um-glyph[data-key="social"] { --um-glyph: url("../menu-icons/social.png"); }
+.um-glyph[data-key="sayit"] { --um-glyph: url("../menu-icons/sayit.png"); }
+.um-glyph[data-key="docs"] { --um-glyph: url("../menu-icons/docs.png"); }
+.um-glyph[data-key="email-creator"] { --um-glyph: url("../menu-icons/email-creator.svg"); }
+.um-glyph[data-key="email-signature"] { --um-glyph: url("../menu-icons/email-signature.png"); }
+.um-glyph[data-key="image-creator"] { --um-glyph: url("../menu-icons/image-creator.svg"); }
+.um-glyph[data-key="music"] { --um-glyph: url("../menu-icons/music.png"); }
+
+/* 3 · Account */
+.um-card {
+  padding: 16px;
+  border-radius: 24px;
+  background: var(--um-surface);
+}
+
+/* The name opens the profile. */
+.um-person {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 10px;
+  padding: 6px 10px 6px 6px;
+  border-radius: 16px;
+  color: var(--um-text);
+  text-decoration: none;
+}
+
+.um-person:hover,
+.um-person:focus-visible {
+  background: var(--um-bg);
+  outline: 0;
+}
+
+.um-person__text {
+  flex: 1;
+  min-width: 0;
+}
+
+.um-person__go {
+  flex: none;
+  color: var(--um-muted);
+}
+
+.um-avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--um-t-blue);
+  color: var(--um-t-blue-fg);
+  font-weight: 700;
+}
+
+.um-person strong {
+  display: block;
+  font-size: 16px;
+}
+
+.um-person small {
+  display: block;
+  overflow: hidden;
+  color: var(--um-muted);
+  font-size: 13px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.um-card .um-row:hover {
+  background: var(--um-bg);
+}
+
+.um-signin {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  height: 48px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--um-blue);
+  color: #fff;
+  font: 700 16px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  cursor: pointer;
+}
+
+.um-signin { text-decoration: none; }
+.um-signin:hover { color: #fff; }
+
+/* Sites with no account of their own say so above Sign in (Music). */
+.um-note {
+  margin: 0 0 12px;
+  color: var(--um-muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.um-empty {
+  margin: 0;
+  color: var(--um-muted);
+  font-size: 14px;
+}
+
+/* Footer */
+.um-foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 24px;
+  padding: 16px 32px 20px;
+  border-top: 1px solid var(--um-surface2);
+  color: var(--um-muted);
+  font-size: 12px;
+}
+
+.um-foot__company,
+.um-foot__legal {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 18px;
+}
+
+.um-foot__company strong {
+  color: var(--um-text);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.um-foot__legal a:hover {
+  color: var(--um-text);
+}
+
+/* Company name, email and phone are links that read as plain text. */
+.um-foot__company a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Tablet and narrow laptop: two columns. The app's pages stay on the left;
+ * Products and Account stack on the right, and the tiles fill what fits. */
+@media (min-width: 761px) and (max-width: 1180px) {
+  .um-head {
+    grid-template-columns: 220px minmax(0, 1fr) auto;
+    gap: 24px;
+  }
+
+  .um-body {
+    grid-template-columns: 220px minmax(0, 1fr);
+    grid-auto-rows: min-content;
+    gap: 32px 24px;
+  }
+
+  .um-body > .um-app {
+    grid-row: span 2;
+  }
+
+  .um-body--no-app {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .um-tiles {
+    grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  }
+
+  .um-account {
+    max-width: 440px;
+  }
+}
+
+/* Phone (6b): a full-screen sheet, sections stacked. */
+@media (max-width: 760px) {
+  .um-backdrop {
+    padding: 0;
+  }
+
+  .um-panel {
+    min-height: 100vh;
+    border-radius: 0;
+  }
+
+  .um-head {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px;
+    padding: 16px;
+  }
+
+  .um-brand {
+    display: none;
+  }
+
+  .um-kbd {
+    display: none;
+  }
+
+  .um-close {
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .um-close__label {
+    display: none;
+  }
+
+  .um-body,
+  .um-body--no-app {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+    padding: 8px 16px 24px;
+  }
+
+  .um-app .um-rows {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .um-divider {
+    grid-column: 1 / -1;
+  }
+
+  .um-tiles {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px 6px;
+  }
+
+  .um-chip {
+    width: 52px;
+    height: 52px;
+  }
+
+  .um-tile {
+    font-size: 12px;
+  }
+
+  .um-foot {
+    flex-direction: column;
+    padding: 16px;
+  }
+}

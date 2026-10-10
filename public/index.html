@@ -55,6 +55,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caprasimo&family=Figtree:wght@400;600;700&display=swap">
+  <!-- Universal menu and footer, copied from taliferro-ui by static/sync.sh public. -->
+  <link rel="stylesheet" href="/tt/styles/universal-menu.css">
+  <link rel="stylesheet" href="/tt/styles/site-footer.css">
   <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"SayIt","url":"https://sayit.taliferro.tech/","applicationCategory":"SocialNetworkingApplication","operatingSystem":"Web, iOS (coming soon)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"A community board for real businesses and the people who need them.","publisher":{"@type":"Organization","name":"Taliferro","email":"info@taliferro.tech"}}
 </script>
@@ -101,6 +104,8 @@
       --blob2: var(--a300);
       --trust-bg: var(--s200);
       --trust-fg: var(--s800);
+      --muted: var(--n700);
+      --surface2: var(--divider);
       color-scheme: light;
     }
 
@@ -225,11 +230,10 @@
       gap: 10px
     }
 
-    .brand-dot {
-      width: 14px;
-      height: 14px;
-      border-radius: 50%;
-      background: var(--a)
+    .brand-logo {
+      width: 46px;
+      height: 40px;
+      object-fit: contain
     }
 
     .brand:hover {
@@ -266,6 +270,19 @@
 
     .nav-links .signin {
       border: 1px solid var(--divider)
+    }
+
+    /* Universal menu pill in SayIt's Organic colors, as in the app. */
+    .nav .um-trigger {
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: none;
+      font-family: var(--fb);
+      font-weight: 600
+    }
+
+    .nav .um-trigger:hover {
+      background: color-mix(in srgb, var(--text) 10%, var(--surface))
     }
 
     /* buttons */
@@ -752,44 +769,10 @@
       color: #201e1d
     }
 
-    /* footer */
-    footer {
-      border-top: 1px solid var(--divider);
-      padding: 32px 0 48px
-    }
-
-    .foot {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 20px
-    }
-
-    .foot ul {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px 22px;
-      list-style: none;
-      margin: 0;
-      padding: 0
-    }
-
-    .foot a {
-      color: var(--n800);
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 15px
-    }
-
-    .foot a:hover {
-      color: var(--link);
-      text-decoration: underline
-    }
-
-    .foot small {
-      color: var(--n700);
-      font-size: 14px
+    /* footer: the shared site-footer.css, in the page's font */
+    .tt-foot {
+      font-family: var(--fb);
+      margin-top: 24px
     }
 
     @media (max-width:880px) {
@@ -823,6 +806,11 @@
         display: none
       }
 
+      /* On a phone, Sign in lives in the menu (PRODUCT-STANDARD part 2). */
+      .nav-links .signin-item {
+        display: none
+      }
+
       .actions .btn {
         flex: 1 1 100%
       }
@@ -839,12 +827,13 @@
 <body>
   <div class="wrap">
     <header class="nav">
-      <a class="brand" href="/" aria-label="SayIt home"><span class="brand-dot"></span>SayIt</a>
+      <a class="brand" href="/" aria-label="SayIt home"><img class="brand-logo" src="/assets/sayit/sayit.png" alt="" width="46" height="40">SayIt</a>
       <nav aria-label="Main">
         <ul class="nav-links">
           <li class="hide-sm"><a href="/about">About</a></li>
           <li class="hide-sm"><a href="/help">Help</a></li>
-          <li><a class="signin" href="/login">Sign in</a></li>
+          <li class="signin-item"><a class="signin" href="/login">Sign in</a></li>
+          <li><div data-tt-menu></div></li>
         </ul>
       </nav>
     </header>
@@ -945,20 +934,65 @@
       </section>
     </main>
   </div>
-  <footer>
-    <div class="wrap foot">
-      <a class="brand" href="/" style="font-size:22px"><span class="brand-dot"></span>SayIt</a>
-      <nav aria-label="Footer">
-        <ul>
-          <li><a href="/about">About</a></li>
-          <li><a href="/help">Help</a></li>
-          <li><a href="https://taliferro.tech/privacy">Privacy</a></li>
-          <li><a href="mailto:info@taliferro.tech">info@taliferro.tech</a></li>
-        </ul>
-      </nav>
-      <small>© 2026 SayIt · Free to use</small>
+  <!-- The universal footer: taliferro-ui/site-footer-component as plain HTML.
+       Products, company and legal links come from MENU_PRODUCTS / MENU_COMPANY
+       in taliferro-ui/platform/universal-menu.model.ts; keep them in step. -->
+  <footer class="tt-foot">
+    <div class="tt-foot__row tt-foot__app">
+      <a href="/about">About SayIt</a>
+      <a href="/help">Help</a>
+      <a href="/terms">Terms of Use</a>
+    </div>
+    <div class="tt-foot__row">
+      <a class="tt-foot__brand" href="https://taliferro.tech">Taliferro Tech</a>
+      <a href="mailto:support@taliferro.tech">support@taliferro.tech</a>
+      <a href="tel:+14016462662">401.646.2662</a>
+      <span>1424 11th Ave STE 400, Seattle, WA 98122</span>
+    </div>
+    <nav class="tt-foot__row" aria-label="Taliferro Tech products">
+      <a href="https://ask.taliferro.tech">Ask TODD</a>
+      <a href="https://maya.taliferro.tech">Maya</a>
+      <a href="https://find.taliferro.tech">Find</a>
+      <a href="https://network.taliferro.tech">Network</a>
+      <a href="https://moves.taliferro.tech">Moves</a>
+      <a href="https://outreach.taliferro.tech">Outreach</a>
+      <a href="https://pulse.taliferro.tech">Pulse</a>
+      <a href="https://lead-vault.taliferro.tech">Lead Vault</a>
+      <a href="https://social.taliferro.tech">Social</a>
+      <a href="https://sayit.taliferro.tech">SayIt</a>
+      <a href="https://docs.taliferro.tech">Docs</a>
+      <a href="https://emails.taliferro.tech">Email Creator</a>
+      <a href="https://signature.taliferro.tech">Email Signature</a>
+      <a href="https://images.taliferro.tech">Image Creator</a>
+      <a href="https://music.taliferro.com">Music</a>
+    </nav>
+    <div class="tt-foot__row">
+      <a href="https://taliferro.tech/terms">Terms &amp; Conditions</a>
+      <a href="https://taliferro.tech/privacy-rights">Privacy Rights</a>
+      <a href="https://taliferro.tech/privacy">Privacy Policy</a>
+      <a href="https://taliferro.tech/careers">Careers</a>
+      <span>© 2026 Taliferro Tech, LLC</span>
     </div>
   </footer>
+  <script>
+    // The universal menu (taliferro-ui/static); same items as the app's platform-menu.config.ts.
+    window.TT_MENU = {
+      app: 'sayit',
+      name: 'SayIt',
+      items: [
+        { label: 'For you', icon: 'home', url: '/board', keywords: 'feed home' },
+        { label: 'Orgs', icon: 'building', url: '/businesses', keywords: 'businesses companies' },
+        { label: 'Inbox', icon: 'inbox', url: '/interests', keywords: 'interests messages' },
+      ],
+      secondaryItems: [
+        { label: 'Profile', icon: 'user', url: '/profile' },
+        { label: 'Help', icon: 'help', url: '/help', keywords: 'faq support guidelines report delete' },
+        { label: 'About SayIt', icon: 'info', url: '/about' },
+      ],
+      signInUrl: '/get-started',
+    };
+  </script>
+  <script src="/tt/universal-menu.js" defer></script>
 </body>
 
 </html>

@@ -1,0 +1,199 @@
+/* The app header from design_handoff_music_leadvault_network ("Shared rules"):
+ * logo + name on the left; secondary pills, the theme pill and the Menu pill
+ * on the right. Import after tokens.css and universal-menu.css.
+ *
+ *   <header class="ah">
+ *     <a class="ah-brand" routerLink="/"><img class="ah-logo" …><span class="ah-name">…</span></a>
+ *     <nav class="ah-nav">…</nav>                 (optional, centred segmented nav)
+ *     <div class="ah-actions">
+ *       <button class="ah-pill">…</button>         (secondary pills)
+ *       <button class="ah-pill ah-theme">…</button>
+ *       <app-platform-menu />
+ *     </div>
+ *   </header>
+ */
+
+.ah {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 40px;
+  font-family: var(--font);
+  color: var(--text);
+}
+
+.ah-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  color: var(--text) !important;
+  text-decoration: none !important;
+}
+
+.ah-logo {
+  width: 36px;
+  height: 36px;
+  flex: none;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.ah-logo--round { border-radius: 50%; }
+
+.ah-name {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ah-name small {
+  font-size: inherit;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.ah-nav {
+  display: inline-flex;
+  gap: 2px;
+  margin: 0 auto;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.ah-nav a {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--muted) !important;
+  text-decoration: none !important;
+}
+
+.ah-nav a.is-active {
+  background: var(--bg);
+  color: var(--text) !important;
+  font-weight: 700;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .1);
+}
+
+.ah-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.ah-nav + .ah-actions { margin-left: 0; }
+
+/* Secondary and theme pills. Exact sizes: the shared button layer pads
+ * every button, so reset it here. */
+.ah-pill,
+button.ah-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 42px;
+  min-height: 0;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font: 600 15px/1 var(--font);
+  white-space: nowrap;
+  text-decoration: none;
+  box-shadow: none;
+}
+
+.ah-pill:hover { background: var(--surface2); transform: none; }
+
+.ah-pill:focus-visible,
+.ah-nav a:focus-visible,
+.ah-brand:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.ah-pill svg {
+  width: 16px;
+  height: 16px;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.ah-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+}
+
+.ah-avatar {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  margin-left: -12px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+
+.ah-avatar[data-tint="cyan"] { background: var(--t-cyan); color: var(--t-cyan-fg); }
+.ah-avatar[data-tint="blue"] { background: var(--t-blue); color: var(--t-blue-fg); }
+.ah-avatar[data-tint="teal"] { background: var(--t-teal); color: var(--t-teal-fg); }
+
+/* Text that differs by width, e.g. the name on laptop, the section on phone. */
+.ah-phone { display: none; }
+
+/* The Menu pill: 42 tall to sit level with the others. */
+.ah .um-trigger {
+  height: 42px;
+  min-height: 0;
+  padding: 0 18px 0 16px;
+  font: 700 15px/1 var(--font);
+}
+
+@media (max-width: 760px) {
+  .ah {
+    gap: 8px;
+    padding: 14px 16px 10px;
+  }
+
+  .ah-logo { width: 32px; height: 32px; }
+  .ah-wide { display: none; }
+  .ah-phone { display: inline; }
+  .ah-name { font-size: 17px; }
+  .ah-actions { gap: 8px; }
+  .ah-nav { display: none; }
+  .ah-nav + .ah-actions { margin-left: auto; }
+
+  /* The theme pill becomes a 40px icon circle; Sign in moves into the menu. */
+  .ah-pill.ah-theme {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .ah-theme span,
+  .ah-pill--wide { display: none !important; }
+
+  .ah .um-trigger {
+    height: 40px;
+    padding: 0 14px 0 12px;
+  }
+}

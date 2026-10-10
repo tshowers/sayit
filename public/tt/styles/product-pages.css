@@ -1,0 +1,365 @@
+/* The shared Help and About pages (design 12a-12d, design_handoff_todd_tools).
+ * Markup: ../product-pages-component. Uses the Find family tokens (tokens.css).
+ * The product glyph reuses .um-glyph from universal-menu.css. */
+
+.pp {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+}
+
+.pp[data-tint="blue"] { --pp-t: var(--t-blue); --pp-t-fg: var(--t-blue-fg); }
+.pp[data-tint="cyan"] { --pp-t: var(--t-cyan); --pp-t-fg: var(--t-cyan-fg); }
+.pp[data-tint="pink"] { --pp-t: var(--t-pink); --pp-t-fg: var(--t-pink-fg); }
+.pp[data-tint="violet"] { --pp-t: var(--t-violet); --pp-t-fg: var(--t-violet-fg); }
+.pp[data-tint="yellow"] { --pp-t: var(--t-yellow); --pp-t-fg: var(--t-yellow-fg); }
+.pp[data-tint="green"] { --pp-t: var(--t-green); --pp-t-fg: var(--t-green-fg); }
+.pp[data-tint="teal"] { --pp-t: var(--t-teal); --pp-t-fg: var(--t-teal-fg); }
+
+/* Apps style links globally (often with long, specific selectors); the
+ * template's links take their colour from their own rules instead. */
+.pp-head a, .pp-tabs a, .pp-nav a, .pp-main a, .pp-aside a, .pp-foot a { color: inherit !important; text-decoration: none; }
+.pp a:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+/* Header */
+.pp-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 40px;
+  min-height: 74px;
+}
+
+.pp-brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+
+.pp-logo {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 36px;
+  height: 36px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--surface2);
+}
+
+.pp-logo img { width: 26px; height: 26px; object-fit: contain; }
+
+/* A full logo (an app-icon tile, or Maya's round avatar) is its own shape:
+ * no white frame behind its transparent corners. The frame is only for the
+ * small TODD icon. */
+.pp-logo--fill { overflow: visible; border-radius: 0; background: none; box-shadow: none; }
+.pp-logo--fill img { width: 100%; height: 100%; object-fit: contain; }
+
+.pp-title { font-size: 20px; font-weight: 700; letter-spacing: -.02em; white-space: nowrap; }
+.pp-title__name { font-weight: 500; color: var(--muted); }
+
+.pp-head__actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+
+/* The app's floating Menu button sits top right; leave it room. */
+.pp--global-menu .pp-head__actions { margin-right: 108px; }
+
+.pp-open {
+  display: inline-flex;
+  align-items: center;
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: var(--blue);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.pp .pp-head .pp-open { color: #fff !important; }
+.pp-open:hover { filter: brightness(.96); }
+
+.pp-tabs { display: none; }
+
+/* Body: nav | content | aside */
+.pp-body {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr) 300px;
+  gap: 48px;
+  flex: 1;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 40px 56px;
+  box-sizing: border-box;
+}
+
+.pp-body--about { grid-template-columns: 240px minmax(0, 1fr); }
+.pp-body > * { min-width: 0; }
+
+.pp-nav { display: flex; flex-direction: column; gap: 4px; }
+
+.pp-nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.pp-nav a span { display: inline-flex; }
+.pp-nav a:hover { background: var(--surface); }
+.pp-nav a.is-on { background: var(--surface); font-weight: 700; }
+
+.pp-h1 { margin: 0; font-size: 52px; font-weight: 700; line-height: 1.04; letter-spacing: -.04em; }
+.pp-sub { margin: 8px 0 0; color: var(--muted); font-size: 18px; }
+
+.pp-label {
+  margin: 36px 0 14px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+/* Help */
+.pp-steps { display: flex; flex-direction: column; gap: 14px; margin: 0; padding: 0; list-style: none; }
+.pp-steps li { display: flex; align-items: flex-start; gap: 14px; font-size: 17px; line-height: 1.45; }
+
+.pp-num {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 30px;
+  height: 30px;
+  margin-top: -3px;
+  border-radius: 50%;
+  background: var(--pp-t);
+  color: var(--pp-t-fg);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.pp-faq { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.pp-faq article { padding: 18px 20px; border-radius: 18px; background: var(--surface); }
+.pp-faq h3 { margin: 0 0 6px; font-size: 16px; font-weight: 700; line-height: 1.3; }
+.pp-faq p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.45; }
+
+.pp-stuck {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  border-radius: 24px;
+  background: var(--pp-t);
+  color: var(--pp-t-fg);
+}
+
+.pp-stuck h2 { margin: 0; font-size: 18px; font-weight: 700; }
+.pp-stuck p { margin: 0 0 4px; font-size: 14px; }
+.pp-stuck a { font-size: 15px; font-weight: 700; }
+
+/* About */
+.pp-hero { display: flex; align-items: center; gap: 20px; }
+
+.pp-chip {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 88px;
+  height: 88px;
+  border-radius: 28px;
+  background: var(--pp-t);
+  color: var(--pp-t-fg);
+}
+
+.pp-chip .um-glyph { width: 46px; height: 46px; }
+
+.pp-about { max-width: 860px; margin: 32px 0 28px; font-size: 19px; line-height: 1.6; }
+
+.pp-does { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; max-width: 860px; }
+
+.pp-does article {
+  padding: 18px 20px;
+  border-radius: 20px;
+  background: var(--pp-t);
+  color: var(--pp-t-fg);
+}
+
+.pp-does h3 { margin: 0 0 6px; font-size: 17px; font-weight: 700; }
+.pp-does p { margin: 0; font-size: 14px; line-height: 1.45; }
+
+.pp-todd {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 860px;
+  margin-top: 28px;
+  padding: 14px 18px;
+  box-sizing: border-box;
+  border-radius: 18px;
+  background: var(--surface);
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.pp-todd:hover { background: var(--surface2); }
+
+.pp-todd__mark {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--t-green);
+  color: var(--t-green-fg);
+}
+
+.pp-todd__mark .um-glyph { width: 26px; height: 26px; }
+
+.pp-todd__go {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+  color: var(--blue-ink);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+
+/* Extra content spans the content and aside columns, below them. */
+.pp-extra { grid-column: 2 / -1; }
+.pp-extra:empty { display: none; }
+
+/* Building blocks for an app's own extra content (projected below the
+ * standard sections): a section card, a card grid, and labelled rows. */
+.pp-section { padding: 28px 32px; border-radius: 28px; background: var(--surface); }
+.pp-section + .pp-section { margin-top: 16px; }
+
+.pp-kicker {
+  margin: 0 0 6px;
+  color: var(--pp-t-fg);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.pp-section h2 { margin: 0 0 10px; font-size: 28px; font-weight: 700; line-height: 1.15; letter-spacing: -.02em; }
+.pp-section > p { max-width: 760px; margin: 0; color: var(--muted); font-size: 16px; line-height: 1.6; }
+
+.pp-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 20px; }
+.pp-cards article { padding: 18px 20px; border-radius: 18px; background: var(--bg); }
+.pp-cards h3 { display: flex; align-items: center; gap: 10px; margin: 0 0 6px; font-size: 16px; font-weight: 700; }
+.pp-cards p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.5; }
+.pp-cards a { color: var(--blue-ink); font-weight: 700; text-decoration: none; }
+.pp-section > p a { color: var(--blue-ink); font-weight: 700; text-decoration: none; }
+.pp-cards h3 .pp-num { width: 26px; height: 26px; margin: 0; font-size: 12px; }
+
+.pp-rows { margin: 20px 0 0; padding: 0; }
+.pp-rows > div { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 16px; padding: 14px 0; border-top: 1px solid var(--surface2); }
+.pp-rows > div:first-child { border-top: 0; padding-top: 0; }
+.pp-rows dt { font-size: 15px; font-weight: 700; }
+.pp-rows dd { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.55; }
+.pp-rows a { color: var(--blue-ink); font-weight: 700; text-decoration: none; }
+
+/* Footer */
+.pp-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 24px;
+  padding: 18px 40px;
+  border-top: 1px solid var(--surface2);
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.pp-foot__company,
+.pp-foot__legal { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 18px; }
+
+.pp-foot__company strong { color: var(--text); font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.pp-foot__legal a:hover { color: var(--text) !important; }
+
+/* Tablet: the aside drops under the content */
+@media (max-width: 1100px) and (min-width: 761px) {
+  .pp-body { grid-template-columns: 200px minmax(0, 1fr); gap: 32px; }
+  .pp-aside { grid-column: 2; }
+  .pp-does { grid-template-columns: 1fr; }
+}
+
+/* Phone (12c / 12d) */
+@media (max-width: 760px) {
+  .pp-head { min-height: 0; padding: 14px 16px; }
+  .pp-logo { width: 32px; height: 32px; }
+  .pp-logo img { width: 23px; height: 23px; }
+  .pp-logo--fill img { width: 100%; height: 100%; }
+  .pp-title { font-size: 17px; }
+  .pp-title__brand { display: none; }
+  .pp-title__name { font-weight: 700; color: var(--text); }
+  .pp-open { display: none; }
+  .pp--global-menu .pp-head__actions { margin-right: 96px; }
+
+  .pp-tabs {
+    display: flex;
+    margin: 4px 16px 0;
+    padding: 4px;
+    border-radius: 999px;
+    background: var(--surface);
+  }
+
+  .pp-tabs a {
+    display: grid;
+    flex: 1;
+    place-items: center;
+    height: 38px;
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+
+  .pp-tabs a.is-on { background: var(--bg); box-shadow: 0 1px 3px rgba(0, 0, 0, .1); font-weight: 700; }
+
+  .pp-body,
+  .pp-body--about { display: block; padding: 20px 16px 32px; }
+  .pp-nav, .pp-aside { display: none; }
+
+  .pp-h1 { font-size: 36px; }
+  .pp-label { margin-top: 24px; }
+  .pp-steps li { font-size: 15px; }
+  .pp-faq { grid-template-columns: 1fr; margin-top: 18px; }
+  .pp-faq article:nth-child(n + 3) { display: none; }
+
+  .pp-hero { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .pp-chip { width: 64px; height: 64px; border-radius: 20px; }
+  .pp-chip .um-glyph { width: 34px; height: 34px; }
+  .pp-about { margin: 20px 0; font-size: 16px; }
+  .pp-does { grid-template-columns: 1fr; gap: 10px; }
+  .pp-does article { padding: 12px 14px; border-radius: 16px; }
+  .pp-todd { flex-wrap: wrap; }
+
+  .pp-foot { flex-direction: column; align-items: flex-start; padding: 16px; }
+  .pp-section { padding: 20px; border-radius: 22px; }
+  .pp-section h2 { font-size: 22px; }
+  .pp-rows > div { grid-template-columns: 1fr; gap: 4px; }
+}
+
+/* Cross-promotion line on landing pages (as on Outreach's landing, design
+ * 4g): "Powered by TODD · Also from us Find". Find's logo reuses the menu's
+ * .um-logo (universal-menu.css). */
+/* !important on size and spacing: it sits inside pages whose own paragraph
+ * rules (more specific, component-scoped) would otherwise restyle it. */
+.tt-made-by { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; max-width: none !important; margin: 28px 0 0 !important; color: var(--muted) !important; font: 13px/1.4 var(--font) !important; }
+.tt-made-by--center { justify-content: center; }
+.tt-made-by a { display: inline-flex; align-items: center; gap: 6px; color: var(--muted) !important; text-decoration: none; }
+.tt-made-by strong { color: var(--text); font-weight: 700; }
+.tt-made-by a:hover strong { text-decoration: underline; }
+.tt-made-by i { width: 3px; height: 3px; border-radius: 50%; background: var(--surface2); }
+.tt-made-by__todd { display: grid; place-items: center; flex: none; width: 28px; height: 28px; margin-right: 2px; border-radius: 50%; background: #fff; box-shadow: 0 0 0 1px var(--surface2); }
+.tt-made-by__todd img { width: 20px; height: 20px; object-fit: contain; }
+.tt-made-by .um-logo { width: 18px; height: 18px; border-radius: 4px; }
