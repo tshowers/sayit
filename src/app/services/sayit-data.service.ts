@@ -279,7 +279,7 @@ export class SayItDataService {
     const snaps = await getDocs( q );
     const key = this.profileCursorKey( criteria );
     this.profilePostCursors[key] = snaps.docs[snaps.docs.length - 1] ?? null;
-    return snaps.docs.map( d => ( { id: d.id, ...d.data() } ) ).filter( p => !( p as any )?.hidden && !( p as any )?.suspended );
+    return snaps.docs.map( d => ( { id: d.id, ...d.data() } ) ).filter( p => !( p as any )?.hidden && !( p as any )?.isHidden && !( p as any )?.suspended );
   }
 
   async getProfilePostsFirstPage ( criteria: { authorContactId?: string; authorHandle?: string; userId?: string; }, pageSize: number = 10 ): Promise<any[]> {
