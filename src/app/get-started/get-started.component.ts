@@ -229,7 +229,7 @@ export class GetStartedComponent implements OnInit {
   signIn (): void {
     this.isSigningIn = true;
     this.persist();
-    this.authService.signIn( '/' );
+    this.authService.signIn( this.returnUrl || '/' );
   }
 
   persist (): void {
