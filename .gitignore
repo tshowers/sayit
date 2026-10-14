@@ -52,3 +52,11 @@ Thumbs.db
 firestore-debug.log
 ui-debug.log
 firebase-debug.log
+
+# Videos: kept local, shipped by deploy.sh's local build, never pushed to GitHub
+*.mp4
+*.mov
+*.m4v
+*.webm
+*.avi
+*.mkv
