@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
+import { AlsoFromUsComponent } from '../also-from-us/also-from-us.component';
 import { isAppleMobileDevice, isSayItAppLive, SAYIT_APP_BENEFITS, sayItAppStoreUrl } from '../app-download';
 
 /**
@@ -18,7 +19,7 @@ import { isAppleMobileDevice, isSayItAppLive, SAYIT_APP_BENEFITS, sayItAppStoreU
 @Component( {
   selector: 'app-promo',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, AlsoFromUsComponent],
   templateUrl: './app-promo.component.html',
   styleUrl: './app-promo.component.css',
 } )

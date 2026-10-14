@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { NotificationComponent } from '../shared/notification/notification.component';
 import { environment } from '../../environments/environment';
 import { LoggerService } from './logger.service';
+import { SoundService } from './sound.service';
 
 type NotifyType = 'success' | 'error' | 'warning' | 'info';
 interface PendingNotification {
@@ -17,6 +18,7 @@ interface PendingNotification {
 } )
 export class NotificationService {
   private readonly logger = inject( LoggerService );
+  private readonly sound = inject( SoundService );
 
   private newMessageSubject = new BehaviorSubject<boolean>( false );
   private notifier?: NotificationComponent;
@@ -34,6 +36,7 @@ export class NotificationService {
 
     if ( this.notifier && this.pending.length ) {
       const toFlush = [...this.pending];
+      this.sound.playSound( 'notification' );
       this.pending = [];
       for ( const n of toFlush ) {
         this.log( 'flushing pending notification:', n.header, n.type );
@@ -62,6 +65,7 @@ export class NotificationService {
     this.newMessageSubject.next( true );
 
     if ( this.notifier ) {
+      this.sound.playSound( 'notification' );
       this.notifier.display( header, description, type );
       return;
     }

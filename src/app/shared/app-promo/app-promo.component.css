@@ -54,6 +54,8 @@
 .promo-web { font-weight: 700; color: var(--promo-accent); }
 .promo-signin { font-weight: 600; color: var(--promo-muted); }
 .promo-hero__note { margin: 12px 0 0; font-size: 0.85rem; color: var(--promo-muted); }
+/* "Powered by TODD · Also from us" (product-pages.css) in SayIt's own colors and type: SayIt doesn't load the shared tokens. */
+.promo-hero__made-by { --muted: var(--promo-muted); --text: var(--promo-ink); --surface2: var(--promo-line); --font: var(--font-body); margin-top: 20px !important; }
 
 @media (max-width: 575px) {
   .promo-hero { flex-direction: column; align-items: center; text-align: center; }

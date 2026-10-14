@@ -1,24 +1,24 @@
-Thank you. Build 5 adds email sign-in so you can use the demo account below, and links SayIt's own Terms of Use. Every other 1.2 safeguard was already in the app behind sign-in.
+Thank you. Build 6 adds email sign-in so you can use the demo account below, links SayIt's own Terms of Use, and also screens uploaded photos. The other 1.2 safeguards were already in the app behind sign-in.
 
-Demo account (Beta App Review Information is updated too):
+Demo account (also in Beta App Review Information):
 Email: appreview@taliferro.com
 Password: DemoAccount
 On the sign-in screen, tick the agreement box, then tap "Sign in with email".
 
 Guideline 1.2:
 
-- Age rating: set to 18+ in App Store Connect.
+- Age rating: 18+ in App Store Connect.
 
 - Terms (EULA): no one can sign in until they tick "I agree to the Terms of Use (EULA) and the Community Guidelines. There is zero tolerance for objectionable content or abusive users." Our Terms of Use (sayit.taliferro.tech/terms, linked from the sign-in screen) and the Community Guidelines (Me > Community Guidelines) say offending content is removed and its author banned.
 
-- Filtering: every new post is screened by automated moderation. Posts rated offensive are never shown; sensitive posts are blurred behind a warning.
+- Filtering: every new post's text and photo are screened automatically. Posts rated offensive are never shown; sensitive posts are covered with a warning.
 
-- Flag: on any post, tap ••• > Report Post. On a comment, press and hold > Report Comment.
+- Flag: on any post, tap ••• to open it, then the More button at the top right > Report Post. On a comment, press and hold > Report Comment.
 
-- Block: ••• > Block [name] on a post, or press and hold a comment > Block. Blocked people's posts, comments and messages disappear immediately. Manage them in Me > Blocked People.
+- Block: in the same More menu > Block [name], or press and hold a comment > Block. Blocked people's posts, comments and messages disappear immediately. Manage them in Me > Blocked People.
 
-- Remove from feed: ••• > Hide Post removes it from the feed immediately.
+- Remove from feed: More > Hide Post removes it from the feed immediately.
 
-- 24-hour action: every report emails our moderator at once, with one-tap actions to remove the post and ban its author. Banned accounts can no longer post, comment or message. We act on reports within 24 hours.
+- 24-hour action: every report emails our moderation inbox at once, with one-tap actions to remove the post and ban its author. Removed posts disappear for everyone, and banned accounts can no longer post, comment or message. We act on reports within 24 hours.
 
 - Contact: Me > Contact Support, the Community Guidelines page, and every report screen show info@taliferro.tech.

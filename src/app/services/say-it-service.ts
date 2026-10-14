@@ -123,7 +123,7 @@ export class SayItService {
   ) { }
 
   getAIResponse ( prompt: string, user: string ) {
-    const headers = new HttpHeaders().set( 'Authorization', `Bearer ${environment.apiKey}` );
+    const headers = new HttpHeaders();
     return firstValueFrom( this.http.post<{ response: string; }>( `${environment.backendURL}/openai`, { prompt }, { headers } ) );
   }
   /**

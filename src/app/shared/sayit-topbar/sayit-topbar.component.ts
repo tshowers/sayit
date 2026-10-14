@@ -28,7 +28,7 @@ import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
       <div class="sayit-topbar__actions">
         <app-theme-toggle></app-theme-toggle>
         <ng-content></ng-content>
-        <button type="button" class="sayit-menu-button" (click)="menuHost.open()" aria-haspopup="dialog" aria-label="Open menu" title="Menu" data-cy="topbar-menu">
+        <button type="button" class="sayit-menu-button" (click)="menuHost.open()" data-sound="off" aria-haspopup="dialog" aria-label="Open menu" title="Menu" data-cy="topbar-menu">
           <i class="fa-solid fa-bars" aria-hidden="true"></i>
         </button>
       </div>
