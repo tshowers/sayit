@@ -29,14 +29,14 @@ echo "Running SayIt production hosting deploy"
 echo "Firebase project context: taliferrotech"
 firebase use taliferrotech
 
-echo "Step 1/4: Building the production SayIt bundle..."
+echo "Step 1/5: Building the production SayIt bundle..."
 npm run build
 
-echo "Step 2/4: Running tests (unit + end-to-end)..."
+echo "Step 2/5: Running tests (unit + end-to-end)..."
 npm run test:ci
 npm run e2e
 
-echo "Step 3/4: Committing changes..."
+echo "Step 3/5: Committing changes..."
 if [ -n "$(git status --porcelain)" ]; then
   git add -A
   git commit -m "Deploy $(date +'%Y-%m-%d %H:%M:%S')"
@@ -44,8 +44,17 @@ else
   echo "No changes to commit - working tree is clean."
 fi
 
-echo "Step 4/4: Deploying SayIt to Firebase Hosting site todd-sayit..."
+echo "Step 4/5: Deploying SayIt to Firebase Hosting site todd-sayit..."
 firebase deploy --project taliferrotech --only hosting:todd-sayit
 
 echo "SayIt hosting deploy complete."
+
+# Only reached when the deploy succeeded (set -e stops on any failure above).
+# The site is already live by now, so a failed push warns instead of tripping
+# the ERR trap, whose message would wrongly say nothing was deployed.
+echo "Step 5/5: Pushing $(git rev-parse --abbrev-ref HEAD) to origin..."
+if ! git push origin HEAD; then
+  echo "WARNING: deploy succeeded but git push failed - run 'git push' by hand." >&2
+fi
+
 firebase projects:list
