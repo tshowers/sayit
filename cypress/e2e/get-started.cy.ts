@@ -4,21 +4,9 @@
  * it. The full run goes through TODD's (stubbed) hosted login and back via
  * /auth/callback against the Auth and Firestore emulators.
  */
-const draftKey = 'sayit_onboarding_draft';
+import { emulatorCustomToken } from '../support/emulator-token';
 
-/** The Auth emulator accepts unsigned custom tokens. */
-function emulatorCustomToken ( uid: string ): string {
-  const encode = ( value: object ) => btoa( JSON.stringify( value ) ).replace( /=+$/, '' ).replace( /\+/g, '-' ).replace( /\//g, '_' );
-  const now = Math.floor( Date.now() / 1000 );
-  return `${encode( { alg: 'none', typ: 'JWT' } )}.${encode( {
-    iss: 'firebase-auth-emulator@example.com',
-    sub: 'firebase-auth-emulator@example.com',
-    aud: 'https://identitytoolkit.googleapis.com/google.identity.identitytoolkit.v1.IdentityToolkit',
-    iat: now,
-    exp: now + 3600,
-    uid,
-  } )}.`;
-}
+const draftKey = 'sayit_onboarding_draft';
 
 describe( 'SayIt get started wizard', () => {
   beforeEach( () => {

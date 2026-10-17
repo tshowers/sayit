@@ -119,7 +119,7 @@
               <span class="sayit-feed-skeleton sayit-feed-skeleton--short"></span>
               <span>Loading posts…</span>
             </div>
-            <app-post-displayer *ngIf="isPrimaryView('feed') && postsInitialLoadComplete && !postsLoadError" [visiblePosts]="visiblePosts" [firebaseUser]="firebaseUser" [isLoggedIn]="isLoggedIn" [showMineOnly]="showMineOnly" [favoritePostIds]="favoritePostIds" [currentUserId]="userId" (favorite)="onFavoritePost($event)" (unfavorite)="onUnfavoritePost($event)">
+            <app-post-displayer *ngIf="isPrimaryView('feed') && postsInitialLoadComplete && !postsLoadError" [visiblePosts]="visiblePosts" [firebaseUser]="firebaseUser" [isLoggedIn]="isLoggedIn" [showMineOnly]="showMineOnly" [favoritePostIds]="favoritePostIds" [currentUserId]="firebaseUser?.uid || null" (favorite)="onFavoritePost($event)" (unfavorite)="onUnfavoritePost($event)">
             </app-post-displayer>
             <app-news-displayer *ngIf="isPrimaryView('newsstand')" [isLoggedIn]="isLoggedIn" [userId]="userId" [firebaseUser]="firebaseUser" [currentUserContact]="currentUserContact" [displayName]="displayName">
             </app-news-displayer>
