@@ -244,11 +244,13 @@ export class SayItService {
     // TOP-LEVEL collection (global)
     const colRef = collection( db, this.interestsEndpoint );
 
+    // Equality only: the live database has no composite index for
+    // postAuthorUid + createdAt, and the query fails without one. Newest
+    // first is sorted here instead.
     const q = query(
       colRef,
       where( 'postAuthorUid', '==', authorUid ),
-      orderBy( 'createdAt', 'desc' ),
-      limit( Math.max( 1, Math.min( 200, max || 50 ) ) )
+      limit( 500 )
     );
 
     const snap = await getDocs( q );
@@ -278,7 +280,9 @@ export class SayItService {
       } );
     } );
 
-    return out;
+    return out
+      .sort( ( a, b ) => ( Date.parse( b.createdAt ) || 0 ) - ( Date.parse( a.createdAt ) || 0 ) )
+      .slice( 0, Math.max( 1, Math.min( 200, max || 50 ) ) );
   }
 
   /**

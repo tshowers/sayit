@@ -1,7 +1,8 @@
-<div class="container-fluid tal-app post-view-shell mt-4">
+<div class="post-view-topbar"><app-sayit-topbar active="feed"></app-sayit-topbar></div>
+<div class="tal-app post-view-shell">
     <div class="post-view-navigation">
         <button type="button" class="post-view-back" (click)="goBackToPosts()" aria-label="Back to Say It posts">
-            <i class="fa-solid fa-arrow-left"></i> Back to posts
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back to posts
         </button>
     </div>
     <div class="post-view-wrap" data-cy="post-view" *ngIf="post">
@@ -12,12 +13,10 @@
                     <div class="post-view-author-media">
                         <img *ngIf="post.user === 'TODD'" [src]="post.imageUrl" class="todd-avatar post-view-avatar" alt="TODD">
                         <ng-container *ngIf="post.user !== 'TODD' && getBusinessProfileIdentifier(post) as profileIdentifier; else plainPostAuthorAvatar">
-                            <a [routerLink]="getBusinessProfileRoute(post)" title="View profile">
-                                <img src="assets/nophoto.svg" class="message-chat-avatar post-view-avatar" alt="{{ post.displayName }}">
-                            </a>
+                            <a [routerLink]="getBusinessProfileRoute(post)" title="View profile" class="post-view-avatar post-view-avatar--initial" [attr.aria-label]="post.displayName">{{ authorInitial }}</a>
                         </ng-container>
                         <ng-template #plainPostAuthorAvatar>
-                            <img *ngIf="post.user !== 'TODD'" src="assets/nophoto.svg" class="message-chat-avatar post-view-avatar" alt="{{ post.displayName }}">
+                            <span *ngIf="post.user !== 'TODD'" class="post-view-avatar post-view-avatar--initial" aria-hidden="true">{{ authorInitial }}</span>
                         </ng-template>
                         <div class="chat-info post-view-author-copy">
                             <ng-container *ngIf="post.user !== 'TODD' && getBusinessProfileIdentifier(post) as profileIdentifier; else plainPostAuthorName">
@@ -32,11 +31,8 @@
                         </div>
                     </div>
                     <div class="post-view-meta">
-                        <div class="post-view-category text-capitalize" *ngIf="post.category">🗂️ {{ post.category }}</div>
-                        <div class="post-view-rating">
-                            <span class="rating-icon">{{ getRatingIcon(post.contentRating) }}</span>
-                            <span class="rating-label">{{ getRatingDescription(post.contentRating) }}</span>
-                        </div>
+                        <span class="post-view-category text-capitalize" *ngIf="post.category">{{ post.category }}</span>
+                        <span class="post-view-rating">{{ getRatingDescription(post.contentRating) }}</span>
                     </div>
                 </div>
             </header>
@@ -61,7 +57,7 @@
                         <div class="link-details post-view-link-details">
                             <span *ngIf="linkSite" class="post-view-link-site">{{ linkSite }}</span>
                             <h2 class="message-link-title post-view-link-title">{{ post.linkPreview.title | truncate:155 }}</h2>
-                            <p *ngIf="post.linkPreview.description" class="message-link-description post-view-link-description"><i>{{ post.linkPreview.description | truncate:155 }}</i></p>
+                            <p *ngIf="post.linkPreview.description" class="message-link-description post-view-link-description">{{ post.linkPreview.description | truncate:155 }}</p>
                             <a [href]="post.linkPreview.url" class="btn-ios post-view-link-button" target="_blank" rel="noopener">{{ hasEmbeddedVideo() ? 'Watch on ' + linkSite : 'Go to link' }}</a>
                         </div>
                     </div>
@@ -74,41 +70,29 @@
                     </div>
                 </section>
                 <section class="post-view-actions">
-                    <div class="row g-2 align-items-stretch">
-                        <div class="col-12 col-md-6">
-                            <button class="btn btn-sm btn-primary d-flex align-items-center justify-content-center w-100 post-view-action-btn" (click)="shareContent(post)">
-                                <i class="fa fa-share-alt me-2"></i>
-                                <span style="white-space: nowrap;" title="Bring up a share window so you can share the post with others">Share</span>
-                            </button>
-                        </div>
-                        <div class="col-12 col-md-6" *ngIf="isLoggedIn">
-                            <div class="favorite-section">
-                                <button class="btn btn-sm btn-outline-primary position-relative d-flex align-items-center justify-content-center w-100 post-view-action-btn" (click)="favoritePost(post, $event)">
-                                    <i class="fa-regular fa-heart me-2"></i><span>Favor</span>
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" *ngIf="post.favoriteCount > 0">
-                                        {{ post.favoriteCount || 0 }}
-                                        <span class="visually-hidden">favored</span>
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="col-12" *ngIf="isLoggedIn && post.user !== 'TODD'">
-                            <button type="button" class="btn btn-sm btn-outline-primary d-flex align-items-center justify-content-center w-100 post-view-action-btn" (click)="expressInterest()" [disabled]="interestBusy">
-                                <i class="fa-solid fa-handshake me-2"></i>{{ interestBusy ? 'Sending…' : 'I’m interested' }}
-                            </button>
-                        </div>
-                    </div>
+                    <button type="button" class="post-view-action-btn post-view-action-btn--primary" (click)="shareContent(post)" title="Bring up a share window so you can share the post with others">
+                        <i class="fa-solid fa-paper-plane" aria-hidden="true"></i><span>Share</span>
+                    </button>
+                    <button *ngIf="isLoggedIn" type="button" class="post-view-action-btn" (click)="favoritePost(post, $event)">
+                        <i class="fa-regular fa-heart" aria-hidden="true"></i><span>Favor</span>
+                        <span class="post-view-count" *ngIf="post.favoriteCount > 0">
+                            {{ post.favoriteCount || 0 }}
+                            <span class="visually-hidden">favored</span>
+                        </span>
+                    </button>
+                    <button *ngIf="isLoggedIn && post.user !== 'TODD'" type="button" class="post-view-action-btn post-view-action-btn--wide" (click)="expressInterest()" [disabled]="interestBusy">
+                        {{ interestBusy ? 'Sending…' : 'I’m interested' }}
+                    </button>
                 </section>
             </div>
             <footer class="post-view-footer">
                 <div class="post-view-rating-explainer">
-                    <span class="rating-icon">{{ getRatingIcon(post.contentRating) }}</span>
-                    <span class="rating-label">Content Rating:</span>
-                    <i>{{ getRatingDescription(post.contentRating) }}</i>
+                    <strong class="rating-label">Content Rating:</strong>
+                    <span>{{ getRatingDescription(post.contentRating) }}</span>
                 </div>
                 <div class="post-view-rating-notes" *ngIf="post.ratingExplanation">{{ post.ratingExplanation }}</div>
                 <div *ngIf="post.contentRating >= 4" class="post-view-warning-action">
-                    <button class="btn-ios btn-warning" (click)="toggleBlur(postContent)">View Any Way</button>
+                    <button type="button" class="post-view-warning-btn" (click)="toggleBlur(postContent)">View Any Way</button>
                 </div>
             </footer>
             <section class="post-view-comments">
@@ -128,7 +112,7 @@
                 </ng-template>
                 <form *ngIf="isLoggedIn" class="post-view-comment-form" (ngSubmit)="submitComment()">
                     <input type="text" name="comment" [(ngModel)]="commentDraft" maxlength="500" placeholder="Add a comment…" aria-label="Add a comment">
-                    <button type="submit" class="btn btn-primary" [disabled]="commentBusy || !commentDraft.trim()">{{ commentBusy ? 'Posting…' : 'Post' }}</button>
+                    <button type="submit" [disabled]="commentBusy || !commentDraft.trim()">{{ commentBusy ? 'Posting…' : 'Post' }}</button>
                 </form>
                 <p *ngIf="!isLoggedIn" class="post-view-signin-hint"><a routerLink="/get-started" [queryParams]="{ returnUrl: '/post/' + post.id }">Sign in</a> to join the conversation.</p>
             </section>
@@ -141,7 +125,7 @@
             <img *ngIf="lightboxImage" [src]="lightboxImage" class="lightbox-img img-fluid" alt="Lightbox image">
         </div>
         <div class="image-lightbox-footer">
-            <button type="button" class="btn btn-outline-light btn-close-custom" (click)="closeLightbox()">Close</button>
+            <button type="button" class="btn-close-custom" (click)="closeLightbox()">Close</button>
         </div>
     </div>
 </div>

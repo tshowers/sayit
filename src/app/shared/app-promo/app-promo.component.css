@@ -1,93 +1,196 @@
 :host {
   display: block;
-  --promo-ink: #201e1d;
-  --promo-muted: #645c50;
-  --promo-surface: #f9f4ed;
-  --promo-line: rgba(32, 30, 29, 0.14);
-  --promo-accent: #b2622d;
 }
-:host-context([data-theme="dark"]) {
-    --promo-ink: #f3ebdd;
-    --promo-muted: #b3a898;
-    --promo-surface: #25221e;
-    --promo-line: rgba(243, 235, 221, 0.16);
-    --promo-accent: #f6a06b;
-  }
 
-/* App Store button */
+/* App Store button: a --text pill */
 .promo-store {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  min-height: 48px;
-  padding: 6px 18px 6px 14px;
-  border-radius: 12px;
-  background: #000;
-  color: #fff;
+  height: 52px;
+  padding: 0 20px 0 16px;
+  border-radius: var(--radius-pill);
+  background: var(--text);
+  color: var(--bg);
   text-decoration: none;
-  line-height: 1.05;
+  line-height: 1.1;
 }
-.promo-store i { font-size: 26px; }
-.promo-store span { display: flex; flex-direction: column; font-size: 1.1rem; font-weight: 700; }
-.promo-store small { font-size: 0.7rem; font-weight: 500; opacity: 0.85; }
-.promo-store:hover { color: #fff; opacity: 0.9; }
-.promo-store--soon { background: #3a3632; cursor: default; }
+.promo-store i { font-size: 22px; }
+.promo-store span { display: flex; flex-direction: column; font-size: 16px; font-weight: 700; }
+.promo-store small { font-size: 11px; font-weight: 500; opacity: 0.75; }
+.promo-store:hover { color: var(--bg); opacity: 0.9; }
+.promo-store--soon { cursor: default; }
+.promo-store--soon:hover { opacity: 1; }
 
-/* Hero */
+/* Hero: copy on the left, a sample post on the right */
 .promo-hero {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 40px;
+  align-items: center;
+  padding: 24px 0 8px;
+  color: var(--text);
+}
+.promo-hero__main { display: flex; flex-direction: column; gap: 18px; max-width: 560px; }
+.promo-hero__brand { display: flex; align-items: center; gap: 12px; }
+.promo-hero__badge {
+  padding: 5px 12px;
+  border-radius: var(--radius-pill);
+  background: var(--t-blue);
+  color: var(--t-blue-fg);
+  font-size: 13px;
+  font-weight: 600;
+}
+.promo-hero__icon {
+  flex: none;
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  object-fit: cover;
+  box-shadow: var(--shadow-md);
+}
+.promo-hero__body { display: flex; flex-direction: column; gap: 18px; }
+.promo-hero h1 {
+  margin: 0;
+  font-size: 68px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  text-wrap: balance;
+}
+.promo-hero__lede { margin: 0; font-size: 19px; line-height: 1.55; color: var(--muted); }
+.promo-hero__benefits { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.promo-hero__benefits li { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 500; }
+.promo-hero__check {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--t-green);
+  color: var(--t-green-fg);
+  font-size: 11px;
+}
+.promo-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding-top: 6px; }
+.promo-web,
+.promo-signin {
+  display: inline-flex;
+  align-items: center;
+  height: 52px;
+  border-radius: var(--radius-pill);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+}
+.promo-web { padding: 0 22px; background: var(--blue); color: #fff; }
+.promo-web:hover { color: #fff; filter: brightness(0.94); }
+.promo-signin { padding: 0 18px; color: var(--blue-ink); }
+.promo-signin:hover { color: var(--blue-ink); background: var(--t-blue); }
+.promo-hero__note { margin: 0; font-size: 14px; line-height: 1.5; color: var(--muted); }
+/* "Powered by TODD · Also from us" (product-pages.css) */
+.promo-hero__made-by { margin-top: 0 !important; font-size: 13px; }
+
+/* Sample post */
+.promo-hero__preview {
   display: flex;
-  gap: 20px;
-  align-items: flex-start;
-  padding: 22px 24px;
-  border: 1px solid var(--promo-line);
-  border-radius: 24px;
-  background: var(--promo-surface);
-  color: var(--promo-ink);
+  justify-content: center;
+  padding: 24px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
 }
-.promo-hero__icon { flex: none; border-radius: 22px; box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18); }
-.promo-hero h2 { margin: 0 0 4px; font-size: clamp(1.4rem, 3.5vw, 1.9rem); font-weight: 800; letter-spacing: -0.01em; }
-.promo-hero__lede { margin: 0 0 12px; color: var(--promo-muted); }
-.promo-hero__benefits { margin: 0 0 16px; padding: 0; list-style: none; display: grid; gap: 6px; }
-.promo-hero__benefits li { display: flex; gap: 8px; align-items: baseline; }
-.promo-hero__benefits i { color: var(--promo-accent); font-size: 0.85rem; }
-.promo-hero__actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
-.promo-web { font-weight: 700; color: var(--promo-accent); }
-.promo-signin { font-weight: 600; color: var(--promo-muted); }
-.promo-hero__note { margin: 12px 0 0; font-size: 0.85rem; color: var(--promo-muted); }
-/* "Powered by TODD · Also from us" (product-pages.css) in SayIt's own colors and type: SayIt doesn't load the shared tokens. */
-.promo-hero__made-by { --muted: var(--promo-muted); --text: var(--promo-ink); --surface2: var(--promo-line); --font: var(--font-body); margin-top: 20px !important; }
-
-@media (max-width: 575px) {
-  .promo-hero { flex-direction: column; align-items: center; text-align: center; }
-  .promo-hero__benefits li { justify-content: center; }
-  .promo-hero__actions { justify-content: center; }
+.promo-sample {
+  width: 100%;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+.promo-sample__text {
+  min-height: 200px;
+  margin: 0;
+  padding: 22px;
+  display: flex;
+  align-items: flex-end;
+  background: var(--t-blue);
+  color: var(--t-blue-fg);
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+.promo-sample__body { display: flex; flex-direction: column; gap: 12px; padding: 16px; }
+.promo-sample__author { display: flex; align-items: center; gap: 10px; }
+.promo-sample__author > span:last-child { display: flex; flex-direction: column; }
+.promo-sample__author strong { font-size: 15px; }
+.promo-sample__author small { font-size: 13px; color: var(--muted); }
+.promo-sample__avatar {
+  flex: none;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--t-cyan);
+  color: var(--t-cyan-fg);
+  font-size: 14px;
+  font-weight: 700;
+}
+.promo-sample__interest {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-pill);
+  background: var(--blue);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
 }
 
-/* Bar */
+@media (max-width: 767.98px) {
+  .promo-hero h1 { font-size: 42px; }
+}
+
+/* Bar: a --surface row */
 .promo-bar {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  border: 1px solid var(--promo-line);
-  border-radius: 18px;
-  background: var(--promo-surface);
-  color: var(--promo-ink);
+  gap: 14px;
+  padding: 12px 12px 12px 14px;
+  border-radius: 20px;
+  background: var(--surface);
+  color: var(--text);
 }
-.promo-bar img { flex: none; border-radius: 10px; }
-.promo-bar__text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
-.promo-bar__text span { font-size: 0.85rem; color: var(--promo-muted); }
-.promo-bar .promo-store { min-height: 40px; padding: 4px 14px 4px 10px; }
-.promo-bar .promo-store i { font-size: 20px; }
-.promo-bar .promo-store span { font-size: 0.95rem; }
-.promo-bar__close { border: 0; background: none; color: var(--promo-muted); padding: 6px; cursor: pointer; }
-.promo-bar--strong { border-color: var(--promo-accent); }
+.promo-bar img { flex: none; width: 40px; height: 40px; border-radius: 12px; object-fit: cover; }
+.promo-bar__text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.promo-bar__text strong { font-size: 15px; }
+.promo-bar__text span { font-size: 14px; color: var(--muted); }
+.promo-bar .promo-store { height: 40px; padding: 0 14px; gap: 8px; }
+.promo-bar .promo-store i { font-size: 16px; }
+.promo-bar .promo-store span { flex-direction: row; gap: 4px; font-size: 13px; }
+.promo-bar .promo-store small { font-size: 13px; font-weight: 700; opacity: 1; }
+.promo-bar__close {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+}
+.promo-bar__close:hover { background: var(--surface2); color: var(--text); }
+.promo-bar--strong { background: var(--t-blue); }
 @media (max-width: 575px) {
   .promo-bar { flex-wrap: wrap; }
-  .promo-bar__text { flex-basis: calc(100% - 100px); }
+  .promo-bar__text { flex-basis: calc(100% - 110px); }
 }
 
 /* Link */
-.promo-link { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 14px 0 0; font-size: 0.9rem; color: var(--promo-muted); }
+.promo-link { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 4px 8px; text-align: center; margin: 14px 0 0; font-size: 14px; color: var(--muted); }
 .promo-link img { border-radius: 6px; }
-.promo-link a { font-weight: 700; color: var(--promo-accent); }
+.promo-link a { font-weight: 700; color: var(--blue-ink); }

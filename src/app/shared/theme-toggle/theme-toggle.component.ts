@@ -1,7 +1,7 @@
 import { Component, Input, computed, inject } from '@angular/core';
 import { ThemeService } from '../../services/theme.service';
 
-/** Sun/moon switch between the light and dark Organic themes. */
+/** Sun/moon switch between the light and dark Find themes. */
 @Component( {
   selector: 'app-theme-toggle',
   standalone: true,
@@ -18,8 +18,8 @@ import { ThemeService } from '../../services/theme.service';
     :host { display: inline-flex; }
     .theme-toggle {
       position: relative;
-      width: 2.75rem;
-      height: 2.75rem;
+      width: 40px;
+      height: 40px;
       min-height: 0;
       padding: 0;
       display: inline-flex;
@@ -27,12 +27,16 @@ import { ThemeService } from '../../services/theme.service';
       justify-content: center;
       border: 0;
       border-radius: 50%;
-      background: var(--color-surface);
-      color: var(--color-text);
+      background: var(--surface);
+      color: var(--text);
       transition: background 0.18s ease, transform 0.12s ease;
     }
-    .theme-toggle:hover { background: var(--color-hover); }
+    .theme-toggle:hover { background: var(--surface2); }
     .theme-toggle:active { transform: scale(0.94); }
+    @media (max-width: 480px) {
+      :host { flex: none; }
+      .theme-toggle:not(.theme-toggle--text) { width: 36px; height: 36px; }
+    }
     .theme-toggle--text {
       width: auto;
       height: auto;
@@ -44,10 +48,7 @@ import { ThemeService } from '../../services/theme.service';
       font: inherit;
       font-weight: 600;
     }
-    .theme-toggle--text:hover { background: var(--color-hover); }
-    @media (max-width: 767.98px) {
-      .theme-toggle:not(.theme-toggle--text) { width: 2.35rem; height: 2.35rem; }
-    }
+    .theme-toggle--text:hover { background: var(--surface2); }
   `]
 } )
 export class ThemeToggleComponent {

@@ -1,5 +1,5 @@
-/* Orgs directory: Organic "2c Orgs" screen from design_handoff_sayit_post_feed.
-   Colors are tokens from src/styles.css, so light/dark follow <html data-theme>. */
+/* Orgs directory, Find style. Colors are tokens from src/styles.css,
+   so light/dark follow <html data-theme>. */
 :host {
   display: block;
 }
@@ -7,138 +7,134 @@
 .orgs-page {
   max-width: 1120px;
   margin: 0 auto;
-  padding: 0 1rem 3rem;
+  padding: 0 16px 48px;
+  color: var(--text);
 }
 
 .orgs-main {
+  max-width: 860px;
   display: flex;
   flex-direction: column;
+  gap: 16px;
+  padding-top: 12px;
 }
 
 .orgs-head {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 1rem 4px 0;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
 .orgs-title {
   margin: 0;
-  font-family: var(--font-heading);
-  font-size: 34px;
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
   line-height: 1;
-  color: var(--color-text);
 }
 
+/* Segmented sort control */
 .orgs-sort {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-}
-
-.orgs-sort select {
-  appearance: none;
-  height: 34px;
-  padding: 0 32px 0 14px;
-  border: 1px solid var(--color-divider);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--color-text);
-  font: 600 12.5px var(--font-body);
-  cursor: pointer;
-}
-
-.orgs-sort select option {
-  background: var(--color-bg);
-  color: var(--color-text);
-}
-
-.orgs-sort i {
-  position: absolute;
-  right: 13px;
-  font-size: 10px;
-  pointer-events: none;
-  color: var(--color-muted);
-}
-
-/* Search pill with icon */
-.orgs-search {
-  position: relative;
-  margin-top: 14px;
-}
-
-.orgs-search i {
-  position: absolute;
-  left: 16px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 14px;
-  color: var(--color-muted);
-  pointer-events: none;
-}
-
-.orgs-search input {
-  width: 100%;
-  height: 44px;
-  padding: 0 16px 0 40px;
-  border: 1px solid var(--color-divider);
-  border-radius: 999px;
-  background: var(--color-surface);
-  color: var(--color-text);
-  font: 14px var(--font-body);
-  outline: none;
-}
-
-.orgs-search input::placeholder {
-  color: var(--color-muted);
-}
-
-.orgs-search input:focus {
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 4px var(--focus-ring);
-}
-
-/* Filter chips: outline pills, active = ink */
-.orgs-chips {
+  max-width: 100%;
   display: flex;
-  gap: 6px;
-  padding: 12px 0 4px;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--surface);
   overflow-x: auto;
   scrollbar-width: none;
 }
 
-.orgs-chips::-webkit-scrollbar {
+.orgs-sort::-webkit-scrollbar {
   display: none;
 }
 
-.orgs-chip {
+.orgs-sort__option {
   flex: none;
-  height: 34px;
-  min-height: 0;
-  padding: 0 13px;
+  padding: 7px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text);
+  font: 600 13px/1.2 var(--font);
+  cursor: pointer;
+}
+
+.orgs-sort__option:hover {
+  background: var(--surface2);
+}
+
+.orgs-sort__option.active {
+  background: var(--bg);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Search pill */
+.orgs-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 52px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: var(--surface);
+}
+
+.orgs-search:focus-within {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.orgs-search i {
+  flex: none;
+  color: var(--muted);
+}
+
+.orgs-search input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: 15px var(--font);
+  outline: none;
+}
+
+.orgs-search input::placeholder {
+  color: var(--muted);
+}
+
+/* Filter chips */
+.orgs-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.orgs-chip {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid var(--color-divider);
+  height: 36px;
+  padding: 0 14px;
+  border: 0;
   border-radius: 999px;
-  background: transparent;
-  color: var(--color-text);
-  font: 700 12.5px var(--font-body);
-  white-space: nowrap;
+  background: var(--surface);
+  color: var(--text);
+  font: 600 13px/1 var(--font);
   cursor: pointer;
-  transition: background 0.18s ease, color 0.18s ease;
 }
 
-.orgs-chip:not(.active):hover {
-  background: var(--color-hover);
-  transform: none;
+.orgs-chip:hover {
+  background: var(--surface2);
 }
 
-.orgs-chip.active {
-  background: var(--color-text);
-  border-color: var(--color-text);
-  color: var(--color-bg);
+.orgs-chip.active,
+.orgs-chip.active:hover {
+  background: var(--text);
+  color: var(--bg);
 }
 
 .orgs-chip--category {
@@ -146,65 +142,75 @@
 }
 
 .orgs-chip__count {
-  opacity: 0.7;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 700;
 }
 
-/* Following strip */
+/* Following row */
 .orgs-following {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 14px 6px 6px;
+  gap: 10px;
 }
 
 .orgs-following__label {
-  font: 700 11px var(--font-body);
+  font: 700 12px/1.2 var(--font);
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-muted);
+  color: var(--muted);
 }
 
 .orgs-following__row {
   display: flex;
   gap: 14px;
   overflow-x: auto;
-  scrollbar-width: none;
+  padding-bottom: 4px;
 }
 
 .orgs-following__item {
   flex: none;
-  width: 64px;
+  width: 76px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-  color: var(--color-text);
+  gap: 6px;
+  color: var(--text);
   text-decoration: none;
 }
 
+.orgs-following__item:hover {
+  color: var(--text);
+}
+
 .orgs-following__name {
-  width: 100%;
-  font: 600 11px var(--font-body);
-  text-align: center;
+  max-width: 76px;
+  font-size: 12px;
+  font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* Org circle: photo, or the initial on an org color */
+/* Initial circles */
 .org-circle {
-  width: 48px;
-  height: 48px;
   flex: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
   border-radius: 50%;
-  color: var(--color-cream);
-  font-family: var(--font-heading);
-  font-size: 20px;
-  line-height: 1;
+  overflow: hidden;
+  font: 700 20px/1 var(--font);
+}
+
+.org-circle--lg {
+  width: 60px;
+  height: 60px;
+  font-size: 22px;
 }
 
 .org-circle img {
@@ -213,33 +219,28 @@
   object-fit: cover;
 }
 
-.org-circle--lg {
-  width: 56px;
-  height: 56px;
-  font-size: 22px;
-}
+.tint-blue { background: var(--t-blue); color: var(--t-blue-fg); }
+.tint-cyan { background: var(--t-cyan); color: var(--t-cyan-fg); }
+.tint-violet { background: var(--t-violet); color: var(--t-violet-fg); }
+.tint-yellow { background: var(--t-yellow); color: var(--t-yellow-fg); }
+.tint-green { background: var(--t-green); color: var(--t-green-fg); }
+.tint-pink { background: var(--t-pink); color: var(--t-pink-fg); }
 
-/* Rows */
+/* List rows */
 .orgs-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
-  gap: 8px;
-  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .org-row {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 26px;
-  background: var(--color-raised);
-  transition: background 0.18s ease;
-}
-
-.org-row:hover {
-  background: var(--color-hover);
+  gap: 14px;
+  padding: 12px 14px 12px 12px;
+  border-radius: var(--radius-md);
+  background: var(--surface);
 }
 
 .org-row__body {
@@ -247,18 +248,17 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 2px;
 }
 
 .org-row__name {
-  font-family: var(--font-heading);
-  font-size: 17px;
-  line-height: 1.15;
-  color: var(--color-text);
+  align-self: flex-start;
+  max-width: 100%;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
   text-decoration: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
 }
 
 /* The name link covers the whole row; the Follow button sits above it */
@@ -270,7 +270,11 @@
 }
 
 .org-row__name:hover {
-  color: var(--color-text);
+  color: var(--text);
+}
+
+.org-row:hover {
+  background: var(--surface2);
 }
 
 .org-row__name:focus-visible {
@@ -278,14 +282,13 @@
 }
 
 .org-row:has(.org-row__name:focus-visible) {
-  outline: 2px solid var(--color-accent);
+  outline: 2px solid var(--blue);
   outline-offset: 2px;
 }
 
 .org-row__sub {
-  font-size: 12px;
-  color: var(--color-muted);
-  text-transform: capitalize;
+  font-size: 14px;
+  color: var(--muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -296,60 +299,58 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 6px;
-  font: 600 12px var(--font-body);
-  color: var(--color-text-2);
+  font-size: 13px;
+  color: var(--muted);
 }
 
 .org-row__tag {
-  height: 18px;
-  padding: 0 7px;
-  display: inline-flex;
-  align-items: center;
+  padding: 2px 8px;
   border-radius: 999px;
-  background: var(--color-tag-accent-bg);
-  color: var(--color-tag-accent-ink);
-  font: 700 10px var(--font-body);
+  background: var(--t-yellow);
+  color: var(--t-yellow-fg);
+  font-size: 11px;
+  font-weight: 700;
 }
 
 .org-follow {
   position: relative;
   z-index: 1;
   flex: none;
-  height: 34px;
-  min-height: 0;
-  padding: 0 14px;
-  border: 1px solid var(--color-primary-bg);
+  height: 38px;
+  padding: 0 16px;
+  border: 0;
   border-radius: 999px;
-  background: var(--color-primary-bg);
-  color: var(--color-primary-ink);
-  font-family: var(--font-heading) !important;
-  font-size: 13px;
-  font-weight: 400;
+  background: var(--blue);
+  color: #fff;
+  font: 700 14px/1 var(--font);
   cursor: pointer;
-  transition: background 0.18s ease, color 0.18s ease;
 }
 
-.org-follow:not(:disabled):hover {
-  transform: none;
-  background: var(--color-primary-bg-hover);
-  border-color: var(--color-primary-bg-hover);
+.org-follow:hover {
+  filter: brightness(0.94);
 }
 
 .org-follow--on,
-.org-follow--on:not(:disabled):hover {
-  background: transparent;
-  border-color: var(--color-divider);
-  color: var(--color-text);
+.org-follow--on:hover {
+  background: var(--bg);
+  color: var(--text);
+  filter: none;
 }
 
 .orgs-empty {
-  padding: 30px 10px;
-  font-size: 14px;
-  color: var(--color-muted);
+  padding: 32px;
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  text-align: center;
+  color: var(--muted);
 }
 
 @media (max-width: 767.98px) {
-  .orgs-page {
-    padding: 0 0.75rem 2rem;
+  .orgs-title {
+    font-size: 34px;
+  }
+
+  .org-row {
+    gap: 12px;
   }
 }

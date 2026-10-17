@@ -5,13 +5,10 @@
   <main class="orgs-main">
     <div class="orgs-head">
       <h1 class="orgs-title">Orgs</h1>
-      <label class="orgs-sort">
-        <span class="visually-hidden">Sort organizations</span>
-        <select [ngModel]="browseMode" (ngModelChange)="setBrowseMode($event)" [ngModelOptions]="{standalone: true}" aria-label="Sort organizations">
-          <option *ngFor="let mode of browseModes" [value]="mode.id">{{ mode.label }}</option>
-        </select>
-        <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-      </label>
+      <div class="orgs-sort" role="radiogroup" aria-label="Sort organizations">
+        <button *ngFor="let mode of browseModes" type="button" class="orgs-sort__option" role="radio"
+          [class.active]="browseMode === mode.id" [attr.aria-checked]="browseMode === mode.id" (click)="setBrowseMode(mode.id)">{{ mode.label }}</button>
+      </div>
     </div>
 
     <div class="orgs-search">
@@ -33,7 +30,7 @@
       <span class="orgs-following__label">Following</span>
       <div class="orgs-following__row">
         <a *ngFor="let profile of followedProfiles; trackBy: trackByProfile" class="orgs-following__item" [routerLink]="getProfileRoute(profile)">
-          <span class="org-circle org-circle--lg" [style.background]="orgColor(profile)">
+          <span class="org-circle org-circle--lg" [ngClass]="orgTint(profile)">
             <img *ngIf="profile?.photoURL" [src]="profile.photoURL" alt="" loading="lazy" referrerpolicy="no-referrer">
             <ng-container *ngIf="!profile?.photoURL">{{ orgInitial(profile) }}</ng-container>
           </span>
@@ -44,7 +41,7 @@
 
     <div class="orgs-list" *ngIf="filteredProfiles.length; else emptyState">
       <div *ngFor="let profile of filteredProfiles | slice:0:60; trackBy: trackByProfile" class="org-row" data-cy="directory-card">
-        <span class="org-circle" [style.background]="orgColor(profile)">
+        <span class="org-circle" [ngClass]="orgTint(profile)">
           <img *ngIf="profile?.photoURL" [src]="profile.photoURL" alt="" loading="lazy" referrerpolicy="no-referrer">
           <ng-container *ngIf="!profile?.photoURL">{{ orgInitial(profile) }}</ng-container>
         </span>

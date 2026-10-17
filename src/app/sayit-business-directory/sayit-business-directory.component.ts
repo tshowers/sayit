@@ -79,7 +79,7 @@ export class SayitBusinessDirectoryComponent implements OnInit {
     await Promise.all( [this.loadProfiles(), this.loadFollowing()] );
   }
 
-  // ─── Following (Organic Orgs screen) ───
+  // ─── Following (Orgs screen) ───
 
   private profileId ( profile: any ): string {
     return String( profile?.id || profile?.uid || '' ).trim();
@@ -140,13 +140,13 @@ export class SayitBusinessDirectoryComponent implements OnInit {
     }
   }
 
-  /** Brand-ish circle color per org, picked from the Organic palette so it stays legible. */
-  orgColor ( profile: any ): string {
-    const palette = ['#728157', '#b2622d', '#645c50', '#8c491a', '#56633f', '#d67f48'];
+  /** Find tint class per org, so each circle keeps its color. */
+  orgTint ( profile: any ): string {
+    const tints = ['blue', 'cyan', 'violet', 'yellow', 'green', 'pink'];
     const key = this.getProfileTitle( profile );
     let hash = 0;
     for ( let i = 0; i < key.length; i++ ) hash = ( hash * 31 + key.charCodeAt( i ) ) | 0;
-    return palette[Math.abs( hash ) % palette.length];
+    return 'tint-' + tints[Math.abs( hash ) % tints.length];
   }
 
   orgInitial ( profile: any ): string {

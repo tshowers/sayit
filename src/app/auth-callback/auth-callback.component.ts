@@ -16,14 +16,62 @@ import { SayItOnboardingService } from '../services/sayit-onboarding.service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   template: `
-    <div data-cy="auth-callback-shell" style="max-width: 480px; margin: 4rem auto; text-align: center; padding: 0 1rem;">
-      <p *ngIf="!errorMessage">{{ status }}</p>
+    <div class="callback-shell" data-cy="auth-callback-shell">
+      <ng-container *ngIf="!errorMessage">
+        <span class="callback-spinner" aria-hidden="true"></span>
+        <p>{{ status }}</p>
+      </ng-container>
       <ng-container *ngIf="errorMessage">
-        <p class="alert alert-danger">{{ errorMessage }}</p>
-        <a routerLink="/login">Try again</a>
+        <p class="callback-error">{{ errorMessage }}</p>
+        <a class="callback-retry" routerLink="/login">Try again</a>
       </ng-container>
     </div>
   `,
+  styles: [`
+    .callback-shell {
+      min-height: 70vh;
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 24px 16px;
+      text-align: center;
+      color: var(--text);
+    }
+    .callback-shell p { margin: 0; font-size: 17px; font-weight: 600; }
+    .callback-spinner {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 4px solid var(--surface2);
+      border-top-color: var(--blue);
+      animation: callback-spin 0.9s linear infinite;
+    }
+    @keyframes callback-spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .callback-spinner { animation-duration: 2.4s; } }
+    .callback-shell .callback-error {
+      padding: 12px 18px;
+      border-radius: var(--radius-md);
+      background: var(--t-pink);
+      color: var(--t-pink-fg);
+      font-size: 15px;
+    }
+    .callback-retry {
+      display: inline-flex;
+      align-items: center;
+      height: 46px;
+      padding: 0 22px;
+      border-radius: 999px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .callback-retry:hover { color: #fff; filter: brightness(0.94); }
+  `],
 } )
 export class AuthCallbackComponent implements OnInit {
   status = 'Signing you in...';

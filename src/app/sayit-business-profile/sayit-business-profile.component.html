@@ -1,16 +1,13 @@
 <app-preloader [isLoading]="isLoading"></app-preloader>
-<div class="sayit-business-shell container-fluid" data-cy="business-profile-shell" *ngIf="!isLoading">
-    <div class="row mb-2" *ngIf="!isLoading">
-        <div class="col-12">
-            <a routerLink="/" class="sayit-back-link">← Back to Posts</a>
-        </div>
-    </div>
-    <div class="row justify-content-center">
-        <div class="col-12 col-xl-10">
+<div class="sayit-business-shell" data-cy="business-profile-shell" *ngIf="!isLoading">
+    <app-sayit-topbar active="orgs"></app-sayit-topbar>
+    <a routerLink="/" class="sayit-back-link"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back to Posts</a>
+    <div class="sayit-business-stack">
             <div class="sayit-business-hero" *ngIf="!errorMessage; else missingState">
                 <div class="sayit-business-brand">
                     <div class="sayit-business-avatar-wrap">
-                        <img [src]="profile?.photoURL || profile?.imageUrl || '/assets/nophoto.svg'" [alt]="profileTitle" class="sayit-business-avatar" width="96" height="96">
+                        <img *ngIf="profile?.photoURL || profile?.imageUrl; else heroInitial" [src]="profile?.photoURL || profile?.imageUrl" [alt]="profileTitle" class="sayit-business-avatar" width="104" height="104">
+                        <ng-template #heroInitial><span class="sayit-business-avatar sayit-business-avatar--initial" role="img" [attr.aria-label]="profileTitle">{{ initialOf(profileTitle) }}</span></ng-template>
                     </div>
                     <div class="sayit-business-copy">
                         <div class="sayit-business-badge">{{ directoryStatusLabel }}</div>
@@ -39,7 +36,7 @@
                         </div>
                     </div>
                     <div class="sayit-business-actions">
-                        <button *ngIf="canWatchProfile" type="button" class="btn-todd" (click)="toggleWatchProfile()" [disabled]="watchActionBusy">
+                        <button *ngIf="canWatchProfile" type="button" class="btn-todd" [class.btn-todd-primary]="!isWatchingProfile" (click)="toggleWatchProfile()" [disabled]="watchActionBusy">
                             {{ watchActionBusy ? 'Saving...' : ( isWatchingProfile ? 'Watching' : 'Watch' ) }}
                         </button>
                         <a *ngIf="websiteHref" class="btn-todd text-center" [href]="websiteHref" target="_blank" rel="noopener noreferrer"> Visit Website </a>
@@ -146,7 +143,8 @@
                 <div class="sayit-business-related-grid">
                     <a *ngFor="let related of relatedProfiles" class="sayit-business-related-card" [routerLink]="['/business', related?.handle || related?.id || related?.uid]">
                         <div class="sayit-business-related-top">
-                            <img [src]="related?.photoURL || '/assets/nophoto.svg'" [alt]="related?.businessName || related?.displayName || 'Business'" class="sayit-business-related-avatar" width="52" height="52">
+                            <img *ngIf="related?.photoURL; else relatedInitial" [src]="related.photoURL" [alt]="related?.businessName || related?.displayName || 'Business'" class="sayit-business-related-avatar" width="48" height="48">
+                            <ng-template #relatedInitial><span class="sayit-business-related-avatar sayit-business-related-avatar--initial" aria-hidden="true">{{ initialOf(related?.businessName || related?.displayName) }}</span></ng-template>
                             <div>
                                 <h3>{{ related?.businessName || related?.displayName || 'Business' }}</h3>
                                 <p>{{ related?.pinnedIntro || related?.tagline || related?.intentText || related?.sellText || 'Business updates on SayIt.' }}</p>
@@ -160,17 +158,12 @@
                     </a>
                 </div>
             </div>
-        </div>
     </div>
 </div>
 <ng-template #missingState>
-    <div class="row justify-content-center">
-        <div class="col-12 col-lg-8">
-            <div class="sayit-business-card sayit-business-empty">
-                <h1>Business profile unavailable</h1>
-                <p>{{ errorMessage }}</p>
-                <a class="btn btn-todd" routerLink="/">Open SayIt</a>
-            </div>
-        </div>
+    <div class="sayit-business-card sayit-business-empty">
+        <h1>Business profile unavailable</h1>
+        <p>{{ errorMessage }}</p>
+        <a class="btn btn-todd btn-todd-primary" routerLink="/">Open SayIt</a>
     </div>
 </ng-template>

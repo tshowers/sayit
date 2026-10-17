@@ -3,7 +3,7 @@ import { Injectable, signal } from '@angular/core';
 export type SayItTheme = 'light' | 'dark';
 
 const STORAGE_KEY = 'sayit-theme';
-const THEME_COLORS: Record<SayItTheme, string> = { light: '#f5ead8', dark: '#1b1917' };
+const THEME_COLORS: Record<SayItTheme, string> = { light: '#ffffff', dark: '#0c0e13' };
 
 /**
  * Light/dark theme for the whole app.

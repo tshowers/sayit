@@ -14,7 +14,36 @@ import { AuthContextService } from '../../services/auth-context.service';
 @Component( {
   selector: 'app-sayit-login',
   standalone: true,
-  template: `<div data-cy="sign-in-shell" style="max-width: 480px; margin: 4rem auto; text-align: center; padding: 0 1rem;"><p>Taking you to sign in...</p></div>`,
+  template: `
+    <div class="sign-in-shell" data-cy="sign-in-shell">
+      <span class="sign-in-spinner" aria-hidden="true"></span>
+      <p>Taking you to sign in...</p>
+    </div>
+  `,
+  styles: [`
+    .sign-in-shell {
+      min-height: 70vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      padding: 24px;
+      text-align: center;
+      color: var(--text);
+    }
+    .sign-in-shell p { margin: 0; font-size: 17px; font-weight: 600; }
+    .sign-in-spinner {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 4px solid var(--surface2);
+      border-top-color: var(--blue);
+      animation: sign-in-spin 0.9s linear infinite;
+    }
+    @keyframes sign-in-spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .sign-in-spinner { animation-duration: 2.4s; } }
+  `],
 } )
 export class SayitLoginComponent implements OnInit {
   constructor (

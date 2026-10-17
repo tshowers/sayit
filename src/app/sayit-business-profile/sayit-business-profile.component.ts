@@ -9,12 +9,13 @@ import { LoggerService } from '../services/logger.service';
 import { NotificationService } from '../services/notification.service';
 import { Post } from '../shared/models/message.model';
 import { PostInterestRecord, SayItService } from '../services/say-it-service';
+import { SayitTopbarComponent } from '../shared/sayit-topbar/sayit-topbar.component';
 
 
 @Component( {
   selector: 'app-sayit-business-profile',
   standalone: true,
-  imports: [CommonModule, RouterModule, PostDisplayerComponent, PreloaderComponent],
+  imports: [CommonModule, RouterModule, PostDisplayerComponent, PreloaderComponent, SayitTopbarComponent],
   templateUrl: './sayit-business-profile.component.html',
   styleUrl: './sayit-business-profile.component.css',
 } )
@@ -65,6 +66,11 @@ export class SayitBusinessProfileComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy (): void { }
+
+  /** First letter of a name, for initial circles when there's no photo. */
+  initialOf ( name: any ): string {
+    return ( String( name || '' ).match( /[\p{L}\p{N}]/u )?.[0] || '?' ).toUpperCase();
+  }
 
   get profileTitle (): string {
     return this.primaryDisplayName || 'SayIt Business';

@@ -1,361 +1,363 @@
+/* Business profile, Find style: --surface panels with --bg tiles inside. */
 .sayit-business-shell {
-    padding: 1.5rem 0 3rem;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  color: var(--text);
 }
 
 .sayit-back-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-size: 0.875rem;
-    color: inherit;
-    opacity: 0.7;
-    text-decoration: none;
-    padding: 0.25rem 0;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 38px;
+  padding: 0 14px 0 12px;
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  font: 600 14px/1 var(--font);
+  text-decoration: none;
 }
 
 .sayit-back-link:hover {
-    opacity: 1;
-    text-decoration: underline;
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.sayit-business-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .sayit-business-hero,
 .sayit-business-card {
-    border: 1px solid rgba(15, 15, 15, 0.08);
-    border-radius: 28px;
-    background:
-        radial-gradient(circle at top right, rgba(247, 208, 96, 0.18), transparent 30%),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 249, 252, 0.98));
-    box-shadow: 0 20px 50px rgba(15, 15, 15, 0.08);
-    margin-bottom: 1.25rem;
-}
-
-.sayit-business-hero {
-    padding: 1.5rem;
-}
-
-.sayit-business-brand {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    gap: 1.25rem;
-    align-items: start;
-}
-
-.sayit-business-avatar-wrap {
-    width: 96px;
-    height: 96px;
-    border-radius: 24px;
-    padding: 4px;
-    background: linear-gradient(135deg, #d97706, #f7d060);
-}
-
-.sayit-business-avatar {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 20px;
-    display: block;
-    background: #fff;
-}
-
-.sayit-business-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.35rem 0.7rem;
-    border-radius: 999px;
-    background: rgba(217, 119, 6, 0.12);
-    color: #9a3412;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    margin-bottom: 0.85rem;
-}
-
-.sayit-business-title {
-    font-size: clamp(2rem, 3vw, 3rem);
-    line-height: 1;
-    font-weight: 800;
-    margin: 0 0 0.55rem;
-    color: #0f172a;
-}
-
-.sayit-business-tagline {
-    font-size: 1.05rem;
-    color: #334155;
-    margin: 0 0 0.45rem;
-}
-
-.sayit-business-intent {
-    font-size: 1rem;
-    color: #475569;
-    max-width: 760px;
-    margin: 0;
-}
-
-.sayit-business-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.65rem;
-    margin-top: 1rem;
-}
-
-.sayit-business-meta span {
-    padding: 0.45rem 0.75rem;
-    border-radius: 999px;
-    background: rgba(15, 15, 15, 0.05);
-    color: #334155;
-    font-size: 0.9rem;
-}
-
-.sayit-business-trust-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.55rem;
-    margin-top: 0.9rem;
-}
-
-.sayit-business-trust-badge {
-    padding: 0.42rem 0.72rem;
-    border-radius: 999px;
-    background: rgba(2, 132, 199, 0.08);
-    color: #075985;
-    font-size: 0.82rem;
-    font-weight: 700;
-}
-
-.sayit-business-trust-badge.verified {
-    background: rgba(22, 163, 74, 0.1);
-    color: #166534;
-}
-
-.sayit-business-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+  padding: 28px;
+  border-radius: var(--radius-lg);
+  background: var(--surface);
 }
 
 .sayit-business-card {
-    padding: 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.sayit-business-pinned {
-    margin-bottom: 1rem;
-    padding: 1rem 1.05rem;
-    border-radius: 20px;
-    background: rgba(245, 245, 245, 0.08);
-    border: 1px solid rgba(217, 119, 6, 0.12);
+/* Hero */
+.sayit-business-brand {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 24px;
 }
 
-.sayit-business-pinned p {
-    margin: 0.35rem 0 0;
-    color: #334155;
-    line-height: 1.55;
+.sayit-business-avatar-wrap {
+  flex: none;
 }
 
+.sayit-business-avatar {
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.sayit-business-avatar--initial {
+  display: grid;
+  place-items: center;
+  background: var(--t-cyan);
+  color: var(--t-cyan-fg);
+  font: 700 42px/1 var(--font);
+}
+
+.sayit-business-copy {
+  flex: 1 1 260px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sayit-business-badge {
+  align-self: flex-start;
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--t-blue);
+  color: var(--t-blue-fg);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sayit-business-title {
+  margin: 0;
+  font-size: 48px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
+}
+
+.sayit-business-tagline {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.5;
+}
+
+.sayit-business-intent {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.sayit-business-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.sayit-business-meta span {
+  overflow-wrap: anywhere;
+}
+
+.sayit-business-trust-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.sayit-business-trust-badge {
+  padding: 5px 12px;
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sayit-business-trust-badge.verified {
+  background: var(--t-green);
+  color: var(--t-green-fg);
+}
+
+/* Actions column: Watch is primary blue, the rest --bg */
+.sayit-business-actions {
+  flex: 0 1 220px;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+:host-context([data-theme]) .sayit-business-actions .btn-todd {
+  margin: 0;
+  height: 46px;
+  width: 100%;
+  background: var(--bg) !important;
+}
+
+:host-context([data-theme]) .sayit-business-actions .btn-todd:hover {
+  background: var(--surface2) !important;
+}
+
+:host-context([data-theme]) .sayit-business-actions .btn-todd-primary,
+:host-context([data-theme]) .sayit-business-actions .btn-todd-primary:hover {
+  background: var(--blue) !important;
+  color: #fff !important;
+}
+
+/* Sections */
 .sayit-business-section-head {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    align-items: end;
-    margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .sayit-business-section-head h2 {
-    margin: 0;
-    font-size: 1.3rem;
-    color: #0f172a;
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
 }
 
 .sayit-business-section-head p {
-    margin: 0;
-    color: #64748b;
+  margin: 0;
+  font-size: 15px;
+  color: var(--muted);
 }
 
-.sayit-business-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.9rem;
+.sayit-business-pinned {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 18px;
+  border-radius: var(--radius-md);
+  background: var(--bg);
 }
 
-.sayit-business-stat {
-    border-radius: 20px;
-    padding: 1rem;
-    background: rgba(255, 255, 255, 0.78);
-    border: 1px solid rgba(15, 15, 15, 0.05);
+.sayit-business-pinned p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
 }
 
 .sayit-business-label {
-    display: block;
-    font-size: 0.8rem;
-    color: #64748b;
-    margin-bottom: 0.35rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+  font: 700 12px/1.2 var(--font);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
-.sayit-business-empty {
-    text-align: center;
-    padding: 3rem 1.5rem;
+.sayit-business-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 8px;
 }
 
-.sayit-business-related-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.9rem;
+.sayit-business-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: var(--bg);
 }
 
-.sayit-business-related-card {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    padding: 1rem;
-    border-radius: 20px;
-    border: 1px solid rgba(15, 15, 15, 0.06);
-    background: rgba(255, 255, 255, 0.82);
-    text-decoration: none;
-    color: inherit;
+.sayit-business-stat strong {
+  font-size: 15px;
+  line-height: 1.35;
+  overflow-wrap: anywhere;
 }
 
-.sayit-business-related-top {
-    display: flex;
-    gap: 0.8rem;
-    align-items: start;
-}
-
-.sayit-business-related-avatar {
-    width: 52px;
-    height: 52px;
-    object-fit: cover;
-    border-radius: 16px;
-    background: #fff;
-}
-
-.sayit-business-related-top h3 {
-    margin: 0 0 0.25rem;
-    font-size: 1rem;
-    color: #0f172a;
-}
-
-.sayit-business-related-top p {
-    margin: 0;
-    color: #475569;
-    line-height: 1.5;
-}
-
-@media (max-width: 991px) {
-    .sayit-business-brand {
-        grid-template-columns: 1fr;
-    }
-
-    .sayit-business-actions {
-        flex-direction: row;
-        flex-wrap: wrap;
-    }
-}
-
-@media (max-width: 767px) {
-    .sayit-business-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .sayit-business-related-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .sayit-business-section-head {
-        flex-direction: column;
-        align-items: start;
-    }
-}
-
-:host-context([data-theme="dark"]) .sayit-business-shell {
-        background: transparent;
-    }
-
-:host-context([data-theme="dark"]) .sayit-business-hero,
-    :host-context([data-theme="dark"]) .sayit-business-card {
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        background: rgba(15, 15, 15, 0.95);
-        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.38);
-    }
-
-:host-context([data-theme="dark"]) .sayit-business-avatar {
-        background: rgba(15, 15, 15, 0.95);
-    }
-
-:host-context([data-theme="dark"]) .sayit-business-badge {
-        background: rgba(245, 158, 11, 0.16);
-        color: #fbbf24;
-    }
-
-:host-context([data-theme="dark"]) .sayit-business-title,
-    :host-context([data-theme="dark"]) .sayit-business-section-head h2,
-    :host-context([data-theme="dark"]) .sayit-business-related-top h3,
-    :host-context([data-theme="dark"]) .sayit-business-stat strong,
-    :host-context([data-theme="dark"]) .sayit-business-empty h1 {
-        color: #f8fafc;
-    }
-
-:host-context([data-theme="dark"]) .sayit-business-tagline,
-    :host-context([data-theme="dark"]) .sayit-business-pinned p,
-    :host-context([data-theme="dark"]) .sayit-business-related-top p,
-    :host-context([data-theme="dark"]) .sayit-business-empty p {
-        color: #cbd5e1;
-    }
-
-:host-context([data-theme="dark"]) .sayit-business-intent,
-    :host-context([data-theme="dark"]) .sayit-business-meta span,
-    :host-context([data-theme="dark"]) .sayit-business-section-head p,
-    :host-context([data-theme="dark"]) .sayit-business-label {
-        color: #94a3b8;
-    }
-
-:host-context([data-theme="dark"]) .sayit-business-meta span {
-        background: rgba(255, 255, 255, 0.06);
-    }
-
-:host-context([data-theme="dark"]) .sayit-business-trust-badge {
-        background: rgba(56, 189, 248, 0.14);
-        color: #7dd3fc;
-    }
-
-:host-context([data-theme="dark"]) .sayit-business-trust-badge.verified {
-        background: rgba(34, 197, 94, 0.14);
-        color: #86efac;
-    }
-
-:host-context([data-theme="dark"]) .sayit-business-pinned {
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(245, 158, 11, 0.18);
-    }
-
-:host-context([data-theme="dark"]) .sayit-business-stat,
-    :host-context([data-theme="dark"]) .sayit-business-related-card {
-        background: rgba(15, 15, 15, 0.68);
-        border: 1px solid rgba(255, 255, 255, 0.06);
-    }
+/* People interested */
 .sayit-business-interest-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    align-items: center;
-    padding: 0.9rem 0;
-    border-top: 1px solid rgba(15, 23, 42, 0.08);
-    color: inherit;
-    text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: var(--bg);
+  color: var(--text);
+  text-decoration: none;
 }
 
 .sayit-business-interest-row:hover {
-    color: inherit;
-    opacity: 0.78;
+  background: var(--surface2);
+  color: var(--text);
 }
 
 .sayit-business-interest-preview {
-    font-weight: 700;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .sayit-business-interest-meta {
-    color: rgba(15, 23, 42, 0.62);
-    font-size: 0.86rem;
-    white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--blue-ink);
+}
+
+/* Similar organizations */
+.sayit-business-related-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+
+.sayit-business-related-card {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  color: var(--text);
+  text-decoration: none;
+  transition: box-shadow 0.15s ease;
+}
+
+.sayit-business-related-card:hover {
+  color: var(--text);
+  box-shadow: var(--shadow-md);
+}
+
+.sayit-business-related-top {
+  display: flex;
+  gap: 12px;
+}
+
+.sayit-business-related-avatar {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.sayit-business-related-avatar--initial {
+  display: grid;
+  place-items: center;
+  background: var(--t-violet);
+  color: var(--t-violet-fg);
+  font: 700 18px/1 var(--font);
+}
+
+.sayit-business-related-top h3 {
+  margin: 0 0 2px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.sayit-business-related-top p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+
+.sayit-business-related-card .sayit-business-meta {
+  font-size: 13px;
+  gap: 4px 12px;
+}
+
+/* Missing profile */
+.sayit-business-empty {
+  max-width: 640px;
+  margin: 0 auto;
+  align-items: flex-start;
+}
+
+.sayit-business-empty h1 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+}
+
+.sayit-business-empty p {
+  margin: 0;
+  color: var(--muted);
+}
+
+@media (max-width: 767.98px) {
+  .sayit-business-hero,
+  .sayit-business-card {
+    padding: 20px;
+  }
+
+  .sayit-business-title {
+    font-size: 34px;
+  }
+
+  .sayit-business-actions {
+    flex-basis: 100%;
+  }
 }

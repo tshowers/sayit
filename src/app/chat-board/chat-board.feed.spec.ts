@@ -29,7 +29,7 @@ describe( 'ChatBoardComponent feed window', () => {
       return feed.asObservable();
     } );
     const noop: any = {};
-    board = new ChatBoardComponent( noop, noop, jasmine.createSpyObj( 'LoggerService', ['info', 'warn', 'error', 'log'] ), noop, noop, dataService, noop, noop, jasmine.createSpyObj( 'SayItOnboardingService', ['submitIfPending'] ) );
+    board = new ChatBoardComponent( noop, noop, jasmine.createSpyObj( 'LoggerService', ['info', 'warn', 'error', 'log'] ), noop, noop, dataService, noop, jasmine.createSpyObj( 'SayItOnboardingService', ['submitIfPending'] ) );
   } );
 
   it( 'listens to a bounded window of the newest posts', async () => {
@@ -51,26 +51,28 @@ describe( 'ChatBoardComponent feed window', () => {
   } );
 
   it( 'widens the window only after every loaded post is shown and more exist', async () => {
+    const page = board.pageSize;
     await board.loadMessages();
     feeds[0].next( posts( 200 ) );
-    expect( board.visiblePosts.length ).toBe( 100 );
+    expect( board.visiblePosts.length ).toBe( page );
 
-    board.loadMorePosts();
+    while ( board.visiblePosts.length < 200 ) board.loadMorePosts();
     expect( board.visiblePosts.length ).toBe( 200 );
     expect( dataService.getRealtimePosts ).toHaveBeenCalledTimes( 1 );
 
     board.loadMorePosts();
     expect( dataService.getRealtimePosts.calls.mostRecent().args ).toEqual( [400] );
 
+    const pagesShown = board.currentPage;
     feeds[1].next( posts( 400 ) );
-    expect( board.visiblePosts.length ).toBe( 300 );
+    expect( board.visiblePosts.length ).toBe( ( pagesShown + 1 ) * page );
   } );
 
   it( 'stops widening once Firestore returns fewer posts than the window', async () => {
     await board.loadMessages();
     feeds[0].next( posts( 120 ) );
-    board.loadMorePosts();
-    board.loadMorePosts();
+    for ( let i = 0; i < 10; i++ ) board.loadMorePosts();
+    expect( board.visiblePosts.length ).toBe( 120 );
     expect( dataService.getRealtimePosts ).toHaveBeenCalledTimes( 1 );
   } );
 
@@ -79,6 +81,6 @@ describe( 'ChatBoardComponent feed window', () => {
     feeds[0].next( posts( 200 ) );
     board.loadMorePosts();
     feeds[0].next( posts( 201 ) );
-    expect( board.visiblePosts.length ).toBe( 200 );
+    expect( board.visiblePosts.length ).toBe( 2 * board.pageSize );
   } );
 } );

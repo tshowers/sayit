@@ -1,9 +1,9 @@
-/* Say It home: Organic design system (tokens live in src/styles.css).
+/* Say It home: Find design system (tokens live in src/styles.css).
    Colors come from tokens only, so light/dark follow <html data-theme>. */
 :host {
   display: block;
-  --page-text: var(--color-text);
-  --muted-text: var(--color-muted);
+  --page-text: var(--text);
+  --muted-text: var(--muted);
 }
 
 .chat-page-shell {
@@ -14,11 +14,11 @@
 
 /* Generic soft panel (search + composer) */
 .chat-card {
-  background: var(--color-raised);
-  border: 1px solid var(--color-divider);
-  border-radius: var(--radius-card);
-  box-shadow: var(--shadow-sm);
-  padding: 1.1rem 1.2rem;
+  background: var(--surface);
+  border: 0;
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+  padding: 12px;
 }
 
 /* ─── Top bar: wordmark + tabs + round actions ─── */
@@ -28,8 +28,8 @@
 
 .sayit-quick-action {
   position: relative;
-  width: 2.75rem;
-  height: 2.75rem;
+  width: 40px;
+  height: 40px;
   min-height: 0;
   padding: 0;
   display: inline-flex;
@@ -37,14 +37,14 @@
   justify-content: center;
   border: 0;
   border-radius: 50%;
-  background: var(--color-surface);
-  color: var(--color-text);
-  transition: background 0.18s ease, transform 0.12s ease;
+  background: var(--surface);
+  color: var(--text);
+  transition: background 0.15s ease, transform 0.12s ease;
 }
 
 .sayit-quick-action:hover,
 .sayit-quick-action:focus-visible {
-  background: var(--color-hover);
+  background: var(--surface2);
 }
 
 .sayit-quick-action:active {
@@ -52,24 +52,24 @@
 }
 
 .sayit-quick-action.active {
-  background: var(--color-primary-bg);
-  color: var(--color-primary-ink);
+  background: var(--text);
+  color: var(--bg);
 }
 
 .sayit-interest-dot {
   position: absolute;
-  top: 0.2rem;
-  right: 0.2rem;
-  width: 0.55rem;
-  height: 0.55rem;
+  top: 6px;
+  right: 7px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
-  background: var(--color-primary-bg);
-  box-shadow: 0 0 0 2px var(--color-bg);
+  background: var(--blue);
+  box-shadow: 0 0 0 2px var(--surface);
 }
 
 .sayit-seed-action.active {
-  background: var(--color-accent-2-700);
-  color: var(--color-cream);
+  background: var(--t-green);
+  color: var(--t-green-fg);
 }
 
 .sayit-seed-action:not(.active) {
@@ -116,8 +116,16 @@
 .sayit-search-card,
 .chat-composer-card {
   width: 100%;
-  max-width: 760px;
-  margin: 0 auto;
+}
+
+/* Search: a single --surface pill */
+.sayit-search-card {
+  padding: 0;
+  border-radius: var(--radius-pill);
+}
+
+.sayit-search-card .chat-composer-input {
+  background: var(--surface);
 }
 
 .chat-composer-card form,
@@ -137,33 +145,47 @@
 }
 
 .chat-composer-input {
-  min-height: 52px;
+  min-height: 54px;
+  border: 0;
   border-radius: var(--radius-pill);
-  background: var(--color-bg);
+  background: var(--bg);
+  padding-inline: 20px;
+  font-size: 16px;
 }
 
-.chat-composer-submit {
-  width: 46px;
-  height: 46px;
+:host-context([data-theme]) .chat-composer-submit {
+  width: 42px;
+  height: 42px;
   min-height: 0;
   margin: 0;
   padding: 0;
   border-radius: 50%;
-  border: 0;
-  background: var(--color-primary-bg);
-  color: var(--color-primary-ink);
+  border: 0 !important;
+  background: var(--blue) !important;
+  color: #fff !important;
 }
 
-.chat-composer-submit:hover,
-.chat-composer-submit:focus-visible {
-  background: var(--color-primary-bg-hover);
-  color: var(--color-primary-ink);
+:host-context([data-theme]) .chat-composer-submit:hover,
+:host-context([data-theme]) .chat-composer-submit:focus-visible {
+  background: var(--blue) !important;
+  color: #fff !important;
+  filter: brightness(0.94);
 }
 
 .chat-composer-hint {
   display: block;
-  margin-top: 0.55rem;
-  line-height: 1.55;
+  margin-top: 8px;
+  padding: 0 14px 4px;
+  font-size: 13px !important;
+  line-height: 1.5;
+}
+
+.chat-composer-hint i {
+  font-style: normal;
+}
+
+.chat-composer-hint strong {
+  color: var(--text);
 }
 
 .chat-drop-zone {
@@ -173,9 +195,10 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  border: 1.5px dashed var(--color-divider);
-  border-radius: var(--radius-lg);
-  color: var(--color-muted);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--bg);
+  color: var(--muted);
 }
 
 .chat-drop-zone p {
@@ -185,15 +208,20 @@
 
 .chat-drop-zone:hover,
 .chat-drop-zone:focus {
-  outline: 0;
-  border-color: var(--color-accent);
-  background: var(--color-hover);
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+  background: var(--surface2);
 }
 
 /* ─── Feed ─── */
 .chat-content-shell {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
+}
+
+/* Line the composer and feed up with the banners above (.m-2) */
+.chat-content-shell .chat-main-row {
+  --bs-gutter-x: 0;
 }
 
 .chat-content-shell .chat-main-row {
@@ -216,8 +244,7 @@
   box-shadow: none;
 }
 
-.chat-feed-card app-post-displayer,
-.chat-feed-card app-news-displayer {
+.chat-feed-card app-post-displayer {
   display: block;
   width: 100%;
 }
@@ -230,19 +257,19 @@
   justify-content: center;
   gap: 0.7rem;
   padding: 2rem;
-  color: var(--color-muted);
+  color: var(--muted);
 }
 
 .sayit-feed-status strong {
-  color: var(--color-text);
-  font-size: 1.05rem;
+  color: var(--text);
+  font-size: 18px;
 }
 
 .sayit-feed-status--error {
   align-items: center;
   text-align: center;
   border-radius: var(--radius-card);
-  background: var(--color-raised);
+  background: var(--surface);
 }
 
 .sayit-feed-skeleton {
@@ -250,7 +277,7 @@
   width: min(34rem, 82vw);
   height: 0.9rem;
   border-radius: var(--radius-pill);
-  background: linear-gradient(90deg, var(--color-surface), var(--color-hover), var(--color-surface));
+  background: linear-gradient(90deg, var(--surface), var(--surface2), var(--surface));
   background-size: 220% 100%;
   animation: sayit-feed-shimmer 1.4s ease-in-out infinite;
 }
@@ -264,80 +291,34 @@
   to { background-position: -100% 0; }
 }
 
-/* "Swipe sideways" hint: an Organic toast-style pill */
-.sayit-feed-hint {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-  margin: 0 0 1rem;
-  padding: 0.6rem 0.6rem 0.6rem 1.1rem;
-  border-radius: var(--radius-card);
-  background: var(--color-raised);
-  border: 1px solid var(--color-divider);
-}
-
-.sayit-feed-hint-icon {
-  flex: 0 0 auto;
-  width: 2.25rem;
-  height: 2.25rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background: var(--color-tag-bg);
-  color: var(--color-tag-ink);
-  font-size: 1.05rem;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.sayit-feed-hint-copy {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.1rem;
-}
-
-.sayit-feed-hint-copy strong {
-  font-size: 0.95rem;
-  line-height: 1.2;
-  color: var(--color-text);
-}
-
-.sayit-feed-hint-copy span {
-  font-size: 0.84rem;
-  line-height: 1.35;
-  color: var(--color-muted);
-}
-
-.sayit-feed-hint .btn {
-  flex: 0 0 auto;
-  margin: 0;
-}
-
-/* Profile-incomplete banner */
+/* Profile-incomplete banner: yellow tint, --text button */
 .sayit-welcome-banner {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 12px 20px;
-  padding: 16px 20px;
-  border-radius: var(--radius-card);
-  background: var(--color-tag-accent-bg);
-  color: var(--color-tag-accent-ink);
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: var(--radius-md);
+  background: var(--t-yellow);
+  color: var(--t-yellow-fg);
+}
+
+.sayit-welcome-banner > div:first-child {
+  flex: 1 1 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .sayit-welcome-banner strong {
   display: block;
-  font-family: var(--font-heading);
-  font-weight: 400;
-  font-size: 1.15rem;
+  font-size: 15px;
+  font-weight: 700;
 }
 
 .sayit-welcome-banner span {
-  opacity: 0.85;
+  font-size: 14px;
 }
 
 .sayit-welcome-banner__actions {
@@ -346,22 +327,28 @@
   gap: 16px;
 }
 
+:host-context([data-theme]) .sayit-welcome-banner .btn-todd {
+  margin: 0;
+  min-height: 40px;
+  height: 40px;
+  padding: 0 18px;
+  font-size: 14px;
+  background: var(--text) !important;
+  color: var(--bg) !important;
+}
+
 @media (max-width: 767.98px) {
   .chat-header {
     margin: 0.5rem 0 0.5rem;
   }
 
+}
+
+/* Phones: keep the topbar's round actions on one row, scrolling if needed */
+@media (max-width: 480px) {
   .sayit-quick-action {
-    width: 2.35rem;
-    height: 2.35rem;
-  }
-
-  .chat-content-shell {
-    padding-left: 0;
-    padding-right: 0;
-  }
-
-  .sayit-feed-hint {
-    padding: 0.6rem 0.6rem 0.6rem 0.8rem;
+    flex: none;
+    width: 36px;
+    height: 36px;
   }
 }

@@ -1,82 +1,87 @@
-<div class="interest-inbox cockpit-dashboard-shell" data-cy="interest-inbox-shell">
-    <div class="cockpit-command-deck interest-inbox__hero">
-        <div class="cockpit-command-deck__eyebrow">SayIt Inbox</div>
-        <div class="cockpit-command-deck__header">
-            <div>
-                <div class="cockpit-command-deck__title">Interested Inbox</div>
-                <div class="cockpit-command-deck__subtitle">People who tapped “I’m interested” on your posts so you can follow up.</div>
-            </div>
-            <div class="cockpit-command-deck__score">
-                <div class="cockpit-command-deck__score-label">Status</div>
-                <div class="cockpit-command-deck__score-value" *ngIf="(interests$ | async) as interests">{{ getInboxStatusLabel(interests) }}</div>
-            </div>
+<div class="interest-inbox" data-cy="interest-inbox-shell">
+    <app-sayit-topbar active="inbox"></app-sayit-topbar>
+    <section class="interest-inbox__hero">
+        <div class="interest-inbox__intro">
+            <div class="interest-inbox__eyebrow">SayIt Inbox</div>
+            <h1 class="interest-inbox__title">Interested Inbox</h1>
+            <p class="interest-inbox__subtitle">People who tapped “I’m interested” on your posts so you can follow up.</p>
         </div>
-    </div>
+        <div class="interest-inbox__status" *ngIf="(interests$ | async) as interests">
+            <span class="interest-inbox__status-label">Status</span>
+            <strong>{{ getInboxStatusLabel(interests) }}</strong>
+        </div>
+    </section>
     <div class="interest-inbox__body">
         <ng-container *ngIf="loading; else loaded">
-            <div class="cockpit-panel interest-inbox__loading">
+            <div class="interest-inbox__panel interest-inbox__loading">
                 <app-preloader [isLoading]="true" [inline]="true" message="Loading…" [autoHideAfterMs]="null"></app-preloader>
             </div>
         </ng-container>
         <ng-template #loaded>
             <ng-container *ngIf="(interests$ | async) as interests">
-                <div class="interest-inbox__overview" *ngIf="isAuthenticated && interests.length">
-                    <div class="cockpit-panel interest-inbox__panel">
-                        <div class="cockpit-panel__kicker">System Status</div>
-                        <div class="cockpit-metric-grid interest-inbox__stats">
-                            <div class="cockpit-metric-tile interest-stat-card">
+                <div *ngIf="loadError" class="interest-inbox__panel interest-inbox__empty" data-cy="interest-inbox-error">
+                    <div class="interest-inbox__emptyTitle">We couldn’t load your inbox.</div>
+                    <div class="interest-inbox__emptyText">Check your connection and try again.</div>
+                    <button type="button" class="btn-todd btn-todd-primary" (click)="loadInterests()">Try again</button>
+                </div>
+                <div class="interest-inbox__overview" *ngIf="!loadError && isAuthenticated && interests.length">
+                    <div class="interest-inbox__panel">
+                        <div class="interest-inbox__kicker">System Status</div>
+                        <div class="interest-inbox__stats">
+                            <div class="interest-stat-card">
                                 <div class="interest-stat-card__label">Active interest</div>
                                 <div class="interest-stat-card__value">{{ interests.length }}</div>
                                 <div class="interest-stat-card__hint">people waiting on replies</div>
                             </div>
-                            <div class="cockpit-metric-tile interest-stat-card">
+                            <div class="interest-stat-card">
                                 <div class="interest-stat-card__label">New today</div>
                                 <div class="interest-stat-card__value">{{ countNewInterests(interests) }}</div>
                                 <div class="interest-stat-card__hint">fresh signals since you last checked</div>
                             </div>
-                            <div class="cockpit-metric-tile interest-stat-card">
+                            <div class="interest-stat-card">
                                 <div class="interest-stat-card__label">Thoughtful replies</div>
                                 <div class="interest-stat-card__value">{{ countWithMessages(interests) }}</div>
                                 <div class="interest-stat-card__hint">saved messages need follow-up</div>
                             </div>
-                            <div class="cockpit-metric-tile interest-stat-card">
+                            <div class="interest-stat-card">
                                 <div class="interest-stat-card__label">Reviewed</div>
                                 <div class="interest-stat-card__value">{{ countViewedInterests(interests) }}</div>
                                 <div class="interest-stat-card__hint">signals already triaged</div>
                             </div>
                         </div>
                     </div>
-                    <div class="cockpit-panel interest-inbox__panel">
-                        <div class="cockpit-panel__kicker">Action Queue</div>
-                        <div class="cockpit-priority-stack">
-                            <div class="cockpit-priority-item">
-                                <div class="cockpit-priority-item__value">{{ countNewInterests(interests) }}</div>
+                    <div class="interest-inbox__panel">
+                        <div class="interest-inbox__kicker">Action Queue</div>
+                        <div class="interest-queue">
+                            <div class="interest-queue__item">
+                                <div class="interest-queue__value tint-blue">{{ countNewInterests(interests) }}</div>
                                 <div>
-                                    <div class="cockpit-priority-item__title">Follow-up required</div>
-                                    <div class="cockpit-priority-item__text">People who just raised their hand and need a response soon.</div>
+                                    <div class="interest-queue__title">Follow-up required</div>
+                                    <div class="interest-queue__text">People who just raised their hand and need a response soon.</div>
                                 </div>
                             </div>
-                            <div class="cockpit-priority-item">
-                                <div class="cockpit-priority-item__value">{{ countWithMessages(interests) }}</div>
+                            <div class="interest-queue__item">
+                                <div class="interest-queue__value tint-violet">{{ countWithMessages(interests) }}</div>
                                 <div>
-                                    <div class="cockpit-priority-item__title">Context-rich replies</div>
-                                    <div class="cockpit-priority-item__text">Signals with notes attached so you have more context before you respond.</div>
+                                    <div class="interest-queue__title">Context-rich replies</div>
+                                    <div class="interest-queue__text">Signals with notes attached so you have more context before you respond.</div>
                                 </div>
                             </div>
-                            <div class="cockpit-priority-item">
-                                <div class="cockpit-priority-item__value">{{ countViewedInterests(interests) }}</div>
+                            <div class="interest-queue__item">
+                                <div class="interest-queue__value tint-green">{{ countViewedInterests(interests) }}</div>
                                 <div>
-                                    <div class="cockpit-priority-item__title">Already reviewed</div>
-                                    <div class="cockpit-priority-item__text">Touches you have seen and can organize into your next outreach batch.</div>
+                                    <div class="interest-queue__title">Already reviewed</div>
+                                    <div class="interest-queue__text">Touches you have seen and can organize into your next outreach batch.</div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <ng-container *ngIf="isAuthenticated && interests.length; else empty">
+                <ng-container *ngIf="!loadError && isAuthenticated && interests.length">
                     <div class="interest-inbox__list">
                         <div class="interest-card" *ngFor="let i of interests">
                             <div class="interest-card__top">
+                                <span class="interest-card__avatar" aria-hidden="true">{{ initialOf(i.interestedDisplayName || i.interestedHandle || 'Someone') }}</span>
                                 <div class="interest-card__who">
                                     <span class="interest-card__name">
                                         {{ (i.interestedDisplayName || i.interestedHandle || 'Someone') }}
@@ -84,26 +89,26 @@
                                     <span class="interest-card__meta" *ngIf="i.createdAt"> • {{ i.createdAt | date:'short' }}</span>
                                 </div>
                                 <div class="interest-card__status" *ngIf="i.viewed === true">Viewed</div>
-                                <div class="interest-card__status" *ngIf="i.viewed === false">New</div>
+                                <div class="interest-card__status interest-card__status--new" *ngIf="i.viewed === false">New</div>
                             </div>
-                            <div class="interest-card__post">
-                                <div class="interest-card__label">Post</div>
-                                <div class="interest-card__snippet">
-                                    {{ (i.postPreview || '—') }}
+                            <div class="interest-card__blocks">
+                                <div class="interest-card__post">
+                                    <div class="interest-card__label">Post</div>
+                                    <div class="interest-card__snippet">
+                                        {{ (i.postPreview || '—') }}
+                                    </div>
+                                </div>
+                                <div class="interest-card__message" *ngIf="i.message && i.message.trim()">
+                                    <div class="interest-card__label">Message</div>
+                                    <div class="interest-card__text">{{ i.message }}</div>
                                 </div>
                             </div>
-                            <div class="interest-card__message" *ngIf="i.message && i.message.trim()">
-                                <div class="interest-card__label">Message</div>
-                                <div class="interest-card__text">{{ i.message }}</div>
-                            </div>
-                            <div class="interest-card__footer">
-                                <div class="interest-card__hint">Reply in-app (coming next)</div>
-                            </div>
+                            <div class="interest-card__hint">Reply in-app (coming next)</div>
                         </div>
                     </div>
                 </ng-container>
-                <ng-template #empty>
-                    <div class="cockpit-panel interest-inbox__empty">
+                <ng-container *ngIf="!loadError && !(isAuthenticated && interests.length)">
+                    <div class="interest-inbox__panel interest-inbox__empty">
                         <div class="interest-inbox__emptyIcon">
                             <i class="fa-solid" [ngClass]="isAuthenticated ? 'fa-inbox' : 'fa-user-lock'"></i>
                         </div>
@@ -115,7 +120,7 @@
                               : 'Once you sign in, you will see who tapped “I’m interested” on your posts so you can review signals and follow up.' }}
                         </div>
                     </div>
-                </ng-template>
+                </ng-container>
             </ng-container>
         </ng-template>
     </div>

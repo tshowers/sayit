@@ -6,6 +6,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 
 import { AuthContextService } from '../services/auth-context.service';
 import { AppPromoComponent } from '../shared/app-promo/app-promo.component';
+import { MenuButtonComponent } from '../shared/menu-button/menu-button.component';
 import {
   CATEGORY_OPTIONS,
   categoryLabel,
@@ -37,7 +38,7 @@ interface Step {
 @Component( {
   selector: 'app-get-started',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, AppPromoComponent],
+  imports: [CommonModule, FormsModule, RouterModule, AppPromoComponent, MenuButtonComponent],
   templateUrl: './get-started.component.html',
   styleUrl: './get-started.component.css',
 } )

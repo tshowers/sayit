@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import {
-  DocumentData,
   collection,
   deleteDoc,
   doc,
@@ -12,7 +11,6 @@ import {
   orderBy,
   query,
   setDoc,
-  startAfter,
   updateDoc,
   where,
 } from 'firebase/firestore';
@@ -31,7 +29,6 @@ export interface Contact {
 
 @Injectable( { providedIn: 'root' } )
 export class SayItDataService {
-  private readonly profilePostCursors: Record<string, DocumentData | null> = {};
 
   constructor ( private readonly logger: LoggerService ) { }
 
@@ -119,9 +116,15 @@ export class SayItDataService {
     try {
       const colRef = collection( this.firestore, `tenants/${MASTER_TENANT_ID}/${SAYIT_PROFILES_ENDPOINT}` );
       const lim = Math.max( 1, Math.min( opts?.limit ?? 60, 200 ) );
-      const seededConfigRef = doc( this.firestore, `tenants/${MASTER_TENANT_ID}/sayit-config/seeded-directory` );
-      const seededConfigSnap = await getDoc( seededConfigRef );
-      const seededDirectoryEnabled = seededConfigSnap.exists() ? seededConfigSnap.data()?.['enabled'] !== false : true;
+      // The live Firestore rules don't let members read sayit-config, so a
+      // failed read means "default on" instead of emptying the whole directory.
+      let seededDirectoryEnabled = true;
+      try {
+        const seededConfigSnap = await getDoc( doc( this.firestore, `tenants/${MASTER_TENANT_ID}/sayit-config/seeded-directory` ) );
+        if ( seededConfigSnap.exists() ) seededDirectoryEnabled = seededConfigSnap.data()?.['enabled'] !== false;
+      } catch ( configErr ) {
+        this.logger.warn( 'getPublicSayItProfilesOnce: seeded-directory config unreadable; showing seeded profiles.', configErr );
+      }
       const snap = await getDocs( query(
         colRef,
         where( 'publicProfile', '==', true ),
@@ -259,31 +262,30 @@ export class SayItDataService {
     }
   }
 
-  private profileCursorKey ( criteria: any ): string {
-    return JSON.stringify( criteria );
-  }
-
-  private async getProfilePostsPage ( criteria: { authorContactId?: string; authorHandle?: string; userId?: string; }, cursor: DocumentData | null, pageSize: number = 10 ): Promise<any[]> {
+  /**
+   * An author's newest posts for their profile page. Filters on one field
+   * only: the live database has no composite indexes for posts (field +
+   * timestamp), and those queries fail without one. Newest first is sorted
+   * here instead.
+   */
+  async getProfilePostsFirstPage ( criteria: { authorContactId?: string; authorHandle?: string; userId?: string; }, pageSize: number = 10 ): Promise<any[]> {
     const colRef = collection( this.firestore, 'posts' );
     let q;
     if ( criteria.authorContactId ) {
-      q = query( colRef, where( 'authorContactId', '==', criteria.authorContactId ), orderBy( 'timestamp', 'desc' ), limit( pageSize ) );
+      q = query( colRef, where( 'authorContactId', '==', criteria.authorContactId ), limit( 200 ) );
     } else if ( criteria.authorHandle ) {
-      q = query( colRef, where( 'authorHandle', '==', criteria.authorHandle.toLowerCase() ), orderBy( 'timestamp', 'desc' ), limit( pageSize ) );
+      q = query( colRef, where( 'authorHandle', '==', criteria.authorHandle.toLowerCase() ), limit( 200 ) );
     } else if ( criteria.userId ) {
-      q = query( colRef, where( 'userId', '==', criteria.userId ), orderBy( 'timestamp', 'desc' ), limit( pageSize ) );
+      q = query( colRef, where( 'userId', '==', criteria.userId ), limit( 200 ) );
     } else {
       return [];
     }
-    if ( cursor ) q = query( q, startAfter( cursor ) );
     const snaps = await getDocs( q );
-    const key = this.profileCursorKey( criteria );
-    this.profilePostCursors[key] = snaps.docs[snaps.docs.length - 1] ?? null;
-    return snaps.docs.map( d => ( { id: d.id, ...d.data() } ) ).filter( p => !( p as any )?.hidden && !( p as any )?.isHidden && !( p as any )?.suspended );
-  }
-
-  async getProfilePostsFirstPage ( criteria: { authorContactId?: string; authorHandle?: string; userId?: string; }, pageSize: number = 10 ): Promise<any[]> {
-    return this.getProfilePostsPage( criteria, null, pageSize );
+    return snaps.docs
+      .map( d => ( { id: d.id, ...d.data() } ) )
+      .filter( p => !( p as any )?.hidden && !( p as any )?.isHidden && !( p as any )?.suspended )
+      .sort( ( a: any, b: any ) => this.extractComparableDate( b?.timestamp ) - this.extractComparableDate( a?.timestamp ) )
+      .slice( 0, pageSize );
   }
 
   async updateMessage ( postId: string, updatedData: any ): Promise<void> {

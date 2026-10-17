@@ -1,42 +1,48 @@
-<div class="chat-horizontal-scroll sayit-post-strip" #horizontalScrollContainer>
+<div class="sayit-post-grid">
   <div *ngIf="visiblePosts.length === 0" class="sy-empty">
     <p class="sy-empty__title">No posts yet</p>
     <p *ngIf="showMineOnly" class="mb-0">Try posting or adjusting your filters.</p>
   </div>
 
-  <!-- One post per card, styled like the SayIt iOS app (Organic "overlay + rail"). -->
+  <!-- One post per card, Find style: tinted media area on top, details below. -->
   <article *ngFor="let post of visiblePosts; trackBy: trackById" class="sy-card"
     [class.sy-card--text]="cardMedia(post).type === 'none'"
     [class.sy-card--flagged]="isFlagged(post)"
     [attr.aria-label]="'Post by ' + getAssistantLabel(post)">
     <ng-container *ngIf="cardMedia(post) as media">
 
-      <!-- Media fills the card; a text post's words are the visual instead -->
-      <button *ngIf="media.type !== 'none'" type="button" class="sy-card__media" (click)="openCardMedia(post)"
-        [attr.aria-label]="media.type === 'video' ? 'Play video' : media.type === 'image' ? 'View image' : 'Open link'">
-        <img *ngIf="media.src" [src]="media.src" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" (error)="onImageError($event)">
-        <span *ngIf="media.type === 'link-text'" class="sy-card__linkpanel" aria-hidden="true">
-          <i class="fa-solid fa-link"></i>
-          <span>{{ linkSite(post) }}</span>
-        </span>
-        <span *ngIf="media.type === 'video'" class="sy-card__play" aria-hidden="true"><i class="fa-solid fa-play"></i></span>
-      </button>
-      <div *ngIf="media.type === 'none'" class="sy-card__quote" [class.sy-card__quote--long]="(post.content || '').length > 90">
-        <p *ngIf="!isAssistantPost(post); else toddQuote" [innerHTML]="post.content | linkify | truncate:155" [attr.title]="post.content || ''"></p>
-        <ng-template #toddQuote>
-          <p [innerHTML]="post.content | aicontentextractor | formatAIText | linkify | truncate:155" [attr.title]="post.content || ''"></p>
-        </ng-template>
-      </div>
-      <div class="sy-card__scrim" aria-hidden="true"></div>
-
-      <!-- Top corner: open the post page, delete your own -->
-      <div class="sy-card__corner">
-        <a class="sy-card__mini" [routerLink]="['/post', post.id]" title="Open post" aria-label="Open post">
-          <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
-        </a>
-        <button *ngIf="isOwnPost(post)" type="button" class="sy-card__mini" title="Delete this post" aria-label="Delete this post" (click)="onDelete(post)">
-          <i class="fa-solid fa-trash" aria-hidden="true"></i>
+      <div class="sy-card__hero" [ngClass]="cardTint(post)">
+        <!-- Media fills the area; a text post's words are the visual instead -->
+        <button *ngIf="media.type !== 'none'" type="button" class="sy-card__media" (click)="openCardMedia(post)"
+          [attr.aria-label]="media.type === 'video' ? 'Play video' : media.type === 'image' ? 'View image' : 'Open link'">
+          <img *ngIf="media.src" [src]="media.src" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" (error)="onImageError($event)">
+          <span *ngIf="media.type === 'link-text'" class="sy-card__linkpanel" aria-hidden="true">
+            <i class="fa-solid fa-link"></i>
+            <span>{{ linkSite(post) }}</span>
+          </span>
+          <span *ngIf="media.type === 'video'" class="sy-card__play" aria-hidden="true"><i class="fa-solid fa-play"></i></span>
         </button>
+        <div *ngIf="media.type === 'none'" class="sy-card__quote" [class.sy-card__quote--long]="(post.content || '').length > 90">
+          <p *ngIf="!isAssistantPost(post); else toddQuote" [innerHTML]="post.content | linkify | truncate:155" [attr.title]="post.content || ''"></p>
+          <ng-template #toddQuote>
+            <p [innerHTML]="post.content | aicontentextractor | formatAIText | linkify | truncate:155" [attr.title]="post.content || ''"></p>
+          </ng-template>
+        </div>
+
+        <!-- Top row: site pill on the left; open and delete on the right -->
+        <div class="sy-card__corner">
+          <span *ngIf="(media.type === 'link' || media.type === 'video') && linkSite(post)" class="sy-card__sitepill">
+            <i class="fa-solid fa-link" aria-hidden="true"></i><span class="sy-card__site">{{ linkSite(post) }}</span>
+          </span>
+          <span class="sy-card__corner-actions">
+            <a class="sy-card__mini" [routerLink]="['/post', post.id]" title="Open post" aria-label="Open post">
+              <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+            </a>
+            <button *ngIf="isOwnPost(post)" type="button" class="sy-card__mini" title="Delete this post" aria-label="Delete this post" (click)="onDelete(post)">
+              <i class="fa-solid fa-trash" aria-hidden="true"></i>
+            </button>
+          </span>
+        </div>
       </div>
 
       <!-- Flagged content stays hidden until the visitor asks -->
@@ -47,56 +53,50 @@
         <button type="button" class="sy-card__flag-btn" (click)="revealPost(post)">View anyway</button>
       </div>
 
-      <div class="sy-card__bottom">
-        <div class="sy-card__body">
-          <!-- Author -->
-          <div class="sy-card__author">
-            <ng-container *ngIf="isAssistantPost(post); else personAvatar">
-              <img [src]="post.imageUrl" class="sy-card__avatar" [alt]="getAssistantLabel(post)" width="42" height="42" loading="lazy" decoding="async">
-            </ng-container>
-            <ng-template #personAvatar>
-              <a [routerLink]="getBusinessProfileRoute(post)" (click)="trackProfileClick(post, getBusinessProfileRoute(post))" title="View profile" class="sy-card__avatar-link">
-                <img *ngIf="avatarUrl(post) as src; else initialsAvatar" [src]="src" class="sy-card__avatar" [alt]="post.displayName || 'Profile photo'" width="42" height="42" loading="lazy" decoding="async" referrerpolicy="no-referrer">
-                <ng-template #initialsAvatar><span class="sy-card__avatar sy-card__avatar--initials" aria-hidden="true">{{ initials(post) }}</span></ng-template>
-              </a>
-            </ng-template>
-            <div class="sy-card__who">
-              <a *ngIf="!isAssistantPost(post) && getBusinessProfileIdentifier(post); else plainName" class="sy-card__name" [routerLink]="getBusinessProfileRoute(post)" (click)="trackProfileClick(post, getBusinessProfileRoute(post))" title="View profile">{{ getAssistantLabel(post) }}</a>
-              <ng-template #plainName><span class="sy-card__name">{{ getAssistantLabel(post) }}</span></ng-template>
-              <span class="sy-card__meta" [title]="post.timestamp | exactTime">{{ post.timestamp | relativeTime }}</span>
-            </div>
-          </div>
-
-          <div *ngIf="cardKind(post)" class="sy-card__kind"><span class="sy-card__tag">{{ cardKind(post) }}</span></div>
-
-          <!-- Link or video: site, then the page's title (the URL itself is not shown) -->
-          <div *ngIf="media.type !== 'none' && media.type !== 'image' && post.linkPreview?.title" class="sy-card__link">
-            <span *ngIf="linkSite(post)" class="sy-card__site">{{ linkSite(post) }}</span>
-            <a class="sy-card__title" [href]="post.linkPreview.url" target="_blank" rel="noopener">{{ post.linkPreview.title | truncate:90 }}</a>
-          </div>
-
-          <!-- What the person wrote, without the link; a bare link shows the page's summary instead -->
-          <div *ngIf="media.type !== 'none' && captionText(post) as caption; else linkSummary" class="sy-card__caption" [attr.title]="caption">
-            <span *ngIf="!isAssistantPost(post); else toddCaption" [innerHTML]="caption | linkify | truncate:155"></span>
-            <ng-template #toddCaption><span [innerHTML]="caption | aicontentextractor | formatAIText | linkify | truncate:155"></span></ng-template>
-          </div>
-          <ng-template #linkSummary>
-            <div *ngIf="media.type !== 'none' && media.type !== 'image' && post.linkPreview?.description" class="sy-card__caption">{{ post.linkPreview.description | truncate:155 }}</div>
+      <div class="sy-card__body">
+        <!-- Author, time, kind -->
+        <div class="sy-card__author">
+          <ng-container *ngIf="isAssistantPost(post); else personAvatar">
+            <img [src]="post.imageUrl" class="sy-card__avatar" [alt]="getAssistantLabel(post)" width="40" height="40" loading="lazy" decoding="async">
+          </ng-container>
+          <ng-template #personAvatar>
+            <a [routerLink]="getBusinessProfileRoute(post)" (click)="trackProfileClick(post, getBusinessProfileRoute(post))" title="View profile" class="sy-card__avatar-link">
+              <img *ngIf="avatarUrl(post) as src; else initialsAvatar" [src]="src" class="sy-card__avatar" [alt]="post.displayName || 'Profile photo'" width="40" height="40" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+              <ng-template #initialsAvatar><span class="sy-card__avatar sy-card__avatar--initials" [ngClass]="avatarTint(post)" aria-hidden="true">{{ initials(post) }}</span></ng-template>
+            </a>
           </ng-template>
+          <div class="sy-card__who">
+            <a *ngIf="!isAssistantPost(post) && getBusinessProfileIdentifier(post); else plainName" class="sy-card__name" [routerLink]="getBusinessProfileRoute(post)" (click)="trackProfileClick(post, getBusinessProfileRoute(post))" title="View profile">{{ getAssistantLabel(post) }}</a>
+            <ng-template #plainName><span class="sy-card__name">{{ getAssistantLabel(post) }}</span></ng-template>
+            <span class="sy-card__meta" [title]="post.timestamp | exactTime">{{ post.timestamp | relativeTime }}</span>
+          </div>
+          <span *ngIf="cardKind(post)" class="sy-card__tag">{{ cardKind(post) }}</span>
         </div>
 
-        <!-- Right rail -->
-        <div class="sy-card__rail">
-          <button *ngIf="!isAssistantPost(post)" type="button" class="sy-rail-btn" [class.sy-rail-btn--on]="isFavorited(post)" (click)="toggleLike(post, $event)" [attr.aria-pressed]="isFavorited(post)" [attr.aria-label]="isFavorited(post) ? 'Unlike' : 'Like'">
-            <span class="sy-rail-btn__circle"><i [class]="isFavorited(post) ? 'fa-solid fa-heart' : 'fa-regular fa-heart'" aria-hidden="true"></i></span>
+        <!-- Link or video: the page's title (the URL itself is not shown) -->
+        <a *ngIf="media.type !== 'none' && media.type !== 'image' && post.linkPreview?.title" class="sy-card__title" [href]="post.linkPreview.url" target="_blank" rel="noopener">{{ post.linkPreview.title | truncate:90 }}</a>
+
+        <!-- What the person wrote, without the link; a bare link shows the page's summary instead -->
+        <div *ngIf="media.type !== 'none' && captionText(post) as caption; else linkSummary" class="sy-card__caption" [attr.title]="caption">
+          <span *ngIf="!isAssistantPost(post); else toddCaption" [innerHTML]="caption | linkify | truncate:155"></span>
+          <ng-template #toddCaption><span [innerHTML]="caption | aicontentextractor | formatAIText | linkify | truncate:155"></span></ng-template>
+        </div>
+        <ng-template #linkSummary>
+          <div *ngIf="media.type !== 'none' && media.type !== 'image' && post.linkPreview?.description" class="sy-card__caption">{{ post.linkPreview.description | truncate:155 }}</div>
+        </ng-template>
+
+        <!-- Like, comments, share -->
+        <div class="sy-card__actions">
+          <button *ngIf="!isAssistantPost(post)" type="button" class="sy-pill" [class.sy-pill--liked]="isFavorited(post)" (click)="toggleLike(post, $event)" [attr.aria-pressed]="isFavorited(post)" [attr.aria-label]="isFavorited(post) ? 'Unlike' : 'Like'">
+            <i [class]="isFavorited(post) ? 'fa-solid fa-heart' : 'fa-regular fa-heart'" aria-hidden="true"></i>
             {{ likesLabel(post) }}
           </button>
-          <button type="button" class="sy-rail-btn" [class.sy-rail-btn--on]="areCommentsOpen(post)" (click)="toggleComments(post)" [attr.aria-expanded]="areCommentsOpen(post)" aria-label="Comments">
-            <span class="sy-rail-btn__circle"><i class="fa-regular fa-comment" aria-hidden="true"></i></span>
+          <button type="button" class="sy-pill" [class.sy-pill--on]="areCommentsOpen(post)" (click)="toggleComments(post)" [attr.aria-expanded]="areCommentsOpen(post)" aria-label="Comments">
+            <i class="fa-regular fa-comment" aria-hidden="true"></i>
             {{ getComments(post).length }}
           </button>
-          <button type="button" class="sy-rail-btn" (click)="shareContent(post)" aria-label="Share">
-            <span class="sy-rail-btn__circle"><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></span>
+          <button type="button" class="sy-pill" (click)="shareContent(post)" aria-label="Share">
+            <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
             Share
           </button>
         </div>
@@ -108,38 +108,38 @@
             <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> Sending…
           </ng-container>
           <ng-template #interestLabel>
-            <i [class]="isInterested(post) ? 'fa-solid fa-check' : 'fa-solid fa-inbox'" aria-hidden="true"></i>
+            <i *ngIf="isInterested(post)" class="fa-solid fa-check" aria-hidden="true"></i>
             {{ isInterested(post) ? 'In your inbox' : 'I’m interested' }}
           </ng-template>
         </button>
-      </div>
 
-      <!-- Comment sheet (cream card that rises over the bottom of the post) -->
-      <section *ngIf="areCommentsOpen(post)" class="sy-sheet" aria-label="Comments">
-        <header class="sy-sheet__head">
-          <span class="sy-sheet__title">Comments</span>
-          <button type="button" class="sy-sheet__close" (click)="toggleComments(post)" aria-label="Close comments"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
-        </header>
-        <div class="sy-sheet__list">
-          <p *ngIf="getComments(post).length === 0" class="sy-sheet__empty">No comments yet.</p>
-          <div *ngFor="let comment of getComments(post)" class="sy-comment">
-            <span class="sy-comment__author">{{ comment.authorDisplayName }}</span>
-            <span class="sy-comment__text">{{ comment.content }}</span>
-            <button *ngIf="currentUserId && currentUserId === comment.authorUid" type="button" class="sy-comment__delete" title="Delete comment" aria-label="Delete comment" (click)="onDeleteComment(post, comment)">
-              <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        <!-- Comments open inline, inside the card -->
+        <section *ngIf="areCommentsOpen(post)" class="sy-sheet" aria-label="Comments">
+          <header class="sy-sheet__head">
+            <span class="sy-sheet__title">Comments</span>
+            <button type="button" class="sy-sheet__close" (click)="toggleComments(post)" aria-label="Close comments"><i class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+          </header>
+          <div class="sy-sheet__list">
+            <p *ngIf="getComments(post).length === 0" class="sy-sheet__empty">No comments yet.</p>
+            <div *ngFor="let comment of getComments(post)" class="sy-comment">
+              <span class="sy-comment__author">{{ comment.authorDisplayName }}</span>
+              <span class="sy-comment__text">{{ comment.content }}</span>
+              <button *ngIf="currentUserId && currentUserId === comment.authorUid" type="button" class="sy-comment__delete" title="Delete comment" aria-label="Delete comment" (click)="onDeleteComment(post, comment)">
+                <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
+          <div *ngIf="isLoggedIn; else signInToComment" class="sy-sheet__composer">
+            <input type="text" class="sy-sheet__input" placeholder="Add a comment…" maxlength="500" aria-label="Add a comment"
+              [value]="getCommentDraft(post)" (input)="setCommentDraft(post, $any($event.target).value)"
+              (keydown.enter)="submitComment(post)" [disabled]="isPostingComment(post)">
+            <button type="button" class="sy-sheet__send" (click)="submitComment(post)" [disabled]="isPostingComment(post) || !getCommentDraft(post).trim()" aria-label="Post comment">
+              <i [class]="isPostingComment(post) ? 'fa-solid fa-spinner fa-spin' : 'fa-solid fa-paper-plane'" aria-hidden="true"></i>
             </button>
           </div>
-        </div>
-        <div *ngIf="isLoggedIn; else signInToComment" class="sy-sheet__composer">
-          <input type="text" class="sy-sheet__input" placeholder="Add a comment…" maxlength="500" aria-label="Add a comment"
-            [value]="getCommentDraft(post)" (input)="setCommentDraft(post, $any($event.target).value)"
-            (keydown.enter)="submitComment(post)" [disabled]="isPostingComment(post)">
-          <button type="button" class="sy-sheet__send" (click)="submitComment(post)" [disabled]="isPostingComment(post) || !getCommentDraft(post).trim()" aria-label="Post comment">
-            <i [class]="isPostingComment(post) ? 'fa-solid fa-spinner fa-spin' : 'fa-solid fa-paper-plane'" aria-hidden="true"></i>
-          </button>
-        </div>
-        <ng-template #signInToComment><a class="sy-sheet__signin" routerLink="/get-started">Sign in to comment</a></ng-template>
-      </section>
+          <ng-template #signInToComment><a class="sy-sheet__signin" routerLink="/get-started">Sign in to comment</a></ng-template>
+        </section>
+      </div>
     </ng-container>
   </article>
 </div>

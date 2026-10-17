@@ -22,11 +22,12 @@ import { BackToTopComponent } from '../shared/back-to-top/back-to-top.component'
 import { SafeVideoUrlPipe } from '../pipes/safe-video-url-pipe';
 import { postVideo, textWithoutLink, videoEmbedUrl } from '../shared/post-link';
 import { SayItComment, SayItService } from '../services/say-it-service';
+import { SayitTopbarComponent } from '../shared/sayit-topbar/sayit-topbar.component';
 
 @Component( {
   selector: 'app-post-view',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule,
+  imports: [CommonModule, FormsModule, RouterModule, SayitTopbarComponent,
     BackToTopComponent,
     SafeVideoUrlPipe, RelativeTimePipe, TruncatePipe, AIContentExtractorPipe, FormatAITextPipe, LinkifyPipe],
   templateUrl: './post-view.component.html',
@@ -242,6 +243,12 @@ export class PostViewComponent implements OnInit, OnDestroy {
   }
 
   /** "YouTube", "ESPN.com"… shown above the link's title. */
+  /** First letter of the author's name, for the initial circle. */
+  get authorInitial (): string {
+    const name = String( this.post?.displayName || this.post?.user || '' ).trim();
+    return ( name.match( /[\p{L}\p{N}]/u )?.[0] || '?' ).toUpperCase();
+  }
+
   get linkSite (): string {
     const site = String( this.post?.linkPreview?.siteName || '' ).trim();
     if ( site ) return site;

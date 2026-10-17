@@ -22,6 +22,23 @@ describe( 'SayIt routes - signed in', () => {
     cy.get( 'button[aria-label="Log out"]' ).should( 'exist' );
   } );
 
+  it( 'shows the board as a grid and loads more posts near the bottom', () => {
+    const stamp = Date.now();
+    for ( let i = 0; i < 30; i++ ) {
+      cy.seedFirestoreDoc( `posts/cy-grid-${stamp}-${i}`, {
+        content: `Grid post ${i} ${stamp}`, displayName: 'Ada', userId: 'cy-author', category: 'general', timestamp: new Date( stamp - i * 60000 ),
+      } );
+    }
+
+    cy.visitWithFirebaseEmulators( '/board', credentials() );
+    cy.get( '.sayit-post-grid .sy-card', { timeout: 20000 } ).should( 'have.length', 24 );
+    cy.contains( '.sy-card', `Grid post 0 ${stamp}` );
+    cy.get( '.sayit-feed-hint' ).should( 'not.exist' );
+
+    cy.scrollTo( 'bottom' );
+    cy.get( '.sayit-post-grid .sy-card' ).should( 'have.length.greaterThan', 24 );
+  } );
+
   it( 'offers signed-in web users the app, and remembers when they dismiss it', () => {
     cy.visitWithFirebaseEmulators( '/board', credentials() );
     cy.get( '[data-cy="app-promo-bar"]', { timeout: 20000 } ).should( 'contain.text', 'Say It' );

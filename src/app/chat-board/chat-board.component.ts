@@ -6,7 +6,6 @@ import {
   HostListener,
   OnDestroy,
   OnInit,
-  Renderer2,
   ViewChild
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -36,7 +35,6 @@ import { PreloaderComponent } from '../shared/preloader/preloader.component';
 import { getAuth } from 'firebase/auth';
 import { addDoc, collection, doc, getDoc, getFirestore, setDoc } from 'firebase/firestore';
 
-import { NewsDisplayerComponent } from '../components/news-displayer/news-displayer.component';
 import { SayItService } from '../services/say-it-service';
 import { SayItDataService } from '../services/sayit-data.service';
 import { SayItOnboardingService } from '../services/sayit-onboarding.service';
@@ -56,7 +54,6 @@ declare var bootstrap: any;
     RouterModule,
     PostDisplayerComponent,
     PreloaderComponent,
-    NewsDisplayerComponent,
     ClickSoundDirective,
     AppPromoComponent,
     SayitTopbarComponent
@@ -68,7 +65,7 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
   firebaseUser: any = null;
   isLoggedIn = false;
   readonly userId: string = environment.taliferroTenantId;
-  activePrimaryView: 'feed' | 'businesses' | 'newsstand' = 'feed';
+  activePrimaryView: 'feed' | 'businesses' = 'feed';
   showComposer = false;
   postSearchTerm = '';
   postsInitialLoadComplete = false;
@@ -76,8 +73,6 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
   businessWatchPendingIds = new Set<string>();
   showMineOnly: boolean = false;
   showSearch: boolean = false;
-  showHorizontalFeedHint: boolean = false;
-  private readonly FEED_HINT_KEY = 'sayit_horizontal_feed_hint_dismissed';
   imageDraft: boolean = false; // true when an uploaded image is waiting for user to click Post
   currentGroupId: string | null = null;
 
@@ -111,8 +106,6 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild( 'messageInput', { static: false } )
   messageInput!: ElementRef<HTMLInputElement>;
 
-  @ViewChild( 'horizontalScrollContainer', { static: false } )
-  horizontalScrollContainer!: ElementRef;
 
   @ViewChild( 'businessSection', { static: false } )
   businessSection?: ElementRef<HTMLElement>;
@@ -126,9 +119,11 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   posts$!: Observable<Post[]>;
   newMessage: string = '';
-  // RSS progress tracking
 
-  pageSize: number = 100;
+  /** Cards shown per page of the board's infinite scroll. */
+  pageSize: number = 24;
+  /** How much the live Firestore window grows once every loaded post is shown (each change re-reads the window). */
+  private readonly postsWindowStep = 200;
   page: number = 1;
   isPosting = false;
   showFavorites: boolean = false;
@@ -158,7 +153,6 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
   showProfileIntent: boolean = false;
   /** Signed in but the SayIt profile is missing a name or "what I do/need". */
   profileIncomplete = false;
-  showNewsstand: boolean = false;
   displayName: string = '';
   userImage!: string;
   userSubscription!: Subscription;
@@ -217,7 +211,6 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
     protected router: Router,
     private sayItService: SayItService,
     private dataService: SayItDataService,
-    private renderer: Renderer2,
     private notificationService: NotificationService,
     private onboarding: SayItOnboardingService
   ) { }
@@ -322,7 +315,6 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
       void this.loadInterestNotifications();
     }
 
-    this.evaluateHorizontalFeedHint();
     this.refreshPageActions();
   }
 
@@ -658,35 +650,8 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
     return { displayName, photoURL, handle };
   }
 
-  private evaluateHorizontalFeedHint (): void {
-    try {
-      const dismissed = localStorage.getItem( this.FEED_HINT_KEY ) === 'true';
-      this.showHorizontalFeedHint = !dismissed && this.activePrimaryView === 'feed' && this.visiblePosts.length > 1;
-    } catch {
-      this.showHorizontalFeedHint = this.activePrimaryView === 'feed' && this.visiblePosts.length > 1;
-    }
-  }
-
-  dismissHorizontalFeedHint (): void {
-    this.showHorizontalFeedHint = false;
-    try {
-      localStorage.setItem( this.FEED_HINT_KEY, 'true' );
-    } catch { }
-    this.soundService.playSound('click');
-  }
-
-  toggleNewsstand (): void {
-    try {
-      this.setPrimaryView( this.activePrimaryView === 'newsstand' ? 'feed' : 'newsstand' );
-    } catch ( e ) {
-      this.logger.error( 'toggleNewsstand error', e );
-    }
-  }
-
-  setPrimaryView ( view: 'feed' | 'businesses' | 'newsstand' ): void {
+  setPrimaryView ( view: 'feed' | 'businesses' ): void {
     this.activePrimaryView = view;
-    this.evaluateHorizontalFeedHint();
-    this.showNewsstand = view === 'newsstand';
     this.refreshPageActions();
     this.scrollBusinessSectionIntoView( view );
     this.soundService.playSound('click');
@@ -725,7 +690,7 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
     if ( panel === 'composer' && this.newMessage.trim() ) return;
   }
 
-  isPrimaryView ( view: 'feed' | 'businesses' | 'newsstand' ): boolean {
+  isPrimaryView ( view: 'feed' | 'businesses' ): boolean {
     return this.activePrimaryView === view;
   }
 
@@ -1032,7 +997,7 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
     if ( this.visiblePosts.length >= filteredPosts.length ) {
       // Shown everything loaded so far - widen the live window if Firestore has older posts.
       if ( this.hasMorePosts ) {
-        this.postsWindow += this.pageSize * 2;
+        this.postsWindow += this.postsWindowStep;
         this.showNextPageWhenLoaded = true;
         void this.loadMessages();
       }
@@ -1054,22 +1019,6 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit (): void {
     window.scrollTo( 0, 0 );
     this.refreshPageActions();
-
-    if ( this.horizontalScrollContainer ) {
-      this.renderer.listen(
-        this.horizontalScrollContainer.nativeElement,
-        'scroll',
-        () => {
-          const container = this.horizontalScrollContainer.nativeElement;
-          const scrollPosition = container.scrollLeft + container.clientWidth;
-          const maxScroll = container.scrollWidth;
-
-          if ( scrollPosition >= maxScroll - 50 ) {
-            this.loadMorePosts();
-          }
-        }
-      );
-    }
 
     this.initializeVideoContainers();
 
@@ -1150,8 +1099,6 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
           this.logger.error( '[ChatBoard] Error in posts$ subscription:', error );
           this.isLoading = false;
           this.postsLoadError = true;
-          // Still show NewsStand items for guests or when POSTS cannot be read
-          // this.mergeNewsIntoPosts();
         },
         complete: () => {
         }
@@ -1176,7 +1123,6 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
     const visibleCount = this.currentPage * this.pageSize;
 
     this.visiblePosts = filteredPosts.slice( 0, visibleCount );
-    this.evaluateHorizontalFeedHint();
   }
 
   private getFilteredPosts (): any[] {
@@ -1593,7 +1539,7 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
   // Say It owns its own compact toolbar; there is no global page-actions bar in the standalone app.
   private refreshPageActions (): void { }
 
-  private scrollBusinessSectionIntoView ( view: 'feed' | 'businesses' | 'newsstand' ): void {
+  private scrollBusinessSectionIntoView ( view: 'feed' | 'businesses' ): void {
     if ( view !== 'businesses' || !this.isMobileDevice ) return;
 
     setTimeout( () => {
@@ -1812,13 +1758,6 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     return meta;
   }
-
-  /**
-   * Fetches multiple RSS feeds, processes the items, and sorts them by date in descending order.
-   * Handles errors by logging them and returning an empty array for the problematic feed.
-   * Once all feeds are processed, updates the `feedItems` property with the final sorted list.
-   * Also manages the `isRSSLoading` state to indicate the loading process to the UI.
-   */
 
   /** Remove the currently attached draft image (before posting). */
   removeDraftImage (): void {

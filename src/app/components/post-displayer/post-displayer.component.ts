@@ -6,8 +6,6 @@ import {
   SimpleChanges,
   OnChanges,
   HostListener,
-  ViewChild,
-  ElementRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -66,7 +64,6 @@ export class PostDisplayerComponent implements OnChanges {
   @Input() firebaseUser: any;
   @Input() favoritePostIds: string[] = [];
   @Input() currentUserId: string | null = null;
-  @ViewChild( 'horizontalScrollContainer' ) horizontalScrollContainer?: ElementRef<HTMLDivElement>;
   @Output() id = new EventEmitter();
 
   @Output() favorite = new EventEmitter<Post>();
@@ -74,7 +71,6 @@ export class PostDisplayerComponent implements OnChanges {
 
   /** Fast lookup for current user's favorites passed down from the parent/profile. */
   private favoritePostIdSet = new Set<string>();
-  private previousVisiblePostSignature = '';
 
 
   lightboxImage: string | null = null;
@@ -136,40 +132,6 @@ export class PostDisplayerComponent implements OnChanges {
           .filter( id => !!id )
       );
     }
-    if ( changes['visiblePosts'] ) {
-      this.scrollToNewestPostIfNeeded();
-    }
-  }
-
-  private scrollToNewestPostIfNeeded (): void {
-    const signature = ( Array.isArray( this.visiblePosts ) ? this.visiblePosts : [] )
-      .map( post => String( post?.id || '' ).trim() )
-      .filter( id => !!id )
-      .join( '|' );
-
-    if ( !signature || signature === this.previousVisiblePostSignature ) {
-      return;
-    }
-
-    this.previousVisiblePostSignature = signature;
-
-    setTimeout( () => {
-      this.scrollToNewestPost();
-    }, 0 );
-  }
-
-  private scrollToNewestPost (): void {
-    const container = this.horizontalScrollContainer?.nativeElement;
-    if ( !container ) return;
-
-    try {
-      container.scrollTo( {
-        left: 0,
-        behavior: 'smooth'
-      } );
-    } catch {
-      container.scrollLeft = 0;
-    }
   }
 
   isFavorited ( post: Post ): boolean {
@@ -193,7 +155,7 @@ export class PostDisplayerComponent implements OnChanges {
     return post.id; // Use the unique 'id' to track each post
   }
 
-  // ─── Card view helpers (Organic "overlay + rail" card, matching the iOS app) ───
+  // ─── Card view helpers (Find card) ───
 
   /** Posts the visitor marked "I'm interested" this session. */
   private interestedIds = new Set<string>();
@@ -270,6 +232,23 @@ export class PostDisplayerComponent implements OnChanges {
   cardKind ( post: any ): string {
     const category = String( post?.category || '' ).trim();
     return !category || category.toLowerCase() === 'all' ? '' : category;
+  }
+
+  /** Find tint for a card's media area (and an author's initials circle), stable per post/author. */
+  private static readonly TINTS = ['blue', 'cyan', 'violet', 'yellow', 'green', 'pink'];
+
+  private tintFor ( key: string ): string {
+    let hash = 0;
+    for ( let i = 0; i < key.length; i++ ) hash = ( hash * 31 + key.charCodeAt( i ) ) | 0;
+    return PostDisplayerComponent.TINTS[Math.abs( hash ) % PostDisplayerComponent.TINTS.length];
+  }
+
+  cardTint ( post: any ): string {
+    return 'tint-' + this.tintFor( String( post?.id || post?.content || '' ) );
+  }
+
+  avatarTint ( post: any ): string {
+    return 'tint-' + this.tintFor( this.getAssistantLabel( post ) );
   }
 
   /** Author photo, or '' to fall back to initials (the generic no-photo icon clashes with the card). */
@@ -843,49 +822,6 @@ export class PostDisplayerComponent implements OnChanges {
       };
 
       this.logger.info( 'Sharing', shareData );
-
-      // Call the Web Share API
-      navigator
-        .share( shareData )
-        .then( () => {
-          this.notificationService.show(
-            'Success',
-            'Content shared successfully!',
-            'success'
-          );
-        } )
-        .catch( ( error ) => {
-          this.notificationService.show(
-            'Share Canceled',
-            'The share was canceled because you either double-clicked accidentally or clicked outside the share button.',
-            'warning'
-          );
-          this.logger.error( 'Error sharing content:', error );
-        } );
-    } else {
-      this.notificationService.show(
-        'Error',
-        'Sharing is not supported on this device.',
-        'error'
-      );
-    }
-  }
-
-  /**
-   * Initiates the sharing of news content using the Web Share API.
-   * Displays a notification based on the result of the share action.
-   *
-   * @param {any} item - The item containing details to be shared.
-   *                       This object should have `title`, `description`, and `link` properties.
-   */
-  shareNewsStandContent ( item: any ): void {
-    if ( navigator.share ) {
-      // Construct the sharing data
-      const shareData = {
-        title: item.title || 'Check this out!',
-        text: item.description || '',
-        url: item.link || window.location.href,
-      };
 
       // Call the Web Share API
       navigator

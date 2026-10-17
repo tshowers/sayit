@@ -2,40 +2,41 @@
  * SayIt's static /about and /help pages (public/about.html, help.html). The
  * home page (public/index.html) carries its own styles.
  * Plain HTML with no Angular, so search engines and link previews read the
- * words directly. Organic tokens copied from src/styles.css; keep in sync.
+ * words directly. Find tokens copied from src/styles.css; keep in sync.
  * Theme is <html data-theme>, set before paint by each page's inline script.
  */
 :root {
-  --st-bg: #f5ead8;
-  --st-raised: #f9f4ed;
-  --st-surface: #ebddc5;
-  --st-text: #201e1d;
-  --st-muted: #645c50;
-  --st-divider: rgba(32, 30, 29, 0.16);
-  --st-accent: #c67139;
-  --st-link: #8c491a;
-  --st-primary: #b2622d;
-  --st-primary-hover: #8c491a;
-  --st-primary-ink: #f9f4ed;
-  --st-tag-bg: #f0fae1;
-  --st-tag-ink: #3d472b;
-  --st-heading: "Caprasimo", Georgia, serif;
-  --st-body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --st-bg: #ffffff;
+  --st-raised: #f2f3f6;
+  --st-surface: #f2f3f6;
+  --st-surface2: #e4e7ed;
+  --st-text: #0f1115;
+  --st-muted: #5a6170;
+  --st-divider: #e4e7ed;
+  --st-accent: #2f6bff;
+  --st-link: #1f55e0;
+  --st-primary: #2f6bff;
+  --st-primary-ink: #ffffff;
+  --st-tag-bg: #e0f6e6;
+  --st-tag-ink: #17703a;
+  --st-heading: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --st-body: "Helvetica Neue", Helvetica, Arial, sans-serif;
   color-scheme: light;
 }
 
 :root[data-theme="dark"] {
-  --st-bg: #1b1917;
-  --st-raised: #26231f;
-  --st-surface: #2e2b25;
-  --st-text: #f5ead8;
-  --st-muted: #a19786;
-  --st-divider: rgba(245, 234, 216, 0.14);
-  --st-accent: #d67f48;
-  --st-link: #f6a06b;
-  --st-primary-hover: #c67139;
-  --st-tag-bg: #3d472b;
-  --st-tag-ink: #e1eecc;
+  --st-bg: #0c0e13;
+  --st-raised: #171a22;
+  --st-surface: #171a22;
+  --st-surface2: #242936;
+  --st-text: #f2f4f8;
+  --st-muted: #9aa2b2;
+  --st-divider: #242936;
+  --st-accent: #3d7bff;
+  --st-link: #86aeff;
+  --st-primary: #3d7bff;
+  --st-tag-bg: #0e2c19;
+  --st-tag-ink: #80e2a4;
   color-scheme: dark;
 }
 
@@ -57,6 +58,16 @@
 
 .st a {
   color: var(--st-link);
+  text-decoration: none;
+}
+
+.st a:hover {
+  color: var(--st-accent);
+}
+
+.st :focus-visible {
+  outline: 2px solid var(--st-accent);
+  outline-offset: 2px;
 }
 
 .st-nav {
@@ -69,7 +80,8 @@
 }
 
 .st-wordmark {
-  font: 400 2rem/1 var(--st-heading);
+  font: 700 24px/1 var(--st-heading);
+  letter-spacing: -0.04em;
   color: var(--st-text) !important;
   text-decoration: none;
 }
@@ -89,22 +101,27 @@
   text-decoration: none;
 }
 
-.st-nav__links a:hover,
-.st-nav__links a[aria-current="page"] {
+.st-nav__links a:hover {
   background: var(--st-surface);
+}
+
+.st-nav__links a[aria-current="page"] {
+  background: var(--st-text);
+  color: var(--st-bg);
 }
 
 .st h1,
 .st h2 {
   font-family: var(--st-heading);
-  font-weight: 400;
-  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
   margin: 0 0 0.75rem;
   text-wrap: balance;
 }
 
 .st h1 {
-  font-size: clamp(2.3rem, 7vw, 3.6rem);
+  font-size: clamp(34px, 7vw, 48px);
 }
 
 .st main > h1:first-child {
@@ -112,7 +129,8 @@
 }
 
 .st h2 {
-  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-size: 24px;
+  letter-spacing: -0.03em;
   margin-top: 2.5rem;
 }
 
@@ -134,7 +152,6 @@
 .st-card {
   padding: 1.25rem;
   border-radius: 28px;
-  border: 1px solid var(--st-divider);
   background: var(--st-raised);
 }
 
@@ -151,8 +168,10 @@
 }
 
 .st-faq details {
-  border-bottom: 1px solid var(--st-divider);
-  padding: 0.9rem 0;
+  margin-bottom: 6px;
+  padding: 14px 18px;
+  border-radius: 20px;
+  background: var(--st-surface);
 }
 
 .st-faq summary {
@@ -169,7 +188,6 @@
 .st-footer {
   margin-top: 3rem;
   padding-top: 1.25rem;
-  border-top: 1px solid var(--st-divider);
   color: var(--st-muted);
   font-size: 0.9rem;
 }
