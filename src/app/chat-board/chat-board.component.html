@@ -70,6 +70,10 @@
                       </button>
                     </div>
                   </div>
+                  <div class="sayit-kind-chips" role="radiogroup" aria-label="What is this post for?">
+                    <button type="button" class="sayit-chip" role="radio" [class.active]="!composerKind" [attr.aria-checked]="!composerKind" (click)="composerKind = null">Just sharing</button>
+                    <button *ngFor="let kind of postKinds" type="button" class="sayit-chip" role="radio" [class.active]="composerKind === kind" [attr.aria-checked]="composerKind === kind" (click)="composerKind = kind" [attr.data-cy]="'composer-kind-' + kind">{{ postKindLabel[kind] }}</button>
+                  </div>
                   <small style="font-size: smaller;" class="text-muted chat-composer-hint">
                     <i>Post a comment, share a link, or ask a question. Start with</i> '<strong>Hey TODD</strong>' <i>if you want an AI reply.</i></small>
                 </div>
@@ -99,6 +103,20 @@
           </div>
         </div>
         <div class="chat-feed-shell" *ngIf="isPrimaryView('feed')">
+          <div class="sayit-feed-toolbar">
+            <div class="sayit-kind-chips" role="group" aria-label="Filter posts">
+              <button type="button" class="sayit-chip" [class.active]="!kindFilter" [attr.aria-pressed]="!kindFilter" (click)="setKindFilter(null)" data-cy="kind-filter-all">Everything</button>
+              <button *ngFor="let kind of postKinds" type="button" class="sayit-chip" [class.active]="kindFilter === kind" [attr.aria-pressed]="kindFilter === kind" (click)="setKindFilter(kind)" [attr.data-cy]="'kind-filter-' + kind">{{ postKindLabel[kind] }}</button>
+            </div>
+            <div class="sayit-view-toggle" role="radiogroup" aria-label="How to show posts">
+              <button type="button" role="radio" [class.active]="boardView === 'grid'" [attr.aria-checked]="boardView === 'grid'" (click)="setBoardView('grid')" data-cy="board-view-grid">
+                <i class="fa-solid fa-table-cells-large" aria-hidden="true"></i><span>Grid</span>
+              </button>
+              <button type="button" role="radio" [class.active]="boardView === 'single'" [attr.aria-checked]="boardView === 'single'" (click)="setBoardView('single')" data-cy="board-view-single">
+                <i class="fa-regular fa-square" aria-hidden="true"></i><span>One at a time</span>
+              </button>
+            </div>
+          </div>
           <div class="chat-card chat-feed-card">
             <div *ngIf="isPrimaryView('feed') && postsLoadError" class="sayit-feed-status sayit-feed-status--error">
               <strong>We couldn’t load the posts.</strong>
@@ -110,7 +128,7 @@
               <span class="sayit-feed-skeleton sayit-feed-skeleton--short"></span>
               <span>Loading posts…</span>
             </div>
-            <app-post-displayer *ngIf="isPrimaryView('feed') && postsInitialLoadComplete && !postsLoadError" [visiblePosts]="visiblePosts" [firebaseUser]="firebaseUser" [isLoggedIn]="isLoggedIn" [showMineOnly]="showMineOnly" [favoritePostIds]="favoritePostIds" [currentUserId]="firebaseUser?.uid || null" (favorite)="onFavoritePost($event)" (unfavorite)="onUnfavoritePost($event)">
+            <app-post-displayer *ngIf="isPrimaryView('feed') && postsInitialLoadComplete && !postsLoadError" [visiblePosts]="visiblePosts" [firebaseUser]="firebaseUser" [isLoggedIn]="isLoggedIn" [showMineOnly]="showMineOnly" [favoritePostIds]="favoritePostIds" [currentUserId]="firebaseUser?.uid || null" [layout]="boardView" (nearEnd)="loadMorePosts()" (favorite)="onFavoritePost($event)" (unfavorite)="onUnfavoritePost($event)">
             </app-post-displayer>
           </div>
         </div>

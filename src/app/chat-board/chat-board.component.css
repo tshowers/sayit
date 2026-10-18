@@ -291,6 +291,81 @@
   to { background-position: -100% 0; }
 }
 
+/* Feed toolbar: kind filter chips + Grid / One at a time */
+.sayit-feed-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+  margin-bottom: 16px;
+}
+
+.sayit-kind-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.chat-composer-card .sayit-kind-chips {
+  margin: 10px 0 0 6px;
+}
+
+.sayit-chip {
+  height: 36px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+  color: var(--text);
+  font: 600 13px/1 var(--font);
+  cursor: pointer;
+}
+
+.chat-composer-card .sayit-chip {
+  background: var(--bg);
+}
+
+.sayit-chip:hover {
+  background: var(--surface2);
+}
+
+.sayit-chip.active,
+.sayit-chip.active:hover {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.sayit-view-toggle {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  border-radius: var(--radius-pill);
+  background: var(--surface);
+}
+
+.sayit-view-toggle button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--text);
+  font: 600 13px/1.2 var(--font);
+  cursor: pointer;
+}
+
+.sayit-view-toggle button:hover {
+  background: var(--surface2);
+}
+
+.sayit-view-toggle button.active {
+  background: var(--bg);
+  box-shadow: var(--shadow-sm);
+}
+
 /* Profile-incomplete banner: yellow tint, --text button */
 .sayit-welcome-banner {
   display: flex;

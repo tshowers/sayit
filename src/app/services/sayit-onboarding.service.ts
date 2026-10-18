@@ -162,6 +162,7 @@ export class SayItOnboardingService {
             authorEmail: user.email || '',
             content,
             category: draft.category || 'all',
+            kind: draft.intent === 'looking' ? 'looking-for' : 'selling',
             displayName: String( profile?.displayName || '' ).trim() || this.displayName( draft ),
             photoURL: profile?.photoURL || user.photoURL || null,
             authorHandle: profile?.handle || undefined,

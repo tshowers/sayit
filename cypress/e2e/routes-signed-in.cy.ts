@@ -39,6 +39,52 @@ describe( 'SayIt routes - signed in', () => {
     cy.get( '.sayit-post-grid .sy-card' ).should( 'have.length.greaterThan', 24 );
   } );
 
+  it( 'filters the board by Selling / Looking for and remembers One at a time', () => {
+    const stamp = Date.now();
+    const seed = ( id: string, kind: string | null ) => cy.seedFirestoreDoc( `posts/${id}-${stamp}`, {
+      content: `${id} ${stamp}`, displayName: 'Ada', userId: 'cy-author', category: 'general', timestamp: new Date(),
+      ...( kind ? { kind } : {} ),
+    } );
+    seed( 'kind-selling', 'selling' );
+    seed( 'kind-looking', 'looking-for' );
+    seed( 'kind-none', null );
+
+    cy.visitWithFirebaseEmulators( '/board', credentials() );
+    cy.contains( '.sy-card', `kind-none ${stamp}`, { timeout: 20000 } );
+    cy.contains( '.sy-card', `kind-selling ${stamp}` ).find( '.sy-card__tag' ).should( 'have.text', 'Selling' );
+
+    cy.get( '[data-cy="kind-filter-looking-for"]' ).click();
+    cy.contains( '.sy-card', `kind-looking ${stamp}` );
+    cy.contains( '.sy-card', `kind-selling ${stamp}` ).should( 'not.exist' );
+    cy.contains( '.sy-card', `kind-none ${stamp}` ).should( 'not.exist' );
+    cy.get( '[data-cy="kind-filter-all"]' ).click();
+    cy.contains( '.sy-card', `kind-none ${stamp}` );
+
+    cy.get( '[data-cy="board-view-single"]' ).click();
+    cy.get( '.sayit-post-single .sy-card' ).should( 'exist' );
+    cy.get( 'button[aria-label="Next post"]' ).should( 'exist' );
+    cy.reload();
+    cy.get( '.sayit-post-single .sy-card', { timeout: 20000 } ).should( 'exist' );
+    cy.get( '[data-cy="board-view-grid"]' ).click();
+    cy.get( '.sayit-post-grid .sy-card' ).should( 'exist' );
+  } );
+
+  it( 'shows one Orgs row per person when a claimed seeded profile duplicates theirs', () => {
+    const stamp = Date.now();
+    const person = `cy-person-${stamp}`;
+    cy.seedFirestoreDoc( `${profilesPath}/${person}`, {
+      uid: person, publicProfile: true, displayName: `Dup Person ${stamp}`, lastUpdated: new Date(),
+    } );
+    cy.seedFirestoreDoc( `${profilesPath}/seed-${stamp}`, {
+      uid: person, claimedByUid: person, publicProfile: true, businessName: `Dup Person ${stamp}`, businessCategory: 'Consulting',
+      profileSource: 'lead_vault_seed', seedStatus: 'claimed', directoryVisibility: 'member_profile', lastUpdated: new Date(),
+    } );
+
+    cy.visitWithFirebaseEmulators( '/businesses', credentials() );
+    cy.get( '[data-cy="directory-search"]', { timeout: 15000 } ).type( `Dup Person ${stamp}` );
+    cy.get( '[data-cy="directory-card"]' ).should( 'have.length', 1 ).and( 'contain.text', 'Consulting' );
+  } );
+
   it( 'offers signed-in web users the app, and remembers when they dismiss it', () => {
     cy.visitWithFirebaseEmulators( '/board', credentials() );
     cy.get( '[data-cy="app-promo-bar"]', { timeout: 20000 } ).should( 'contain.text', 'Say It' );

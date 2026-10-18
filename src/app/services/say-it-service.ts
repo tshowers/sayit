@@ -16,6 +16,7 @@ import {
   where,
 } from 'firebase/firestore';
 import { firstValueFrom } from 'rxjs';
+import { PostKind } from '../shared/post-kind';
 import { environment } from '../../environments/environment';
 import { LoggerService } from './logger.service';
 
@@ -32,6 +33,9 @@ export type SayItPublishPostInput = {
   // Preferred denormalized identity (SayIt profile). Fallbacks should be done by caller.
   displayName: string;
   photoURL?: string | null;
+
+  /** Selling / Looking for (see shared/post-kind.ts); omit for "Just sharing". */
+  kind?: PostKind | null;
 
   // Optional author meta
   authorHandle?: string;
@@ -121,6 +125,21 @@ export class SayItService {
     private logger: LoggerService,
     private http: HttpClient
   ) { }
+
+  /**
+   * The AI seed-post generator switch (master account only). Goes through the
+   * backend, which holds admin access; the Firestore rules don't let clients
+   * read or write tenants/{master}/sayit-config.
+   */
+  async getSeedSchedulerEnabled (): Promise<boolean> {
+    const res = await firstValueFrom( this.http.get<{ enabled?: boolean; }>( `${environment.backendURL}/sayit/scheduler/status` ) );
+    return res?.enabled !== false;
+  }
+
+  async setSeedSchedulerEnabled ( uid: string, enabled: boolean ): Promise<boolean> {
+    const res = await firstValueFrom( this.http.put<{ enabled?: boolean; }>( `${environment.backendURL}/sayit/scheduler/toggle`, { uid, enabled } ) );
+    return res?.enabled !== false;
+  }
 
   getAIResponse ( prompt: string, user: string ) {
     const headers = new HttpHeaders();
@@ -416,6 +435,10 @@ Respond in this exact JSON format: {"displayName": <user name>, "category": <sel
     }
     if ( input.authorHandle && String( input.authorHandle ).trim() ) {
       newPost.authorHandle = String( input.authorHandle ).trim().toLowerCase();
+    }
+
+    if ( input.kind ) {
+      newPost.kind = input.kind;
     }
 
     if ( input.groupId ) {

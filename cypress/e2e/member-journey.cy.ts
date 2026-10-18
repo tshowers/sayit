@@ -79,6 +79,7 @@ describe( 'SayIt member journey - sign in to sign out', () => {
     cy.get( '.sayit-composer-panel' ).should( 'have.class', 'open' );
     // The greeting uses the saved profile, which loads just after sign-in;
     // posting before it lands would credit the post to "User".
+    cy.get( '[data-cy="composer-kind-looking-for"]' ).click();
     cy.get( 'input[name="message"]' ).should( 'have.attr', 'placeholder', 'Hi, Grace at Hopper Co say it' )
       .type( `${postText}{enter}` );
     cy.contains( '.sy-card', postText, { timeout: 20000 } ).as( 'card' );
@@ -93,6 +94,7 @@ describe( 'SayIt member journey - sign in to sign out', () => {
         expect( fields.userId.stringValue ).to.equal( uid );
         expect( fields.content.stringValue ).to.equal( postText );
         expect( fields.category.stringValue ).to.equal( 'general' );
+        expect( fields.kind.stringValue ).to.equal( 'looking-for' );
       } );
 
       cy.log( 'Like it' );

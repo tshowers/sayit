@@ -120,6 +120,7 @@ describe( 'SayItOnboardingService', () => {
         authorUid: 'u1',
         content: 'Looking for a supplier. Any recommendations?',
         category: 'all',
+        kind: 'looking-for',
         displayName: 'Ada at Analytical Co',
         moderate: true,
       } ) );

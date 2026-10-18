@@ -25,6 +25,7 @@ import {
 import { environment } from '../../environments/environment';
 import { AuthContextService } from '../services/auth-context.service';
 import { LoggerService } from '../services/logger.service';
+import { POST_KINDS, POST_KIND_LABEL, PostKind, parsePostKind } from '../shared/post-kind';
 import { NotificationService } from '../services/notification.service';
 import { SoundService } from '../services/sound.service';
 
@@ -78,6 +79,15 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   activeFilter: string = 'all';
   selectedCategoryFilter: string = 'all';
+  /** Selling / Looking for filter on the board; null shows everything. */
+  kindFilter: PostKind | null = null;
+  /** Kind chosen in the composer for the next post; null is "Just sharing". */
+  composerKind: PostKind | null = null;
+  readonly postKinds = POST_KINDS;
+  readonly postKindLabel = POST_KIND_LABEL;
+  /** Grid for scanning, or one post at a time; remembered per browser. */
+  boardView: 'grid' | 'single' = 'grid';
+  private readonly BOARD_VIEW_KEY = 'sayit_board_view';
   readonly preferredCategoryOrder: string[] = [
     'all',
     'construction',
@@ -168,8 +178,9 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   get isMasterTenant (): boolean {
     const masterTenantId = String( environment.taliferroTenantId || '' ).trim();
+    // Only the signed-in account counts: `userId` is the tenant id itself, so
+    // including it made every member look like the master account.
     const currentIds = [
-      this.userId,
       this.firebaseUser?.uid,
       this.user?.uid,
     ].map( value => String( value || '' ).trim() );
@@ -220,6 +231,9 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
    * Once resolved, it loads messages and checks for a SayIt profile / profile-intent gate.
    */
   ngOnInit (): void {
+    try {
+      if ( localStorage.getItem( this.BOARD_VIEW_KEY ) === 'single' ) this.boardView = 'single';
+    } catch { }
     this.refreshPageActions();
     this.checkUser();
   }
@@ -1125,6 +1139,16 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.visiblePosts = filteredPosts.slice( 0, visibleCount );
   }
 
+  setKindFilter ( kind: PostKind | null ): void {
+    this.kindFilter = kind;
+    this.applyPostFilters( true );
+  }
+
+  setBoardView ( view: 'grid' | 'single' ): void {
+    this.boardView = view;
+    try { localStorage.setItem( this.BOARD_VIEW_KEY, view ); } catch { }
+  }
+
   private getFilteredPosts (): any[] {
     const currentUid = this.firebaseUser?.uid || this.user?.uid || getAuth().currentUser?.uid || '';
     const normalizedCategory = String( this.selectedCategoryFilter || 'all' ).trim().toLowerCase();
@@ -1151,7 +1175,9 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
         post?.sellText
       ].map( value => String( value || '' ).toLowerCase() ).join( ' ' ).includes( searchTerm );
 
-      return matchesCategory && matchesMine && matchesFavorites && matchesSearch;
+      const matchesKind = !this.kindFilter || parsePostKind( post?.kind ) === this.kindFilter;
+
+      return matchesCategory && matchesMine && matchesFavorites && matchesSearch && matchesKind;
     } );
   }
 
@@ -1459,6 +1485,7 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
       postImageUrl: this.downloadURL ? String( this.downloadURL ) : null,
       postImageThumbUrl: null, // for later
       postImagePath: this.downloadPath ? String( this.downloadPath ) : null,
+      kind: this.composerKind,
       moderate: true
     };
 
@@ -1471,6 +1498,7 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
       this.downloadPath = null;
 
       this.newMessage = '';
+      this.composerKind = null;
       this.notificationService.show( 'Success!', 'Message Posted Successfully', 'success' );
 
       // SayIt auto-reply
@@ -1845,28 +1873,19 @@ export class ChatBoardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   async loadSchedulerStatus (): Promise<void> {
     try {
-      const db = getFirestore();
-      const schedulerRef = doc( db, `tenants/${environment.taliferroTenantId}/sayit-config/scheduler` );
-      const snap = await getDoc( schedulerRef );
-      this.sayitSchedulerEnabled = snap.exists() ? snap.data()?.['enabled'] !== false : true;
+      this.sayitSchedulerEnabled = await this.sayItService.getSeedSchedulerEnabled();
     } catch ( e ) {
       this.logger.warn( '[SayIt] loadSchedulerStatus error', e );
-      this.sayitSchedulerEnabled = true;
+      this.sayitSchedulerEnabled = null;
     }
   }
 
   async toggleScheduler (): Promise<void> {
-    if ( this.sayitSchedulerLoading ) return;
+    if ( this.sayitSchedulerLoading || this.sayitSchedulerEnabled === null ) return;
     this.sayitSchedulerLoading = true;
     try {
-      const next = !this.sayitSchedulerEnabled;
-      const db = getFirestore();
-      const schedulerRef = doc( db, `tenants/${environment.taliferroTenantId}/sayit-config/scheduler` );
-      await setDoc( schedulerRef, {
-        enabled: next,
-        updatedAt: new Date().toISOString(),
-        updatedBy: this.userId
-      }, { merge: true } );
+      const uid = String( this.firebaseUser?.uid || getAuth().currentUser?.uid || '' );
+      const next = await this.sayItService.setSeedSchedulerEnabled( uid, !this.sayitSchedulerEnabled );
       this.sayitSchedulerEnabled = next;
       this.notificationService.show(
         'Scheduler',

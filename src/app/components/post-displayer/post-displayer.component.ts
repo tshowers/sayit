@@ -6,6 +6,8 @@ import {
   SimpleChanges,
   OnChanges,
   HostListener,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -14,6 +16,7 @@ import { LoggerService } from '../../services/logger.service';
 import { RouterModule } from '@angular/router';
 
 import { Post } from '../../shared/models/message.model';
+import { POST_KIND_LABEL, parsePostKind } from '../../shared/post-kind';
 import { Email } from '../../shared/models/email.model';
 import { environment } from '../../../environments/environment';
 import { EmailService } from '../../services/email.service';
@@ -64,7 +67,13 @@ export class PostDisplayerComponent implements OnChanges {
   @Input() firebaseUser: any;
   @Input() favoritePostIds: string[] = [];
   @Input() currentUserId: string | null = null;
+  /** 'grid' for scanning; 'single' shows one post at a time in a snapping strip. */
+  @Input() layout: 'grid' | 'single' = 'grid';
   @Output() id = new EventEmitter();
+  /** One-at-a-time view: the reader is a few posts from the end, so the parent can load more. */
+  @Output() nearEnd = new EventEmitter<void>();
+
+  @ViewChild( 'singleStrip' ) singleStrip?: ElementRef<HTMLElement>;
 
   @Output() favorite = new EventEmitter<Post>();
   @Output() unfavorite = new EventEmitter<Post>();
@@ -229,9 +238,38 @@ export class PostDisplayerComponent implements OnChanges {
   }
 
   /** Category as a small tag ("Hiring", "Food"…); hidden for the catch-all bucket. */
+  /** The card's tag: Selling / Looking for when the post says, otherwise its category (as in the app). */
   cardKind ( post: any ): string {
+    const kind = parsePostKind( post?.kind );
+    if ( kind ) return POST_KIND_LABEL[kind];
     const category = String( post?.category || '' ).trim();
     return !category || category.toLowerCase() === 'all' ? '' : category;
+  }
+
+  /** One-at-a-time view: move by one post (direction -1 or 1). */
+  stepSingle ( direction: number ): void {
+    const strip = this.singleStrip?.nativeElement;
+    if ( !strip ) return;
+    strip.scrollBy( { left: direction * strip.clientWidth, behavior: 'smooth' } );
+  }
+
+  onSingleScroll (): void {
+    const strip = this.singleStrip?.nativeElement;
+    if ( this.layout !== 'single' || !strip ) return;
+    // Ask for more while three posts are still ahead.
+    if ( strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - strip.clientWidth * 3 ) {
+      this.nearEnd.emit();
+    }
+  }
+
+  onSingleKeydown ( event: KeyboardEvent ): void {
+    if ( this.layout !== 'single' ) return;
+    if ( event.key === 'ArrowRight' || event.key === 'ArrowLeft' ) {
+      const target = event.target as HTMLElement | null;
+      if ( target && ( target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' ) ) return;
+      event.preventDefault();
+      this.stepSingle( event.key === 'ArrowRight' ? 1 : -1 );
+    }
   }
 
   /** Find tint for a card's media area (and an author's initials circle), stable per post/author. */

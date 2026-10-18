@@ -11,6 +11,67 @@
   align-items: stretch;
 }
 
+/* One at a time: a sideways strip that snaps to one centered post */
+.sayit-post-single {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding: 0 calc(50% - min(230px, 50%)) 8px;
+  scrollbar-width: none;
+}
+
+.sayit-post-single::-webkit-scrollbar {
+  display: none;
+}
+
+.sayit-post-single:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 4px;
+  border-radius: var(--radius-card);
+}
+
+.sayit-post-single .sy-card {
+  flex: 0 0 min(460px, 100%);
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+
+.sayit-post-single .sy-card__hero {
+  min-height: 320px;
+}
+
+.sayit-single-nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.sayit-single-nav__btn {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.sayit-single-nav__btn:hover {
+  background: var(--surface2);
+}
+
+/* Phones swipe; the buttons are for mouse and keyboard */
+@media (max-width: 767.98px) {
+  .sayit-single-nav {
+    display: none;
+  }
+}
+
 .sy-empty {
   grid-column: 1 / -1;
   padding: 40px;

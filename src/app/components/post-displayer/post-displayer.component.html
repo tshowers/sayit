@@ -1,4 +1,10 @@
-<div class="sayit-post-grid">
+<div class="sayit-single-nav" *ngIf="layout === 'single' && visiblePosts.length > 1">
+  <button type="button" class="sayit-single-nav__btn" (click)="stepSingle(-1)" aria-label="Previous post"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+  <button type="button" class="sayit-single-nav__btn" (click)="stepSingle(1)" aria-label="Next post"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+</div>
+<div #singleStrip [class.sayit-post-grid]="layout === 'grid'" [class.sayit-post-single]="layout === 'single'"
+  [attr.tabindex]="layout === 'single' ? 0 : null" [attr.aria-label]="layout === 'single' ? 'Posts, one at a time. Use the arrow keys to move.' : null"
+  (scroll)="onSingleScroll()" (keydown)="onSingleKeydown($event)">
   <div *ngIf="visiblePosts.length === 0" class="sy-empty">
     <p class="sy-empty__title">No posts yet</p>
     <p *ngIf="showMineOnly" class="mb-0">Try posting or adjusting your filters.</p>

@@ -154,17 +154,56 @@ export class SayItDataService {
         } )
         .sort( ( a: any, b: any ) => this.extractComparableDate( b?.lastUpdated || b?.createdAt ) - this.extractComparableDate( a?.lastUpdated || a?.createdAt ) );
 
+      const merged = this.mergeProfilesByPerson( docs );
+
       this.logger.info( `[Firestore READ] collection=${colRef.path} user=${user} (public SayIt profiles)`, {
         requestedLimit: lim,
         seededDirectoryEnabled,
         rawCount: rawDocs.length,
         returnedCount: docs.length,
       } );
-      return docs;
+      return merged;
     } catch ( err ) {
       this.logger.error( 'getPublicSayItProfilesOnce error:', err );
       return [];
     }
+  }
+
+  /**
+   * One directory row per person. Claiming a seeded profile saves the member's
+   * profile under the seeded doc's id, while the app keeps one under their
+   * uid, so the same person can have two public docs. Keep the uid-keyed doc
+   * (the one the app reads and writes) and fill its blanks from the other.
+   */
+  private mergeProfilesByPerson ( profiles: any[] ): any[] {
+    const byPerson = new Map<string, any[]>();
+    for ( const profile of profiles ) {
+      const key = String( profile?.claimedByUid || profile?.uid || profile?.id || '' ).trim();
+      if ( !key ) continue;
+      byPerson.set( key, [...( byPerson.get( key ) || [] ), profile] );
+    }
+    const position = new Map( profiles.map( ( p, i ) => [p, i] ) );
+    const merged: { profile: any; at: number; }[] = [];
+    for ( const [key, group] of byPerson ) {
+      const at = Math.min( ...group.map( p => position.get( p ) ?? Number.MAX_SAFE_INTEGER ) );
+      if ( group.length === 1 ) {
+        merged.push( { profile: group[0], at } );
+        continue;
+      }
+      const primary = group.find( p => p.id === key ) || group[0];
+      const result = { ...primary };
+      for ( const other of group ) {
+        if ( other === primary ) continue;
+        for ( const [field, value] of Object.entries( other ) ) {
+          const current = ( result as any )[field];
+          if ( current === undefined || current === null || current === '' ) ( result as any )[field] = value;
+        }
+      }
+      result.watcherCount = Math.max( ...group.map( p => Number( p?.watcherCount || 0 ) ) );
+      merged.push( { profile: result, at } );
+    }
+    // Keep the newest-first order, each person where their first doc was.
+    return merged.sort( ( a, b ) => a.at - b.at ).map( entry => entry.profile );
   }
 
   async toggleSayItBusinessWatch ( currentUid: string, targetProfileId: string, user: string ): Promise<{ watching: boolean; watchlistProfileIds: string[]; watcherCount: number; }> {
