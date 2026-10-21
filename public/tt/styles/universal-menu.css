@@ -161,6 +161,7 @@ body.dark .um {
 .um-logo[data-app="email-signature"] { --um-logo: url("../menu-logos/email-signature-logo.png"); }
 .um-logo[data-app="docs"] { --um-logo: url("../menu-logos/docs-logo.png"); }
 .um-logo[data-app="find"] { --um-logo: url("../menu-logos/find-logo.png"); }
+.um-logo[data-app="market"] { --um-logo: url("../menu-logos/market-logo.png"); }
 .um-logo[data-app="lead-vault"] { --um-logo: url("../menu-logos/lead-vault-logo.png"); }
 .um-logo[data-app="network"] { --um-logo: url("../menu-logos/network-logo.png"); }
 .um-logo[data-app="outreach"] { --um-logo: url("../menu-logos/outreach-logo.png"); }
@@ -410,6 +411,7 @@ body.dark .um {
 .um-glyph[data-key="email-signature"] { --um-glyph: url("../menu-icons/email-signature.png"); }
 .um-glyph[data-key="image-creator"] { --um-glyph: url("../menu-icons/image-creator.svg"); }
 .um-glyph[data-key="music"] { --um-glyph: url("../menu-icons/music.png"); }
+.um-glyph[data-key="market"] { --um-glyph: url("../menu-icons/market.png"); }
 
 /* 3 · Account */
 .um-card {
@@ -644,4 +646,92 @@ body.dark .um {
     flex-direction: column;
     padding: 16px;
   }
+}
+
+/* ── ⌘K search: go to any page in any product (menu-component, search-index.model.ts) ── */
+.us-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10030;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 12vh 16px 16px;
+  background: rgba(15, 17, 21, .45);
+  backdrop-filter: blur(4px);
+}
+
+.us-panel {
+  display: flex;
+  flex-direction: column;
+  width: min(640px, 100%);
+  max-height: 72vh;
+  overflow: hidden;
+  border-radius: 24px;
+  background: var(--um-bg);
+  box-shadow: var(--um-shadow);
+  animation: um-in .15s ease-out;
+}
+
+.us-search {
+  max-width: none;
+  margin: 14px 14px 6px;
+}
+
+.us-results {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px 10px 12px;
+  overflow-y: auto;
+}
+
+.um .us-hit {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 14px;
+  color: var(--um-text);
+  text-decoration: none;
+}
+
+.um .us-hit.is-active {
+  background: var(--um-surface);
+}
+
+.us-chip {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+}
+
+.us-chip .um-glyph {
+  width: 20px;
+  height: 20px;
+}
+
+.us-hit__label {
+  overflow: hidden;
+  font: 600 15px/1.3 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.us-hit__site {
+  font: 400 13px/1 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: var(--um-muted);
+}
+
+.us-empty {
+  margin: 0;
+  padding: 18px 12px;
+  font: 400 15px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: var(--um-muted);
+}
+
+@media (max-width: 760px) {
+  .us-backdrop { padding: 16px 12px; }
+  .us-panel { max-height: calc(100vh - 32px); }
 }

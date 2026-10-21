@@ -50,6 +50,8 @@
   --t-grey: #e4e7ed;
   --t-grey-fg: #3d4350;
   --shadow: 0 20px 50px rgba(15, 17, 21, .12);
+  --shadow-md: 0 8px 24px rgba(15, 17, 21, .08);
+  --shadow-sm: 0 1px 3px rgba(15, 17, 21, .08);
   --font: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
@@ -76,6 +78,8 @@
     --t-green: #0e2c19;
     --t-green-fg: #80e2a4;
     --shadow: 0 20px 50px rgba(0, 0, 0, .55);
+    --shadow-md: 0 0 0 1px #242936;
+    --shadow-sm: 0 0 0 1px #242936;
     --teal: #4fe0c8;
     --green: #3dd27a;
     --amber: #f2b33d;
@@ -114,6 +118,8 @@ html.dark,
   --t-green: #0e2c19;
   --t-green-fg: #80e2a4;
   --shadow: 0 20px 50px rgba(0, 0, 0, .55);
+  --shadow-md: 0 0 0 1px #242936;
+  --shadow-sm: 0 0 0 1px #242936;
   --teal: #4fe0c8;
   --green: #3dd27a;
   --amber: #f2b33d;
@@ -126,4 +132,31 @@ html.dark,
   --t-red-fg: #ff9d95;
   --t-grey: #242936;
   --t-grey-fg: #c3c9d6;
+}
+
+/* Mission owners (design_handoff_todd_missions): who holds a step is the
+ * most important thing on a plan strip. TODD blue, Maya violet, you pink,
+ * teammates cyan. Shape carries identity too, so these never stand alone. */
+:root {
+  --c-todd: #2f6bff;
+  --c-maya: #7c3aed;
+  --c-you: #ff4fa8;
+  --c-team: #0891b2;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light):not([data-theme="light"]) {
+    --c-todd: #4d86ff;
+    --c-maya: #a78bfa;
+    --c-you: #ff5cb0;
+    --c-team: #22c3e6;
+  }
+}
+
+html.dark,
+:root[data-theme="dark"] {
+  --c-todd: #4d86ff;
+  --c-maya: #a78bfa;
+  --c-you: #ff5cb0;
+  --c-team: #22c3e6;
 }
