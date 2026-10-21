@@ -1,6 +1,6 @@
 {
   "name": "sayit",
-  "version": "2026.10.21-build.1",
+  "version": "2026.10.21-build.4",
   "scripts": {
     "ng": "ng",
     "generate-version": "node scripts/generate-version.js",

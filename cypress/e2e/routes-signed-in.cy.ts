@@ -35,6 +35,10 @@ describe( 'SayIt routes - signed in', () => {
     cy.contains( '.sy-card', `Grid post 0 ${stamp}` );
     cy.get( '.sayit-feed-hint' ).should( 'not.exist' );
 
+    // Bootstrap sets scroll-behavior: smooth on <html>, and under Cypress the
+    // smooth scroll can stall partway, so load more never sees the bottom.
+    // Scroll instantly, like a wheel or trackpad does.
+    cy.document().then( ( doc ) => { doc.documentElement.style.scrollBehavior = 'auto'; } );
     cy.scrollTo( 'bottom' );
     cy.get( '.sayit-post-grid .sy-card' ).should( 'have.length.greaterThan', 24 );
   } );

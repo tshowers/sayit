@@ -267,6 +267,30 @@
       background: var(--surface)
     }
 
+    /* Sun/moon switch (theme-toggle.js), the app's round --surface button. */
+    .theme-toggle {
+      width: 40px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      background: var(--surface);
+      color: var(--text);
+      cursor: pointer;
+      transition: background .18s ease, transform .12s ease
+    }
+
+    .theme-toggle:hover {
+      background: var(--surface2)
+    }
+
+    .theme-toggle:active {
+      transform: scale(.94)
+    }
+
     /* Universal menu pill: a --text pill, as in the app. */
     .nav .um-trigger {
       background: var(--text);
@@ -642,6 +666,7 @@
         <ul class="nav-links">
           <li class="hide-sm"><a href="/about">About</a></li>
           <li class="hide-sm"><a href="/help">Help</a></li>
+          <li><button type="button" class="theme-toggle" data-theme-toggle aria-label="Switch theme"></button></li>
           <li class="signin-item"><a class="signin" href="/login">Sign in</a></li>
           <li><div data-tt-menu></div></li>
         </ul>
@@ -810,6 +835,7 @@
       new MutationObserver(load).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     })();
   </script>
+  <script src="/assets/static/theme-toggle.js" defer></script>
   <script src="/tt/universal-menu.js" defer></script>
 </body>
 
