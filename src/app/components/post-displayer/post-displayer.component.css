@@ -11,14 +11,14 @@
   align-items: stretch;
 }
 
-/* One at a time: a sideways strip that snaps to one centered post */
+/* One at a time: a sideways strip of full-width slides. Each post's image
+   (or its tint) fills the slide and fades into the page; the card sits over
+   the lower part, as in the app. */
 .sayit-post-single {
   display: flex;
-  gap: 16px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
-  padding: 0 calc(50% - min(230px, 50%)) 8px;
   scrollbar-width: none;
 }
 
@@ -33,20 +33,91 @@
 }
 
 .sayit-post-single .sy-card {
-  flex: 0 0 min(460px, 100%);
-  scroll-snap-align: center;
+  flex: 0 0 100%;
+  min-height: clamp(560px, calc(100vh - 160px), 860px);
+  justify-content: flex-end;
+  padding: 0 16px 24px;
+  background: transparent;
+  scroll-snap-align: start;
   scroll-snap-stop: always;
 }
 
 .sayit-post-single .sy-card__hero {
-  min-height: 320px;
+  position: absolute;
+  inset: 0 0 18% 0;
+  min-height: 0;
+  justify-content: center;
+  align-items: center;
+  border-radius: var(--radius-card);
+  -webkit-mask-image: linear-gradient(to bottom, #000 50%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 50%, transparent 100%);
+}
+
+/* A text post's words, large over the tint, above the card */
+.sayit-post-single .sy-card__quote {
+  max-width: 760px;
+  padding: 0 24px 22vh;
+  text-align: center;
+}
+
+.sayit-post-single .sy-card__quote p {
+  font-size: clamp(28px, 4vw, 44px);
+  -webkit-line-clamp: 6;
+}
+
+.sayit-post-single .sy-card__quote--long p {
+  font-size: clamp(22px, 3vw, 32px);
+}
+
+.sayit-post-single .sy-card__body {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: min(560px, 100%);
+  margin: 0 auto;
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
 }
 
 .sayit-single-nav {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
   gap: 6px;
   margin-bottom: 12px;
+}
+
+.sayit-single-dots {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+}
+
+.sayit-single-dot {
+  width: 8px;
+  height: 8px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text) 22%, transparent);
+  cursor: pointer;
+  transition: width 0.2s ease, background 0.2s ease;
+}
+
+.sayit-single-dot.active {
+  width: 28px;
+  background: var(--text);
+}
+
+.sayit-single-nav__count {
+  margin-right: 6px;
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
 }
 
 .sayit-single-nav__btn {
@@ -65,10 +136,21 @@
   background: var(--surface2);
 }
 
-/* Phones swipe; the buttons are for mouse and keyboard */
+.sayit-single-nav__btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* Phones swipe; the buttons and count are for mouse and keyboard */
 @media (max-width: 767.98px) {
-  .sayit-single-nav {
+  .sayit-single-nav__btn,
+  .sayit-single-nav__count {
     display: none;
+  }
+
+  .sayit-post-single .sy-card {
+    min-height: clamp(520px, calc(100svh - 200px), 760px);
+    padding: 0 0 16px;
   }
 }
 

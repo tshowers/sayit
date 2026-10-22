@@ -326,12 +326,14 @@
   background: var(--bg);
 }
 
-.sayit-chip:hover {
+.sayit-chip:hover,
+.chat-composer-card .sayit-chip:hover {
   background: var(--surface2);
 }
 
 .sayit-chip.active,
-.sayit-chip.active:hover {
+.sayit-chip.active:hover,
+.chat-composer-card .sayit-chip.active {
   background: var(--text);
   color: var(--bg);
 }

@@ -1,6 +1,10 @@
 <div class="sayit-single-nav" *ngIf="layout === 'single' && visiblePosts.length > 1">
-  <button type="button" class="sayit-single-nav__btn" (click)="stepSingle(-1)" aria-label="Previous post"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
-  <button type="button" class="sayit-single-nav__btn" (click)="stepSingle(1)" aria-label="Next post"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
+  <div class="sayit-single-dots" aria-hidden="true">
+    <button *ngFor="let i of singleDots" type="button" tabindex="-1" class="sayit-single-dot" [class.active]="i === singleIndex" (click)="goToSingle(i)"></button>
+  </div>
+  <span class="sayit-single-nav__count">{{ singleIndex + 1 }} of {{ visiblePosts.length }}</span>
+  <button type="button" class="sayit-single-nav__btn" (click)="stepSingle(-1)" [disabled]="singleIndex === 0" aria-label="Previous post"><i class="fa-solid fa-chevron-left" aria-hidden="true"></i></button>
+  <button type="button" class="sayit-single-nav__btn" (click)="stepSingle(1)" [disabled]="singleIndex >= visiblePosts.length - 1" aria-label="Next post"><i class="fa-solid fa-chevron-right" aria-hidden="true"></i></button>
 </div>
 <div #singleStrip [class.sayit-post-grid]="layout === 'grid'" [class.sayit-post-single]="layout === 'single'"
   [attr.tabindex]="layout === 'single' ? 0 : null" [attr.aria-label]="layout === 'single' ? 'Posts, one at a time. Use the arrow keys to move.' : null"

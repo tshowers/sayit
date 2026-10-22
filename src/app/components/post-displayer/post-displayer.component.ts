@@ -246,6 +246,17 @@ export class PostDisplayerComponent implements OnChanges {
     return !category || category.toLowerCase() === 'all' ? '' : category;
   }
 
+  /** One-at-a-time view: the post on screen. */
+  singleIndex = 0;
+
+  /** Pager dots for the one-at-a-time view: at most nine, sliding with the reader. */
+  get singleDots (): number[] {
+    const count = this.visiblePosts.length;
+    const size = Math.min( 9, count );
+    const start = Math.max( 0, Math.min( this.singleIndex - 4, count - size ) );
+    return Array.from( { length: size }, ( _, i ) => start + i );
+  }
+
   /** One-at-a-time view: move by one post (direction -1 or 1). */
   stepSingle ( direction: number ): void {
     const strip = this.singleStrip?.nativeElement;
@@ -253,9 +264,16 @@ export class PostDisplayerComponent implements OnChanges {
     strip.scrollBy( { left: direction * strip.clientWidth, behavior: 'smooth' } );
   }
 
+  goToSingle ( index: number ): void {
+    const strip = this.singleStrip?.nativeElement;
+    if ( !strip ) return;
+    strip.scrollTo( { left: index * strip.clientWidth, behavior: 'smooth' } );
+  }
+
   onSingleScroll (): void {
     const strip = this.singleStrip?.nativeElement;
     if ( this.layout !== 'single' || !strip ) return;
+    this.singleIndex = Math.round( strip.scrollLeft / Math.max( 1, strip.clientWidth ) );
     // Ask for more while three posts are still ahead.
     if ( strip.scrollLeft + strip.clientWidth >= strip.scrollWidth - strip.clientWidth * 3 ) {
       this.nearEnd.emit();
