@@ -15,6 +15,8 @@
    (or its tint) fills the slide and fades into the page; the card sits over
    the lower part, as in the app. */
 .sayit-post-single {
+  /* Every slide is this tall, photo or text, so the dots and arrows never move. */
+  --single-h: clamp(560px, calc(100vh - 160px), 860px);
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -34,7 +36,7 @@
 
 .sayit-post-single .sy-card {
   flex: 0 0 100%;
-  min-height: clamp(560px, calc(100vh - 160px), 860px);
+  min-height: var(--single-h);
   justify-content: flex-end;
   padding: 0 16px 24px;
   background: transparent;
@@ -148,9 +150,346 @@
     display: none;
   }
 
+  .sayit-post-single {
+    --single-h: clamp(520px, calc(100svh - 200px), 760px);
+  }
+
   .sayit-post-single .sy-card {
-    min-height: clamp(520px, calc(100svh - 200px), 760px);
     padding: 0 0 16px;
+  }
+}
+
+/* One at a time, text post (design_handoff_sayit_one_at_a_time, 4c): the
+   post's tint fills the slide; tag, words, replies, reply box and author
+   all sit inside it. No fade, no floating card. */
+.sayit-post-single .sy-card.sy-card--textslide {
+  height: var(--single-h);
+  min-height: 0;
+  padding: 0;
+  border-radius: 28px;
+}
+
+.sy-text {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 32px 40px;
+  border-radius: 28px;
+}
+
+.sy-text__top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sy-text__tag {
+  padding: 7px 14px;
+  border-radius: var(--radius-pill);
+  background: var(--bg);
+  color: inherit;
+  font: 700 14px/1.1 var(--font);
+}
+
+.sy-text__top-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+
+.sy-text__mini {
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.sy-text__mini:hover {
+  color: var(--text);
+  filter: brightness(0.96);
+}
+
+/* The words: FitTextDirective sets the size (64 → 52 → 40 → 32) to fit this box. */
+.sy-text__body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
+  max-width: 900px;
+  font-size: 52px;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+}
+
+.sy-text__body p {
+  margin: 0;
+  text-wrap: pretty;
+  overflow-wrap: anywhere;
+}
+
+.sy-text__body :is(a, a:hover) {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.sy-text__more {
+  align-self: flex-start;
+  margin-top: -12px;
+  color: inherit;
+  font: 700 14px var(--font);
+}
+
+.sy-replies {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sy-reply {
+  max-width: 720px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 22px;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.sy-reply__avatar {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  font: 700 13px/1 var(--font);
+}
+
+.sy-reply__main {
+  min-width: 0;
+}
+
+.sy-reply__head {
+  font-size: 15px;
+  color: var(--muted);
+}
+
+.sy-reply__head strong {
+  color: var(--text);
+}
+
+.sy-reply__text {
+  margin: 2px 0 0;
+  font-size: 16px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.sy-replies__all {
+  align-self: flex-start;
+  padding: 2px 4px;
+  color: inherit;
+  font: 700 14px var(--font);
+  text-decoration: none;
+}
+
+.sy-replies__all:hover {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.sy-replybox {
+  max-width: 720px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 4px 4px 20px;
+  border-radius: var(--radius-pill);
+  background: var(--bg);
+  text-decoration: none;
+}
+
+.sy-replybox:focus-within {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.sy-replybox__input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: 16px var(--font);
+  outline: none;
+}
+
+.sy-replybox__input::placeholder,
+.sy-replybox--signin .sy-replybox__input {
+  color: var(--muted);
+}
+
+.sy-replybox__send {
+  flex: none;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--blue);
+  color: #fff;
+  cursor: pointer;
+}
+
+.sy-replybox__send:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.sy-text__author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.sy-text__avatar-link {
+  flex: none;
+  text-decoration: none;
+}
+
+.sy-text__avatar {
+  flex: none;
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bg);
+  color: inherit;
+  font: 700 16px/1 var(--font);
+}
+
+.sy-text__who {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sy-text__name,
+.sy-text__name:hover {
+  overflow: hidden;
+  color: var(--text);
+  font: 700 17px/1.2 var(--font);
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sy-text__meta {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.sy-text__actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.sy-card .sy-text__like,
+.sy-card .sy-text__share {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  font: 700 15px var(--font);
+  cursor: pointer;
+}
+
+.sy-card .sy-text__like {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.sy-card .sy-text__like--on {
+  background: var(--t-pink);
+  color: var(--t-pink-fg);
+}
+
+.sy-card .sy-text__share {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.sy-card .sy-text__interest {
+  width: auto;
+  min-height: 44px;
+  padding: 0 20px;
+}
+
+.sy-card--flagged .sy-text {
+  filter: blur(18px);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Phones: smaller words (set by textSlideSizes), one reply, actions under the
+   name. The card grows rather than squeezing the words out; the words get up
+   to 45% of the screen before stepping down to "Read more". */
+@media (max-width: 819.98px) {
+  .sayit-post-single .sy-card.sy-card--textslide {
+    height: auto;
+    min-height: var(--single-h);
+  }
+
+  .sy-text__body {
+    flex: 1 0 auto;
+    max-height: 45svh;
+  }
+
+  .sy-text {
+    gap: 16px;
+    padding: 24px 20px;
+  }
+
+  .sy-reply:not(:last-of-type) {
+    display: none;
+  }
+
+  .sy-text__author {
+    flex-wrap: wrap;
+  }
+
+  .sy-text__actions {
+    width: 100%;
+    margin-left: 0;
+    justify-content: flex-start;
   }
 }
 

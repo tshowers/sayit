@@ -35,6 +35,7 @@ import { NotificationService } from '../../services/notification.service';
 import { SayItService, SayItComment } from '../../services/say-it-service';
 import { SoundService } from '../../services/sound.service';
 import { ClickSoundDirective } from '../../shared/directives/click-sound.directive';
+import { FitTextDirective } from './fit-text.directive';
 import {
   buildSayitPostUrl,
   getSayitHomeUrl,
@@ -54,7 +55,7 @@ import {
     ExactTimePipe,
     LinkifyPipe,
     TruncatePipe,
-    AIContentExtractorPipe, ClickSoundDirective],
+    AIContentExtractorPipe, ClickSoundDirective, FitTextDirective],
   standalone: true,
   templateUrl: './post-displayer.component.html',
   styleUrl: './post-displayer.component.css',
@@ -244,6 +245,54 @@ export class PostDisplayerComponent implements OnChanges {
     if ( kind ) return POST_KIND_LABEL[kind];
     const category = String( post?.category || '' ).trim();
     return !category || category.toLowerCase() === 'all' ? '' : category;
+  }
+
+  // ─── One at a time, text posts (design_handoff_sayit_one_at_a_time) ───
+
+  /** Below 820px the text post's type and replies step down. */
+  narrow = typeof window !== 'undefined' && window.innerWidth < 820;
+  /** Text posts whose words didn't fit even at the smallest size ("Read more"). */
+  textClamped: Record<string, boolean> = {};
+
+  @HostListener( 'window:resize' )
+  onWindowResize (): void {
+    this.narrow = window.innerWidth < 820;
+  }
+
+  /** In One at a time, a post with no image, video or link card gets the text layout. */
+  isTextSlide ( post: any ): boolean {
+    return this.layout === 'single' && this.cardMedia( post ).type === 'none';
+  }
+
+  /** Font sizes to try, largest first: 64 with no replies, 52 with; on a phone (the iPhone design) 40, or 32 with replies. */
+  textSlideSizes ( post: any ): number[] {
+    if ( this.narrow ) return this.getComments( post ).length ? [32, 26, 22] : [40, 32, 26, 22];
+    return this.getComments( post ).length ? [52, 40, 32] : [64, 52, 40, 32];
+  }
+
+  /** The newest replies shown in the card: two, or one on a phone (CSS hides the older). */
+  latestReplies ( post: any ): SayItComment[] {
+    return this.getComments( post ).slice( -2 );
+  }
+
+  /** "Martin" from "Martin at GreenWave Logistics". */
+  authorFirstName ( post: any ): string {
+    return this.getAssistantLabel( post ).split( ' at ' )[0].trim().split( /\s+/ )[0] || 'them';
+  }
+
+  /** The author's category for the meta line ("Trucking-Logistics"), or ''. */
+  authorCategory ( post: any ): string {
+    const category = String( post?.category || '' ).trim();
+    return category.toLowerCase() === 'all' ? '' : category;
+  }
+
+  replyInitials ( comment: SayItComment ): string {
+    const words = String( comment.authorDisplayName || '' ).replace( /[^\p{L}\p{N}\s]/gu, ' ' ).split( /\s+/ ).filter( Boolean );
+    return ( ( words[0]?.[0] || '' ) + ( words.length > 1 ? words[words.length - 1][0] : '' ) ).toUpperCase() || '?';
+  }
+
+  replyTint ( comment: SayItComment ): string {
+    return 'tint-' + this.tintFor( String( comment.authorDisplayName || comment.authorUid || '' ) );
   }
 
   /** One-at-a-time view: the post on screen. */
@@ -971,6 +1020,11 @@ export class PostDisplayerComponent implements OnChanges {
     return ( this.commentsByPostId[postId] || [] ).length;
   }
 
+  /** A reply shown before it's saved; it can't be deleted until it is. */
+  isPendingComment ( comment: SayItComment ): boolean {
+    return comment.commentId.startsWith( 'pending-' );
+  }
+
   getCommentDraft ( post: any ): string {
     return this.commentDraftByPostId[post?.id] || '';
   }
@@ -988,16 +1042,27 @@ export class PostDisplayerComponent implements OnChanges {
     const draft = ( this.commentDraftByPostId[postId] || '' ).trim();
     if ( !postId || !draft || this.commentBusyPostIds.has( postId ) ) return;
 
+    // Show the reply at once; the reload below swaps in the saved copy.
+    const pending: SayItComment = {
+      commentId: `pending-${Date.now()}`,
+      postId,
+      authorUid: this.currentUserId || '',
+      authorDisplayName: ( this.firebaseUser?.displayName || this.firebaseUser?.email?.split( '@' )[0] || 'You' ).trim(),
+      content: draft.slice( 0, 500 ),
+      createdAt: new Date().toISOString(),
+    };
+    this.commentsByPostId[postId] = [...( this.commentsByPostId[postId] || [] ), pending];
+    this.commentDraftByPostId[postId] = '';
     this.commentBusyPostIds.add( postId );
     try {
       await this.sayItService.addComment( postId, draft );
-      this.commentDraftByPostId[postId] = '';
-      // Reload comments after submit
       this.commentLoadedPostIds.delete( postId );
       this.commentsByPostId[postId] = await this.sayItService.getComments( postId );
       this.commentLoadedPostIds.add( postId );
     } catch ( e ) {
       this.logger.error( 'submitComment error', e );
+      this.commentsByPostId[postId] = ( this.commentsByPostId[postId] || [] ).filter( ( c ) => c !== pending );
+      this.commentDraftByPostId[postId] = draft;
       this.notificationService.show( 'Error', 'Could not post comment. Please try again.', 'error' );
     } finally {
       this.commentBusyPostIds.delete( postId );

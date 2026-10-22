@@ -18,8 +18,106 @@
   <article *ngFor="let post of visiblePosts; trackBy: trackById" class="sy-card"
     [class.sy-card--text]="cardMedia(post).type === 'none'"
     [class.sy-card--flagged]="isFlagged(post)"
+    [class.sy-card--textslide]="isTextSlide(post)"
     [attr.aria-label]="'Post by ' + getAssistantLabel(post)">
     <ng-container *ngIf="cardMedia(post) as media">
+
+      <!-- One at a time, text post: everything inside the tinted card
+           (design_handoff_sayit_one_at_a_time). Photo posts and the grid use the card below. -->
+      <ng-container *ngIf="isTextSlide(post); else standardCard">
+        <div class="sy-text" [ngClass]="cardTint(post)">
+          <div class="sy-text__top">
+            <span *ngIf="cardKind(post)" class="sy-text__tag">{{ cardKind(post) }}</span>
+            <span class="sy-text__top-actions">
+              <a class="sy-text__mini" [routerLink]="['/post', post.id]" title="Open post" aria-label="Open post">
+                <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+              </a>
+              <button *ngIf="isOwnPost(post)" type="button" class="sy-text__mini" title="Delete this post" aria-label="Delete this post" (click)="onDelete(post)">
+                <i class="fa-solid fa-trash" aria-hidden="true"></i>
+              </button>
+            </span>
+          </div>
+
+          <!-- The words, as large as fit: 64 → 52 → 40 → 32, then "Read more" -->
+          <div class="sy-text__body" [syFitText]="textSlideSizes(post)" [syFitTextKey]="post.id + ':' + getComments(post).length + ':' + narrow"
+            (clampedChange)="textClamped[post.id] = $event" [attr.title]="post.content || ''">
+            <p *ngIf="!isAssistantPost(post); else toddText" [innerHTML]="post.content | linkify"></p>
+            <ng-template #toddText><p [innerHTML]="post.content | aicontentextractor | formatAIText | linkify"></p></ng-template>
+          </div>
+          <a *ngIf="textClamped[post.id]" class="sy-text__more" [routerLink]="['/post', post.id]">Read more</a>
+
+          <!-- The newest replies, and a box to add one -->
+          <div class="sy-replies">
+            <div *ngFor="let comment of latestReplies(post)" class="sy-reply">
+              <span class="sy-reply__avatar" [ngClass]="replyTint(comment)" aria-hidden="true">{{ replyInitials(comment) }}</span>
+              <div class="sy-reply__main">
+                <div class="sy-reply__head"><strong>{{ comment.authorDisplayName }}</strong><span *ngIf="comment.createdAt"> · {{ comment.createdAt | relativeTime }}</span></div>
+                <p class="sy-reply__text">{{ comment.content }}</p>
+              </div>
+            </div>
+            <a *ngIf="getComments(post).length > 2" class="sy-replies__all" [routerLink]="['/post', post.id]">See all {{ getComments(post).length }} replies</a>
+            <form *ngIf="isLoggedIn; else replySignIn" class="sy-replybox" (submit)="$event.preventDefault(); submitComment(post)">
+              <input type="text" class="sy-replybox__input" maxlength="500"
+                [placeholder]="(getComments(post).length ? 'Reply to ' : 'Be the first to reply to ') + authorFirstName(post) + '…'"
+                [attr.aria-label]="'Reply to ' + authorFirstName(post)"
+                [value]="getCommentDraft(post)" (input)="setCommentDraft(post, $any($event.target).value)">
+              <button type="submit" class="sy-replybox__send" [disabled]="!getCommentDraft(post).trim()" aria-label="Send reply">
+                <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+              </button>
+            </form>
+            <ng-template #replySignIn>
+              <a class="sy-replybox sy-replybox--signin" routerLink="/get-started">
+                <span class="sy-replybox__input">{{ (getComments(post).length ? 'Reply to ' : 'Be the first to reply to ') + authorFirstName(post) }}…</span>
+                <span class="sy-replybox__send" aria-hidden="true"><i class="fa-solid fa-arrow-up"></i></span>
+              </a>
+            </ng-template>
+          </div>
+
+          <!-- Author, then Like, Share and I'm interested -->
+          <div class="sy-text__author">
+            <ng-container *ngIf="isAssistantPost(post); else textPersonAvatar">
+              <img [src]="post.imageUrl" class="sy-text__avatar" [alt]="getAssistantLabel(post)" width="48" height="48" loading="lazy" decoding="async">
+            </ng-container>
+            <ng-template #textPersonAvatar>
+              <a [routerLink]="getBusinessProfileRoute(post)" (click)="trackProfileClick(post, getBusinessProfileRoute(post))" title="View profile" class="sy-text__avatar-link">
+                <img *ngIf="avatarUrl(post) as src; else textInitials" [src]="src" class="sy-text__avatar" [alt]="post.displayName || 'Profile photo'" width="48" height="48" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+                <ng-template #textInitials><span class="sy-text__avatar" aria-hidden="true">{{ initials(post) }}</span></ng-template>
+              </a>
+            </ng-template>
+            <div class="sy-text__who">
+              <a *ngIf="!isAssistantPost(post) && getBusinessProfileIdentifier(post); else textPlainName" class="sy-text__name" [routerLink]="getBusinessProfileRoute(post)" (click)="trackProfileClick(post, getBusinessProfileRoute(post))" title="View profile">{{ getAssistantLabel(post) }}</a>
+              <ng-template #textPlainName><span class="sy-text__name">{{ getAssistantLabel(post) }}</span></ng-template>
+              <span class="sy-text__meta" [title]="post.timestamp | exactTime"><ng-container *ngIf="authorCategory(post) as category">{{ category }} · </ng-container>{{ post.timestamp | relativeTime }}</span>
+            </div>
+            <div class="sy-text__actions">
+              <button *ngIf="!isAssistantPost(post)" type="button" class="sy-text__like" [class.sy-text__like--on]="isFavorited(post)" (click)="toggleLike(post, $event)" [attr.aria-pressed]="isFavorited(post)" [attr.aria-label]="isFavorited(post) ? 'Unlike' : 'Like'">
+                <i [class]="isFavorited(post) ? 'fa-solid fa-heart' : 'fa-regular fa-heart'" aria-hidden="true"></i>
+                {{ likesLabel(post) }}
+              </button>
+              <button type="button" class="sy-text__share" (click)="shareContent(post)">Share</button>
+              <button *ngIf="!isAssistantPost(post) && !isOwnPost(post)" type="button" class="sy-interest sy-text__interest" [class.sy-interest--on]="isInterested(post)"
+                (click)="onInterestedClick(post, $event)" [disabled]="isExpressingInterestFor(post) || isInterested(post)">
+                <ng-container *ngIf="isExpressingInterestFor(post); else textInterestLabel">
+                  <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> Sending…
+                </ng-container>
+                <ng-template #textInterestLabel>
+                  <i *ngIf="isInterested(post)" class="fa-solid fa-check" aria-hidden="true"></i>
+                  {{ isInterested(post) ? 'In your inbox' : 'I’m interested' }}
+                </ng-template>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div *ngIf="isFlagged(post)" class="sy-card__flag">
+          <span class="sy-card__flag-icon" aria-hidden="true">{{ getRatingIcon(post.contentRating) }}</span>
+          <strong>Sensitive content</strong>
+          <span>{{ getRatingDescription(post.contentRating) }}</span>
+          <button type="button" class="sy-card__flag-btn" (click)="revealPost(post)">View anyway</button>
+        </div>
+      </ng-container>
+
+      <ng-template #standardCard>
 
       <div class="sy-card__hero" [ngClass]="cardTint(post)">
         <!-- Media fills the area; a text post's words are the visual instead -->
@@ -134,7 +232,7 @@
             <div *ngFor="let comment of getComments(post)" class="sy-comment">
               <span class="sy-comment__author">{{ comment.authorDisplayName }}</span>
               <span class="sy-comment__text">{{ comment.content }}</span>
-              <button *ngIf="currentUserId && currentUserId === comment.authorUid" type="button" class="sy-comment__delete" title="Delete comment" aria-label="Delete comment" (click)="onDeleteComment(post, comment)">
+              <button *ngIf="currentUserId && currentUserId === comment.authorUid && !isPendingComment(comment)" type="button" class="sy-comment__delete" title="Delete comment" aria-label="Delete comment" (click)="onDeleteComment(post, comment)">
                 <i class="fa-solid fa-xmark" aria-hidden="true"></i>
               </button>
             </div>
@@ -150,6 +248,7 @@
           <ng-template #signInToComment><a class="sy-sheet__signin" routerLink="/get-started">Sign in to comment</a></ng-template>
         </section>
       </div>
+      </ng-template>
     </ng-container>
   </article>
 </div>
