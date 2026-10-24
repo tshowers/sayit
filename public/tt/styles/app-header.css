@@ -192,8 +192,9 @@ button.ah-pill {
   .ah-theme span,
   .ah-pill--wide { display: none !important; }
 
+  /* Menu becomes a 40px hamburger circle (universal-menu.css hides the word). */
   .ah .um-trigger {
     height: 40px;
-    padding: 0 14px 0 12px;
+    padding: 0;
   }
 }

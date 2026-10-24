@@ -97,6 +97,21 @@ body.dark .um {
   cursor: pointer;
 }
 
+/* Phones: just the hamburger, in a circle as tall as the pill was (the
+ * button keeps aria-label="Menu"). 760px matches app-header.css, where the
+ * theme pill becomes an icon circle too. */
+@media (max-width: 760px) {
+  .um-trigger.um-trigger {
+    width: auto;
+    aspect-ratio: 1;
+    padding: 0;
+    gap: 0;
+    justify-content: center;
+  }
+
+  .um-trigger__label { display: none; }
+}
+
 /* The sheet over the page. */
 .um-backdrop {
   position: fixed;
@@ -154,8 +169,8 @@ body.dark .um {
 }
 
 /* 64px copies (2x the 32px slot) so opening the menu doesn't pull a full-size logo. */
-.um-logo[data-app="todd"],
-.um-logo[data-app="ask-todd"] { --um-logo: url("../menu-logos/todd-logo.png"); }
+.um-logo[data-app="todd"] { --um-logo: url("../menu-logos/todd-logo.png"); }
+.um-logo[data-app="ask-todd"] { --um-logo: url("../menu-logos/ask-todd-logo.png"); }
 .um-logo[data-app="email-creator"] { --um-logo: url("../menu-logos/email-creator-logo.png"); }
 .um-logo[data-app="image-creator"] { --um-logo: url("../menu-logos/image-creator-logo.png"); }
 .um-logo[data-app="email-signature"] { --um-logo: url("../menu-logos/email-signature-logo.png"); }
