@@ -4,7 +4,7 @@
 
 # SayIt
 
-SayIt is a community board where people post what they need and businesses respond. The Angular web app was extracted from TODD and is served at https://sayit.taliferro.tech from the `todd-sayit` Firebase Hosting site in the `taliferrotech` project.
+SayIt is a community board where people post what they need and businesses respond. The Angular web app was extracted from 16Ahead and is served at https://sayit.16ahead.com from the `todd-sayit` Firebase Hosting site in the `taliferrotech` project.
 
 The free iOS app is the main product. The web app shares the same account and data, so it still works fully, but its most important job is opening shared post links. Signed-out visitors land on an "app first" hero, and on iPhone, `/post/*` links open straight in the app through universal links.
 
@@ -34,7 +34,7 @@ Old share links in the `/?post=<id>` format are redirected to `/post/<id>` by `l
   - `post-interests` holds "I'm Interested" records.
   - `tenants/{taliferroTenantId}/say-it-profiles` holds member and business profiles.
   - `tenants/{taliferroTenantId}/sayit-config` holds directory seeding config.
-- **TODD backend** (`https://api.taliferro.tech/api`): onboarding and profile completion (`/onboarding/profile`, `/sayit/profile/complete`), seeding tracking, AI post drafting (`/openai`) and email (`/send-email`). `idTokenInterceptor` adds the signed-in user's Firebase ID token to requests that go to our own backend, and never to third-party APIs.
+- **16Ahead backend** (`https://api.taliferro.tech/api`): onboarding and profile completion (`/onboarding/profile`, `/sayit/profile/complete`), seeding tracking, AI post drafting (`/openai`) and email (`/send-email`). `idTokenInterceptor` adds the signed-in user's Firebase ID token to requests that go to our own backend, and never to third-party APIs.
 - **Third parties:** linkpreview.net for link cards, plus an RSS-to-JSON service for the news panel.
 - **iOS integration:** `public/.well-known/apple-app-site-association` maps `/post/*` to the `tech.taliferro.sayitios` app. `shared/app-download.ts` controls the App Store links. Leave `SAYIT_IOS_APPLE_ID` empty until the app is live; the promo shows "coming soon" until then.
 
