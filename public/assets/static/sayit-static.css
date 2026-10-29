@@ -80,10 +80,32 @@
 }
 
 .st-wordmark {
-  font: 700 24px/1 var(--st-heading);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font: 700 22px/1 var(--st-heading);
   letter-spacing: -0.04em;
   color: var(--st-text) !important;
   text-decoration: none;
+}
+
+/* The 16Ahead lockup, as in the app's header: the SayIt mark, "16Ahead",
+ * then the product in muted text. The mark is a light/dark pair. */
+.st-wordmark__mark {
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  object-fit: cover;
+}
+
+.st-wordmark__product {
+  font-weight: 500;
+  color: var(--st-muted);
+}
+
+:root:not([data-theme="dark"]) .brand-mark--dark,
+:root[data-theme="dark"] .brand-mark--light {
+  display: none;
 }
 
 .st-nav__links {
