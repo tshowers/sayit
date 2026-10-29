@@ -7,18 +7,18 @@
   <title>SayIt — Say what you need. Hear from people who can help.</title>
   <meta name="description" content="SayIt is a free community board for real businesses and the people who need them. Post what you're looking for or selling, and message one-on-one with people who can help. Coming soon to iPhone & iPad.">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://sayit.taliferro.tech/">
+  <link rel="canonical" href="https://sayit.16ahead.com/">
   <meta property="og:type" content="website">
   <meta property="og:title" content="SayIt — a community board for real businesses and the people who need them">
   <meta property="og:description" content="Say what you need. Get found.">
-  <meta property="og:url" content="https://sayit.taliferro.tech/">
+  <meta property="og:url" content="https://sayit.16ahead.com/">
   <meta property="og:site_name" content="Taliferro Tech">
   <meta name="twitter:card" content="summary_large_image">
-  <meta property="og:image" content="https://sayit.taliferro.tech/assets/og-image.png">
+  <meta property="og:image" content="https://sayit.16ahead.com/assets/og-image.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="SayIt: Say what you need. Get found">
-  <meta name="twitter:image" content="https://sayit.taliferro.tech/assets/og-image.png">
+  <meta name="twitter:image" content="https://sayit.16ahead.com/assets/og-image.png">
   <meta name="twitter:image:alt" content="SayIt: Say what you need. Get found">
   <meta name="theme-color" content="#ffffff">
   <!--
@@ -41,8 +41,9 @@
       document.querySelector('meta[name="theme-color"]').setAttribute('content', theme === 'dark' ? '#0c0e13' : '#ffffff');
     })();
   </script>
-  <link rel="icon" type="image/png" sizes="128x111" href="/assets/seo/sayit-icon.png">
-  <link rel="apple-touch-icon" href="/assets/seo/sayit-icon.png">
+  <link rel="icon" href="/assets/brand/products/png/light/12-sayit-64.png" type="image/png" media="(prefers-color-scheme: light)">
+  <link rel="icon" href="/assets/brand/products/png/dark/12-sayit-64.png" type="image/png" media="(prefers-color-scheme: dark)">
+  <link rel="apple-touch-icon" href="/assets/brand/products/png/light/12-sayit.png">
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
@@ -59,9 +60,16 @@
   <link rel="stylesheet" href="/tt/styles/universal-menu.css">
   <link rel="stylesheet" href="/tt/styles/site-footer.css">
   <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"WebApplication","name":"SayIt","url":"https://sayit.taliferro.tech/","applicationCategory":"SocialNetworkingApplication","operatingSystem":"Web, iOS (coming soon)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"A community board for real businesses and the people who need them.","publisher":{"@type":"Organization","name":"Taliferro","email":"info@taliferro.tech"}}
+{"@context":"https://schema.org","@type":"WebApplication","name":"SayIt","url":"https://sayit.16ahead.com/","applicationCategory":"SocialNetworkingApplication","operatingSystem":"Web, iOS (coming soon)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"A community board for real businesses and the people who need them.","publisher":{"@type":"Organization","name":"Taliferro","email":"info@taliferro.tech"}}
 </script>
   <style>
+    .brand-product { font-weight: 500; color: var(--muted, #9aa2b2); }
+    /* The SayIt dial comes as a light/dark pair; the theme hides one. */
+    @media not (prefers-color-scheme: dark) { :root:not(.dark):not([data-theme="dark"]) .brand-mark--dark { display: none !important; } }
+    :root.light .brand-mark--dark, :root[data-theme="light"] .brand-mark--dark { display: none !important; }
+    @media (prefers-color-scheme: dark) { :root:not(.light):not([data-theme="light"]) .brand-mark--light { display: none !important; } }
+    :root.dark .brand-mark--light, :root[data-theme="dark"] .brand-mark--light { display: none !important; }
+
     /* Find tokens, same values as the app (src/styles.css). The old Organic
        names (--a, --s200, --n700...) are kept and pointed at Find colors. */
     :root {
@@ -661,7 +669,7 @@
 <body>
   <div class="wrap">
     <header class="nav">
-      <a class="brand" href="/" aria-label="SayIt home"><img class="brand-logo" src="/assets/sayit/sayit-logo.png" alt="" width="34" height="34">SayIt</a>
+      <a class="brand" href="/" aria-label="SayIt home"><img class="brand-logo brand-mark--light" src="/assets/brand/products/svg/light/12-sayit.svg" alt="" width="34" height="34"><img class="brand-logo brand-mark--dark" src="/assets/brand/products/svg/dark/12-sayit.svg" alt="" width="34" height="34">16Ahead <span class="brand-product">SayIt</span></a>
       <nav aria-label="Main">
         <ul class="nav-links">
           <li class="hide-sm"><a href="/about">About</a></li>
@@ -760,20 +768,20 @@
       <span>1424 11th Ave STE 400, Seattle, WA 98122</span>
     </div>
     <nav class="tt-foot__row" aria-label="Taliferro Tech products">
-      <a href="https://ask.taliferro.tech">Ask TODD</a>
-      <a href="https://maya.taliferro.tech">Maya</a>
-      <a href="https://find.taliferro.tech">Find</a>
-      <a href="https://network.taliferro.tech">Network</a>
-      <a href="https://moves.taliferro.tech">Moves</a>
-      <a href="https://outreach.taliferro.tech">Outreach</a>
-      <a href="https://pulse.taliferro.tech">Pulse</a>
-      <a href="https://lead-vault.taliferro.tech">Lead Vault</a>
-      <a href="https://social.taliferro.tech">Social</a>
-      <a href="https://sayit.taliferro.tech">SayIt</a>
-      <a href="https://docs.taliferro.tech">Docs</a>
-      <a href="https://emails.taliferro.tech">Email Creator</a>
-      <a href="https://signature.taliferro.tech">Email Signature</a>
-      <a href="https://images.taliferro.tech">Image Creator</a>
+      <a href="https://assistant.16ahead.com">Ask TODD</a>
+      <a href="https://marketing.16ahead.com">Maya</a>
+      <a href="https://find.16ahead.com">Find</a>
+      <a href="https://network.16ahead.com">Network</a>
+      <a href="https://moves.16ahead.com">Moves</a>
+      <a href="https://outreach.16ahead.com">Outreach</a>
+      <a href="https://pulse.16ahead.com">Pulse</a>
+      <a href="https://lead-vault.16ahead.com">Lead Vault</a>
+      <a href="https://social.16ahead.com">Social</a>
+      <a href="https://sayit.16ahead.com">SayIt</a>
+      <a href="https://docs.16ahead.com">Docs</a>
+      <a href="https://emails.16ahead.com">Email Creator</a>
+      <a href="https://signature.16ahead.com">Email Signature</a>
+      <a href="https://images.16ahead.com">Image Creator</a>
       <a href="https://music.taliferro.com">Music</a>
     </nav>
     <div class="tt-foot__row">

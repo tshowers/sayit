@@ -11,7 +11,7 @@
                 <div class="post-view-eyebrow">Say It Post</div>
                 <div class="post-view-author-row">
                     <div class="post-view-author-media">
-                        <img *ngIf="post.user === 'TODD'" [src]="post.imageUrl" class="todd-avatar post-view-avatar" alt="TODD">
+                        <img *ngIf="post.user === 'TODD'" [src]="post.imageUrl" class="todd-avatar post-view-avatar" alt="16Ahead">
                         <ng-container *ngIf="post.user !== 'TODD' && getBusinessProfileIdentifier(post) as profileIdentifier; else plainPostAuthorAvatar">
                             <a [routerLink]="getBusinessProfileRoute(post)" title="View profile" class="post-view-avatar post-view-avatar--initial" [attr.aria-label]="post.displayName">{{ authorInitial }}</a>
                         </ng-container>

@@ -14,7 +14,7 @@
 <section *ngIf="variant === 'hero'" class="promo-hero" data-cy="app-promo-hero">
   <div class="promo-hero__main">
     <div class="promo-hero__brand">
-      <img class="promo-hero__icon" src="assets/sayit/sayit-logo.png" alt="" width="72" height="72">
+      <img class="promo-hero__icon brand-mark--light" src="assets/brand/products/svg/light/12-sayit.svg" alt="" width="72" height="72"><img class="promo-hero__icon brand-mark--dark" src="assets/brand/products/svg/dark/12-sayit.svg" alt="" width="72" height="72">
       <span class="promo-hero__badge">Free on iPhone</span>
     </div>
     <div class="promo-hero__body">
@@ -29,7 +29,7 @@
         <a class="promo-signin" routerLink="/get-started" data-cy="guest-sign-in">Sign in</a>
       </div>
       <p class="promo-hero__note">One account either way - start here and pick up in the app, or the other way around.</p>
-      <p class="tt-made-by promo-hero__made-by"><a href="https://todd.taliferro.tech" target="_blank" rel="noopener"><span class="tt-made-by__todd"><img src="assets/find/entities/todd/logo-bw-icon.png" alt="" /></span>Powered by <strong>TODD</strong></a><i aria-hidden="true"></i><a appAlsoFromUs></a></p>
+      <p class="tt-made-by promo-hero__made-by"><a href="https://app.16ahead.com" target="_blank" rel="noopener"><span class="tt-made-by__todd"><img class="brand-mark--light" src="assets/brand/products/png/light/01-16ahead-64.png" alt="" /><img class="brand-mark--dark" src="assets/brand/products/png/dark/01-16ahead-64.png" alt="" /></span>Powered by <strong>16Ahead</strong></a><i aria-hidden="true"></i><a appAlsoFromUs></a></p>
     </div>
   </div>
   <!-- A sample post, to show what Say It looks like -->
@@ -48,7 +48,7 @@
 </section>
 <!-- Signed-in web users: slim, dismissible -->
 <div *ngIf="variant === 'bar' && !dismissed" class="promo-bar" [class.promo-bar--strong]="onAppleDevice" data-cy="app-promo-bar">
-  <img src="assets/sayit/sayit-logo.png" alt="" width="40" height="40">
+  <img class="brand-mark--light" src="assets/brand/products/svg/light/12-sayit.svg" alt="" width="40" height="40"><img class="brand-mark--dark" src="assets/brand/products/svg/dark/12-sayit.svg" alt="" width="40" height="40">
   <div class="promo-bar__text">
     <strong>{{ onAppleDevice ? 'Get the Say It app' : 'Say It is on iPhone too' }}</strong>
     <span>Reply the moment someone's interested. Same account.</span>
@@ -60,7 +60,7 @@
 </div>
 <!-- Wizard: one line -->
 <p *ngIf="variant === 'link'" class="promo-link" data-cy="app-promo-link">
-  <img src="assets/sayit/sayit-logo.png" alt="" width="24" height="24">
+  <img class="brand-mark--light" src="assets/brand/products/svg/light/12-sayit.svg" alt="" width="24" height="24"><img class="brand-mark--dark" src="assets/brand/products/svg/dark/12-sayit.svg" alt="" width="24" height="24">
   <span>Prefer the app?</span>
   <a *ngIf="isLive; else soonText" [href]="appStoreLink" target="_blank" rel="noopener">Get Say It for iPhone</a>
   <ng-template #soonText><span class="promo-link__soon">Say It for iPhone is coming soon.</span></ng-template>

@@ -44,6 +44,11 @@ describe( 'idTokenInterceptor', () => {
     expect( controller.expectOne( 'https://api.linkpreview.net/?q=x' ).request.headers.has( 'Authorization' ) ).toBeFalse();
   } );
 
+  it( 'treats the 16Ahead API host as our backend', () => {
+    http.get( 'https://api.16ahead.io/api/x', { headers: { Authorization: 'Bearer caller' } } ).subscribe();
+    expect( controller.expectOne( 'https://api.16ahead.io/api/x' ).request.headers.get( 'Authorization' ) ).toBe( 'Bearer caller' );
+  } );
+
   it( 'keeps an Authorization header the caller already set', () => {
     http.get( 'https://api.taliferro.tech/api/x', { headers: { Authorization: 'Bearer caller' } } ).subscribe();
     expect( controller.expectOne( 'https://api.taliferro.tech/api/x' ).request.headers.get( 'Authorization' ) ).toBe( 'Bearer caller' );

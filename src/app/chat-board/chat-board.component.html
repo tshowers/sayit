@@ -12,7 +12,7 @@
         <i class="fa-solid fa-user"></i>
         <span *ngIf="interestUnreadCount > 0" class="sayit-interest-dot" aria-label="New interest"></span>
       </button>
-      <a *ngIf="isLoggedIn" class="sayit-quick-action" href="https://find.taliferro.tech/?query=Today%27s%20News" target="_blank" rel="noopener" title="Today's news on Find" aria-label="Today's news on Find (opens in a new tab)">
+      <a *ngIf="isLoggedIn" class="sayit-quick-action" href="https://find.16ahead.com/?query=Today%27s%20News" target="_blank" rel="noopener" title="Today's news on Find" aria-label="Today's news on Find (opens in a new tab)">
         <i class="fa-solid fa-newspaper"></i>
       </a>
       <button *ngIf="isMasterTenant && sayitSchedulerEnabled !== null" type="button" class="sayit-quick-action sayit-seed-action" [class.active]="sayitSchedulerEnabled" (click)="toggleScheduler()" [disabled]="sayitSchedulerLoading" [title]="sayitSchedulerEnabled ? 'AI seed posts on — click to turn off' : 'AI seed posts off — click to turn on'" [attr.aria-label]="sayitSchedulerEnabled ? 'Turn off AI seed posts' : 'Turn on AI seed posts'">
@@ -75,7 +75,7 @@
                     <button *ngFor="let kind of postKinds" type="button" class="sayit-chip" role="radio" [class.active]="composerKind === kind" [attr.aria-checked]="composerKind === kind" (click)="composerKind = kind" [attr.data-cy]="'composer-kind-' + kind">{{ postKindLabel[kind] }}</button>
                   </div>
                   <small style="font-size: smaller;" class="text-muted chat-composer-hint">
-                    <i>Post a comment, share a link, or ask a question. Start with</i> '<strong>Hey TODD</strong>' <i>if you want an AI reply.</i></small>
+                    <i>Post a comment, share a link, or ask a question. Start with</i> '<strong>Hey 16Ahead</strong>' <i>if you want an AI reply.</i></small>
                 </div>
               </div>
               <div class="row mt-2" *ngIf="newMessage">

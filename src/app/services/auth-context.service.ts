@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { getAuth, onAuthStateChanged, signInWithCustomToken, signOut, User } from 'firebase/auth';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { hostedLoginUrl } from '@taliferro/ui/platform/hosted-login.model';
 
 /**
  * SayIt is a single-tenant, public-facing app — everything reads/writes under
@@ -59,7 +60,7 @@ export class AuthContextService {
     sessionStorage.setItem( this.pendingLoginStorageKey, JSON.stringify( { state, returnUrl } ) );
     const host = window.location.hostname;
     const client = host === 'localhost' || host === '127.0.0.1' ? 'sayit-web-local' : 'sayit-web';
-    window.location.href = `https://todd.taliferro.tech/login?client=${client}&state=${state}`;
+    window.location.href = hostedLoginUrl(client, state);
   }
 
   /** Reads back and clears what signIn() stashed; null unless `state` matches. */

@@ -12,7 +12,7 @@ export class EmailService {
   © 2026
   <a href="https://taliferro.com" style="color: #1a73e8; text-decoration: none;">Taliferro</a>.
   Email sent from
-  <a href="https://sayit.taliferro.tech" style="color: #1a73e8; text-decoration: none;">Say It</a>.
+  <a href="https://sayit.16ahead.com" style="color: #1a73e8; text-decoration: none;">Say It</a>.
   taliferro-tech-unsubscribe.
   </p>
   </div>

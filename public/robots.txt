@@ -9,4 +9,4 @@ Disallow: /login
 Disallow: /auth/
 Disallow: /not-authorized
 
-Sitemap: https://sayit.taliferro.tech/sitemap.xml
+Sitemap: https://sayit.16ahead.com/sitemap.xml

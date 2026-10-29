@@ -17,8 +17,8 @@ import { ThemeToggleComponent } from '../theme-toggle/theme-toggle.component';
     <header class="sayit-topbar">
       <div class="sayit-brand">
         <a class="sayit-wordmark" routerLink="/" aria-label="Say It home">
-          <img src="/assets/sayit/sayit-logo.png" alt="" width="34" height="34">
-          <span>Say It</span>
+          <img class="brand-mark--light" src="/assets/brand/products/svg/light/12-sayit.svg" alt="" width="34" height="34"><img class="brand-mark--dark" src="/assets/brand/products/svg/dark/12-sayit.svg" alt="" width="34" height="34">
+          <span>16Ahead <span class="brand-product">SayIt</span></span>
         </a>
         <nav class="sayit-tabs" aria-label="Say It sections">
           <a class="sayit-tab" routerLink="/" [class.active]="active === 'feed'" [attr.aria-current]="active === 'feed' ? 'page' : null">For you</a>

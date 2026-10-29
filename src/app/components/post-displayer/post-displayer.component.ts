@@ -87,7 +87,7 @@ export class PostDisplayerComponent implements OnChanges {
   isImageLightboxOpen: boolean = false;
 
   get footer (): string {
-    const appLabel = this.isSayItRoute() ? 'SayIt' : 'TODD';
+    const appLabel = this.isSayItRoute() ? 'SayIt' : '16Ahead';
     const appUrl = this.isSayItRoute()
       ? getSayitHomeUrl()
       : getToddHomeUrl();
@@ -592,7 +592,7 @@ export class PostDisplayerComponent implements OnChanges {
   getPostTrustLabel ( post: any ): string {
     if ( post?.linkPreview?.url ) return 'Linked source';
     if ( post?.postImageUrl ) return 'Image post';
-    return 'TODD post';
+    return '16Ahead post';
   }
 
   /** Analytics: track when a user clicks into a profile from a post card. */

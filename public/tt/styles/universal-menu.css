@@ -169,7 +169,14 @@ body.dark .um {
 }
 
 /* 64px copies (2x the 32px slot) so opening the menu doesn't pull a full-size logo. */
-.um-logo[data-app="todd"] { --um-logo: url("../menu-logos/todd-logo.png"); }
+.um-logo[data-app="todd"] { --um-logo: url("../menu-logos/todd-logo.png"); border-radius: 0; }
+/* The 16Ahead dial has black ticks; dark surfaces need the white-tick copy. */
+@media (prefers-color-scheme: dark) {
+  html:not(.light):not([data-theme="light"]) .um-logo[data-app="todd"] { --um-logo: url("../menu-logos/todd-logo-dark.png"); }
+}
+html.dark .um-logo[data-app="todd"],
+html[data-theme="dark"] .um-logo[data-app="todd"],
+body.dark .um-logo[data-app="todd"] { --um-logo: url("../menu-logos/todd-logo-dark.png"); }
 .um-logo[data-app="ask-todd"] { --um-logo: url("../menu-logos/ask-todd-logo.png"); }
 .um-logo[data-app="email-creator"] { --um-logo: url("../menu-logos/email-creator-logo.png"); }
 .um-logo[data-app="image-creator"] { --um-logo: url("../menu-logos/image-creator-logo.png"); }
