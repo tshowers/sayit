@@ -4,6 +4,8 @@
  * Plain HTML with no Angular, so search engines and link previews read the
  * words directly. Find tokens copied from src/styles.css; keep in sync.
  * Theme is <html data-theme>, set before paint by each page's inline script.
+ * After editing, bump the ?v= on its <link> in about, help and terms.html so
+ * browsers don't keep the old copy.
  */
 :root {
   --st-bg: #ffffff;
